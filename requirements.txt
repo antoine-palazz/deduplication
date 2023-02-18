@@ -1,6 +1,8 @@
 # os
 pandas
 tqdm
+# re
+unidecode
 # warnings
 Levenshtein
 sklearn
