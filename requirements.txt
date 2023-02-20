@@ -4,5 +4,6 @@ tqdm
 # re
 unidecode
 # warnings
+# nltk
 Levenshtein
 sklearn
