@@ -1,9 +1,7 @@
-# os
-pandas
-tqdm
-# re
-unidecode
-# warnings
-# nltk
 Levenshtein
-sklearn
+pandas
+scikit-learn
+torch
+tqdm
+transformers
+unidecode
