@@ -1,5 +1,6 @@
 Levenshtein
 pandas
+numpy
 scikit-learn
 torch
 tqdm
