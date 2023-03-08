@@ -9,7 +9,7 @@ jupyterlab~=3.0, <3.6.0
 kedro~=0.18.6
 kedro-telemetry~=0.2.0
 nbstripout~=0.4
-nump
+numpy
 pandas
 pytest-cov~=3.0
 pytest-mock>=1.7.1, <2.0
