@@ -1,8 +1,0 @@
-Levenshtein
-pandas
-numpy
-scikit-learn
-torch
-tqdm
-transformers
-unidecode
