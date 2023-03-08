@@ -2,3 +2,9 @@
 #
 # Documentation for this file format can be found in "The Data Catalog"
 # Link: https://kedro.readthedocs.io/en/stable/data/data_catalog.html
+
+wi_dataset:
+  type: pandas.CSVDataSet
+  filepath: data/01_raw/wi_dataset.csv
+  load_args:
+      engine: "python"
