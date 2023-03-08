@@ -8,3 +8,7 @@ wi_dataset:
   filepath: data/01_raw/wi_dataset.csv
   load_args:
       engine: "python"
+
+preprocesssed_dataset:
+  type: pandas.ParquetDataSet
+  filepath: data/02_intermediate/preprocesssed_dataset.pq
