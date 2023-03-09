@@ -1,5 +1,5 @@
 """
-This is a boilerplate pipeline 'full_duplicates'
+This is a boilerplate pipeline 'subtle_duplicates_tf_idf'
 generated using Kedro 0.18.6
 """
 
@@ -7,7 +7,7 @@ import pandas as pd
 from tqdm import tqdm
 
 
-def identify_full_duplicates(
+def identify_subtle_duplicates(
     data: pd.DataFrame,
     id_col: str = 'id',
     cols_to_match: list = ['title', 'description']
