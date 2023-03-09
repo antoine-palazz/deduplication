@@ -17,6 +17,6 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:id_col"],
                 outputs="full_duplicates",
                 name="identify_full_duplicates"
-            ),
+            )
         ]
     )

@@ -1,8 +1,6 @@
-concatenated_col_name:
-    'text'
+concatenated_col_name: 'text'
 
-id_col:
-    'id'
+id_col: 'id'
 
 languages_list:
     ['dansih',

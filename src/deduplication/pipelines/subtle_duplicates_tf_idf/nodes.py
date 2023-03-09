@@ -51,30 +51,86 @@ def compute_chunk_cosine_similarity(
     )
 
 
-def identify_subtle_duplicates(
+def find_subtle_duplicates_from_tokens(
     data: pd.DataFrame,
+    tokenized_texts,
     languages_list: list,
-    id_col: str = 'id'
+    description_col: str = 'description',
+    date_col: str = 'retrieval_date',
+    id_col: str = 'id',
+    chunk_size: int = 10000,
+    threshold_semantic: int = 0.95,
+    threshold_partial: int = 0.1
 ) -> pd.DataFrame:
 
     duplicates = []
 
+    for chunk_start in range(0, len(data), chunk_size):
+        similarity_matrix_chunk = compute_chunk_cosine_similarity(
+            tokenized_texts,
+            chunk_start,
+            chunk_start+chunk_size)
+        compteur_init = len(duplicates)
+
+        for i in tqdm(range(chunk_size)):
+            for j in range(chunk_start+i+1, len(data)):
+                if similarity_matrix_chunk[i][j] > threshold_semantic:
+                    if (data.loc[chunk_start+i, date_col] !=
+                            data.loc[j, date_col]):
+                        duplicates.append(
+                            {'id1': data.loc[chunk_start+i, id_col],
+                             'id2': data.loc[j, id_col], 'type': 'TEMPORAL'}
+                        )
+                    elif abs(
+                            len(data.loc[chunk_start+i, description_col]) -
+                            len(data.loc[j, description_col])
+                        ) / (1 + min(
+                            len(data.loc[chunk_start+i, description_col]),
+                            len(data.loc[j, description_col])
+                            )) > threshold_partial:
+                        duplicates.append(
+                            {'id1': data.loc[chunk_start+i, id_col],
+                             'id2': data.loc[j, id_col], 'type': 'PARTIAL'})
+                    else:
+                        duplicates.append(
+                            {'id1': data.loc[chunk_start+i, id_col],
+                             'id2': data.loc[j, id_col], 'type': 'SEMANTIC'})
+
+        compteur_end = len(duplicates)
+        print(compteur_end-compteur_init)
+
+    return(duplicates)
 
 
-    data.sort_values(by=cols_to_match + [id_col], inplace=True)
-    n_ads = len(data)
+def identify_subtle_duplicates(
+    data: pd.DataFrame,
+    languages_list: list,
+    concatenated_col_name: str = 'text',
+    description_col: str = 'description',
+    date_col: str = 'retrieval_date',
+    id_col: str = 'id',
+    max_df_tokenizer: float = 0.01,
+    chunk_size: int = 10000,
+    threshold_semantic: int = 0.95,
+    threshold_partial: int = 0.1
+) -> pd.DataFrame:
 
-    for i in tqdm(range(n_ads-1)):
-        j = i+1
-        while (j < n_ads) and (
-            (data.loc[i, cols_to_match] == data.loc[j, cols_to_match]).all()
-        ):
-            full_duplicates.append(
-                {
-                    'id1': data.loc[i, id_col],
-                    'id2': data.loc[j, id_col],
-                    'type': 'FULL'
-                })
-            j += 1
+    stopwords_list = create_stopwords_list(languages_list)
+    tokenized_texts = tokenize_tf_idf(
+        data[concatenated_col_name],
+        stopwords_list,
+        max_df_tokenizer
+    )
+    duplicates = find_subtle_duplicates_from_tokens(
+        data,
+        tokenized_texts,
+        languages_list,
+        description_col,
+        date_col,
+        id_col,
+        chunk_size,
+        threshold_semantic,
+        threshold_partial
+    )
 
-    return(pd.DataFrame(full_duplicates))
+    return duplicates

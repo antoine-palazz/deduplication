@@ -16,3 +16,7 @@ preprocessed_dataset:
 full_duplicates:
   type: pandas.ParquetDataSet
   filepath: data/07_model_output/full_duplicates.pq
+
+subtle_duplicates:
+  type: pandas.ParquetDataSet
+  filepath: data/07_model_output/subtle_duplicates.pq
