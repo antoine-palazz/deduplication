@@ -1,0 +1,18 @@
+concatenated_col_name:
+    'text'
+
+id_col:
+    'id'
+
+languages_list:
+    ['dansih',
+    'dutch',
+    'english',
+    'finnish',
+    'french',
+    'german',
+    'hungarian',
+    'protuguese',
+    'romanian',
+    'russian',
+    'spanish']

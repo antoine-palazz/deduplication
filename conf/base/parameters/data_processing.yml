@@ -7,5 +7,3 @@
 str_cols:
     ['title', 'company_name', 'location', 'description']
     
-concatenated_col_name:
-    'text'

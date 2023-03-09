@@ -9,8 +9,8 @@ from tqdm import tqdm
 
 def identify_full_duplicates(
     data: pd.DataFrame,
-    id_col: str = 'id',
-    cols_to_match: list = ['title', 'description']
+    cols_to_match: list = ['title', 'description'],
+    id_col: str = 'id'
 ) -> pd.DataFrame:
 
     full_duplicates = []
