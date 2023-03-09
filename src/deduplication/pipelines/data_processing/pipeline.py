@@ -13,10 +13,10 @@ def create_pipeline(**kwargs) -> Pipeline:
             node(
                 func=preprocess_data,
                 inputs=["wi_dataset",
-                        "params:str_columns",
+                        "params:str_cols",
                         "params:concatenated_col_name"],
-                outputs="preprocesssed_dataset",
-                name="preprocess_data_node",
+                outputs="preprocessed_dataset",
+                name="preprocess_data_node"
             ),
         ]
     )
