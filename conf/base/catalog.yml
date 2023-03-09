@@ -11,14 +11,30 @@ wi_dataset:
 
 preprocessed_dataset:
   type: pandas.ParquetDataSet
-  filepath: data/02_intermediate/preprocessed_dataset.pq
+  filepath: data/03_primary/preprocessed_dataset.pq
 
 full_duplicates:
   type: pandas.ParquetDataSet
-  filepath: data/07_model_output/full_duplicates.pq
+  filepath: data/06_models/full_duplicates.pq
   save_args:
       index: False
 
 subtle_duplicates_tf_idf:
   type: pandas.ParquetDataSet
-  filepath: data/07_model_output/subtle_duplicates_tf_idf.pq
+  filepath: data/06_models/subtle_duplicates_tf_idf.pq
+  save_args:
+      index: False
+
+all_duplicates_tf_idf:
+  type: pandas.CSVDataSet
+  filepath: data/07_model_output/all_duplicates_tf_idf.pq
+  save_args:
+      index: False
+      header: False
+
+all_duplicates_tf_idf_description:
+  type: pandas.CSVDataSet
+  filepath: data/08_reporting/all_duplicates_tf_idf_description.csv
+  save_args:
+      index: True
+      header: True

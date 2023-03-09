@@ -31,4 +31,5 @@ def identify_full_duplicates(
             j += 1
 
     print(len(full_duplicates))
-    return(pd.DataFrame(full_duplicates))
+    full_duplicates = pd.DataFrame(full_duplicates)
+    return(full_duplicates)

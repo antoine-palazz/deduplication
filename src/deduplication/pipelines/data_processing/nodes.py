@@ -16,7 +16,8 @@ warnings.filterwarnings('ignore')
 
 
 def remove_nans(data: pd.DataFrame) -> pd.DataFrame:
-    return data.fillna("")
+    data = data.fillna("")
+    return data
 
 
 def normalize_strings(
