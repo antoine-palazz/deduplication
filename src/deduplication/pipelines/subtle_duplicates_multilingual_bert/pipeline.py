@@ -18,10 +18,9 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:description_col",
                         "params:date_col",
                         "params:id_col",
-                        "params:max_df_tokenizer",
-                        "params:chunk_size",
-                        "params:threshold_semantic",
-                        "params:threshold_partial"],
+                        "params:chunk_size_multilingual_bert",
+                        "params:threshold_semantic_multilingual_bert",
+                        "params:threshold_partial_multilingual_bert"],
                 outputs="subtle_duplicates_multilingual_bert",
                 name="identify_subtle_duplicates_multilingual_bert"
             )

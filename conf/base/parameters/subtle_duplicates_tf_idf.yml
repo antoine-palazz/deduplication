@@ -6,6 +6,6 @@
 
 
 max_df_tokenizer: 0.01
-chunk_size: 10000
-threshold_semantic: 0.95
-threshold_partial: 0.1
+chunk_size_tf_idf: 10000
+threshold_semantic_tf_idf: 0.95
+threshold_partial_tf_idf: 0.1
