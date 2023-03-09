@@ -2,7 +2,9 @@
 
 ## Web Intelligence - Deduplication Challenge
 
-https://statistics-awards.eu/competitions/4
+- https://statistics-awards.eu/competitions/4
+
+- https://github.com/antoine-palazz/deduplication
 
 ## Overview
 

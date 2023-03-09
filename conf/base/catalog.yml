@@ -19,6 +19,6 @@ full_duplicates:
   save_args:
       index: False
 
-subtle_duplicates:
+subtle_duplicates_tf_idf:
   type: pandas.ParquetDataSet
-  filepath: data/07_model_output/subtle_duplicates.pq
+  filepath: data/07_model_output/subtle_duplicates_tf_idf.pq
