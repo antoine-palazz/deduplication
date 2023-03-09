@@ -4,7 +4,19 @@ generated using Kedro 0.18.6
 """
 
 from kedro.pipeline import Pipeline, node, pipeline
+from .nodes import identify_full_duplicates
 
 
 def create_pipeline(**kwargs) -> Pipeline:
-    return pipeline([])
+    return pipeline(
+        [
+            node(
+                func=identify_full_duplicates,
+                inputs=["preprocessed_dataset",
+                        "params:id_col",
+                        "params:cols_to_match"],
+                outputs="full_duplicates",
+                name="identify_full_duplicates"
+            ),
+        ]
+    )

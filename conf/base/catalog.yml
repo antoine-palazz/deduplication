@@ -12,3 +12,8 @@ wi_dataset:
 preprocessed_dataset:
   type: pandas.ParquetDataSet
   filepath: data/02_intermediate/preprocessed_dataset.pq
+
+full_duplicates:
+  type: pandas.ParquetDataSet
+  filepath: data/07_model_output/full_duplicates.pq
+

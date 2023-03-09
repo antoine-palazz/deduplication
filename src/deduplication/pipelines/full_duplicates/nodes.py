@@ -30,3 +30,6 @@ def identify_full_duplicates(
                 })
             j += 1
 
+    return(pd.DataFrame(full_duplicates))
+
+
