@@ -38,3 +38,17 @@ all_duplicates_tf_idf_description:
   save_args:
       index: True
       header: True
+
+all_duplicates_multilingual_bert:
+  type: pandas.CSVDataSet
+  filepath: data/07_model_output/all_duplicates_multilingual_bert.pq
+  save_args:
+      index: False
+      header: False
+
+all_duplicates_multilingual_bert_description:
+  type: pandas.CSVDataSet
+  filepath: data/08_reporting/all_duplicates_multilingual_bert_description.csv
+  save_args:
+      index: True
+      header: True

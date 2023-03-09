@@ -1,6 +1,8 @@
 concatenated_col_name: 'text'
 
 id_col: 'id'
+description_col: 'description'
+date_col: 'retrieval_date'
 
 languages_list:
     ['danish',
