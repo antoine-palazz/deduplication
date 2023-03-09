@@ -42,7 +42,7 @@ def compute_chunk_cosine_similarity(
     end: int
 ):
 
-    end = max(end, len(tokenized_texts))
+    end = min(end, tokenized_texts.shape[0])
     return(
         cosine_similarity(
             X=tokenized_texts[start:end],
@@ -133,4 +133,4 @@ def identify_subtle_duplicates(
         threshold_partial
     )
 
-    return duplicates
+    return(pd.DataFrame(duplicates))

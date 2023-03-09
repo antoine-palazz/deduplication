@@ -25,7 +25,10 @@ def normalize_strings(
 ) -> pd.DataFrame:
 
     data[str_cols] = data[str_cols].progress_apply(
-        lambda x: x.str.replace(r'\W', ' ').apply(
+        lambda x: x.str.replace(
+            '\n\r', ' ').replace(
+                '\n', ' ').replace(
+                    r'\W', ' ').apply(
             lambda x: unidecode(re.sub(' +', ' ', x))
         ).str.strip().str.lower()
     )

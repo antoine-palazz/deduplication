@@ -3,14 +3,14 @@ concatenated_col_name: 'text'
 id_col: 'id'
 
 languages_list:
-    ['dansih',
+    ['danish',
     'dutch',
     'english',
     'finnish',
     'french',
     'german',
     'hungarian',
-    'protuguese',
+    'portuguese',
     'romanian',
     'russian',
     'spanish']

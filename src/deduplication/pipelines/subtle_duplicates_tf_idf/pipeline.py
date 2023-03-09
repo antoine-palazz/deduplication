@@ -23,7 +23,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:threshold_semantic",
                         "params:threshold_partial"],
                 outputs="subtle_duplicates",
-                name="identify_subtle_duplicates"
+                name="identify_subtle_duplicates_tf_idf"
             )
         ]
     )
