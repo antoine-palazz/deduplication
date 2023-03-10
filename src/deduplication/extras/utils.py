@@ -1,4 +1,5 @@
 from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
 import nltk
 import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
@@ -10,6 +11,22 @@ nltk.download('stopwords')
 def create_stopwords_list(languages_list: list) -> list:
     stopwords_list = stopwords.words(languages_list)
     return stopwords_list
+
+
+def lemmatize_texts(
+    texts: pd.Series,
+    stopwords_list: list
+) -> pd.Series:  # To move in data processing?
+    lem = WordNetLemmatizer()
+    lemmatized_texts = texts.progress_apply(
+        lambda x: ' '.join(
+            [lem.lemmatize(word) for word in x.split()
+             if word not in stopwords_list
+             ]
+        )
+    )
+
+    return lemmatized_texts
 
 
 def compute_chunk_cosine_similarity(

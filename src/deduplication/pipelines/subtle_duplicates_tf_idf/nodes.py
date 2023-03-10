@@ -5,6 +5,7 @@ generated using Kedro 0.18.6
 
 from deduplication.extras.utils import (
     create_stopwords_list,
+    lemmatize_texts,
     find_subtle_duplicates_from_tokens
 )
 import pandas as pd
@@ -45,8 +46,12 @@ def identify_subtle_duplicates(
 ) -> pd.DataFrame:
 
     stopwords_list = create_stopwords_list(languages_list)
-    tokenized_texts = tokenize_tf_idf(
+    lemmatized_texts = lemmatize_texts(
         data[concatenated_col_name],
+        stopwords_list
+        )
+    tokenized_texts = tokenize_tf_idf(
+        lemmatized_texts,
         stopwords_list,
         max_df_tokenizer
     )

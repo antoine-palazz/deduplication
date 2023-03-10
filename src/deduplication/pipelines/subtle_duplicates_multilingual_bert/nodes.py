@@ -5,9 +5,9 @@ generated using Kedro 0.18.6
 
 from deduplication.extras.utils import (
     create_stopwords_list,
+    lemmatize_texts,
     find_subtle_duplicates_from_tokens
 )
-from nltk.stem import WordNetLemmatizer
 import pandas as pd
 import torch
 from tqdm import tqdm
@@ -16,22 +16,6 @@ import warnings
 
 tqdm.pandas()
 warnings.filterwarnings('ignore')
-
-
-def lemmatize_texts(
-    texts: pd.Series,
-    stopwords_list: list
-) -> pd.Series:
-    lem = WordNetLemmatizer()
-    lemmatized_texts = texts.progress_apply(
-        lambda x: ' '.join(
-            [lem.lemmatize(word) for word in x.split()
-             if word not in stopwords_list
-             ]
-        )
-    )
-
-    return lemmatized_texts
 
 
 def encode_text(
@@ -52,13 +36,13 @@ def encode_text(
 
 
 def tokenize_multilingual_bert(
-    lemmatized_texts: pd.Series
+    texts: pd.Series
 ) -> list:
 
     tokenizer = BertTokenizer.from_pretrained('bert-base-multilingual-cased')
     model = BertModel.from_pretrained('bert-base-multilingual-cased')
 
-    bert_texts = lemmatized_texts.progress_apply(
+    bert_texts = texts.progress_apply(
         lambda x: encode_text(x,
                               tokenizer,
                               model)
