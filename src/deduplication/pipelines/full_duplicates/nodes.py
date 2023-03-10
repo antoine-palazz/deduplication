@@ -14,7 +14,7 @@ def identify_full_duplicates(
 ) -> pd.DataFrame:
 
     full_duplicates = []
-    data.sort_values(by=cols_to_match + [id_col], inplace=True)
+    data.sort_values(by=cols_to_match+[id_col], inplace=True)
     n_ads = len(data)
 
     for i in tqdm(range(n_ads-1)):

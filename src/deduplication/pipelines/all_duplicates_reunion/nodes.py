@@ -29,5 +29,6 @@ def combine_all_duplicates(
 
 
 def describe_duplicates(all_duplicates: pd.DataFrame) -> pd.DataFrame:
-    duplicates_description = all_duplicates.groupby('type').count()
+    duplicates_description = all_duplicates.groupby('type').count(
+    ).reset_index()
     return duplicates_description

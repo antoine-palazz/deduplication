@@ -31,13 +31,21 @@ all_duplicates_tf_idf:
   save_args:
       index: False
       header: False
+  load_args:
+      names:
+          ['id1', 'id2', 'type']
 
 all_duplicates_tf_idf_description:
   type: pandas.CSVDataSet
   filepath: data/08_reporting/all_duplicates_tf_idf_description.csv
   save_args:
-      index: True
-      header: True
+      index: False
+
+subtle_duplicates_multilingual_bert:
+  type: pandas.ParquetDataSet
+  filepath: data/06_models/subtle_duplicates_multilingual_bert.pq
+  save_args:
+      index: False
 
 all_duplicates_multilingual_bert:
   type: pandas.CSVDataSet
@@ -45,10 +53,12 @@ all_duplicates_multilingual_bert:
   save_args:
       index: False
       header: False
+  load_args:
+      names:
+          ['id1', 'id2', 'type']
 
 all_duplicates_multilingual_bert_description:
   type: pandas.CSVDataSet
   filepath: data/08_reporting/all_duplicates_multilingual_bert_description.csv
   save_args:
-      index: True
-      header: True
+      index: False
