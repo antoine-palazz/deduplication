@@ -15,26 +15,31 @@ def create_pipeline(**kwargs) -> Pipeline:
                 inputs=["full_duplicates",
                         "subtle_duplicates_tf_idf"],
                 outputs="all_duplicates_tf_idf",
-                name="combine_all_duplicates_tf_idf"
+                name="combine_all_duplicates_tf_idf",
+                tags=['tf_idf']
             ),
             node(
                 func=describe_duplicates,
                 inputs=["all_duplicates_tf_idf"],
                 outputs="all_duplicates_tf_idf_description",
-                name="describe_duplicates_tf_idf"
+                name="describe_duplicates_tf_idf",
+                tags=['tf_idf']
             ),
+
             node(
                 func=combine_all_duplicates,
                 inputs=["full_duplicates",
                         "subtle_duplicates_multilingual_bert"],
                 outputs="all_duplicates_multilingual_bert",
-                name="combine_all_duplicates_multilingual_bert"
+                name="combine_all_duplicates_multilingual_bert",
+                tags=['multilingual_bert']
             ),
             node(
                 func=describe_duplicates,
                 inputs=["all_duplicates_multilingual_bert"],
                 outputs="all_duplicates_multilingual_bert_description",
-                name="describe_duplicates_multilingual_bert"
+                name="describe_duplicates_multilingual_bert",
+                tags=['multilingual_bert']
             )
         ]
     )

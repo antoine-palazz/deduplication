@@ -27,5 +27,6 @@ def create_pipeline(**kwargs) -> Pipeline:
                 outputs="processed_dataset",
                 name="lemmatize_data_node"
             ),
-        ]
+        ],
+        tags=['full', 'tf_idf', 'multilingual_bert']
     )
