@@ -5,6 +5,7 @@ generated using Kedro 0.18.6
 
 from kedro.config import ConfigLoader
 from kedro.framework.project import settings
+from kedro.io import DataCatalog
 import pandas as pd
 
 
@@ -39,17 +40,17 @@ def combine_all_duplicates_from_best_models(
     project_path: str = 'deduplication'
 ) -> pd.DataFrame:
 
-    conf_path = str(project_path / settings.CONF_SOURCE)
+    conf_path = str(project_path + settings.CONF_SOURCE)
     conf_loader = ConfigLoader(conf_source=conf_path, env="local")
-    catalog = conf_loader["catalog"]
+    io = DataCatalog.from_config(conf_loader["catalog"])
 
-    best_subtle_duplicates_temporal = catalog.load(
+    best_subtle_duplicates_temporal = io.load(
         str_subtle_duplicates + best_model_temporal
         )
-    best_subtle_duplicates_partial = catalog.load(
+    best_subtle_duplicates_partial = io.load(
         str_subtle_duplicates + best_model_partial
         )
-    best_subtle_duplicates_semantic = catalog.load(
+    best_subtle_duplicates_semantic = io.load(
         str_subtle_duplicates + best_model_semantic
         )
 

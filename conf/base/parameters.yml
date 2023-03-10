@@ -1,4 +1,4 @@
-project_path: 'deduplication'
+project_path: '/home/onyxia/work/deduplication/'
 
 concatenated_col_name: 'text'
 lemmatized_col_name: 'lemmatized_text'
