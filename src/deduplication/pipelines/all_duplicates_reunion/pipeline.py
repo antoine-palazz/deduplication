@@ -40,6 +40,22 @@ def create_pipeline(**kwargs) -> Pipeline:
                 outputs="all_duplicates_multilingual_bert_description",
                 name="describe_duplicates_multilingual_bert",
                 tags=['multilingual_bert']
+            ),
+
+            node(
+                func=combine_all_duplicates,
+                inputs=["full_duplicates",
+                        "subtle_duplicates_xlm_roberta"],
+                outputs="all_duplicates_xlm_roberta",
+                name="combine_all_duplicates_xlm_roberta",
+                tags=['xlm_roberta']
+            ),
+            node(
+                func=describe_duplicates,
+                inputs=["all_duplicates_xlm_roberta"],
+                outputs="all_duplicates_xlm_roberta_description",
+                name="describe_duplicates_xlm_roberta",
+                tags=['xlm_roberta']
             )
         ]
     )

@@ -18,7 +18,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:date_col",
                         "params:id_col",
                         "params:max_df_tokenizer",
-                        "params:chunk_size_tf_idf",
+                        "params:chunk_size",
                         "params:threshold_semantic_tf_idf",
                         "params:threshold_partial_tf_idf"],
                 outputs="subtle_duplicates_tf_idf",

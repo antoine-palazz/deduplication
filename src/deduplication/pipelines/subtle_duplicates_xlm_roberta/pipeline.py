@@ -18,11 +18,11 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:date_col",
                         "params:id_col",
                         "params:chunk_size",
-                        "params:threshold_semantic_multilingual_bert",
-                        "params:threshold_partial_multilingual_bert"],
-                outputs="subtle_duplicates_multilingual_bert",
-                name="identify_subtle_duplicates_multilingual_bert"
+                        "params:threshold_semantic_xlm_roberta",
+                        "params:threshold_partial_xlm_roberta"],
+                outputs="subtle_duplicates_xlm_roberta",
+                name="identify_subtle_duplicates_xlm_roberta"
             )
         ],
-        tags=['multilingual_bert']
+        tags=['xlm_roberta']
     )

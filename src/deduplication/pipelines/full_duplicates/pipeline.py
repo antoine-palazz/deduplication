@@ -19,5 +19,5 @@ def create_pipeline(**kwargs) -> Pipeline:
                 name="identify_full_duplicates"
             )
         ],
-        tags=['full', 'tf_idf', 'multilingual_bert']
+        tags=['full', 'tf_idf', 'multilingual_bert', 'xlm_roberta']
     )

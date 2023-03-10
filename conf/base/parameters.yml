@@ -4,3 +4,5 @@ lemmatized_col_name: 'lemmatized_text'
 id_col: 'id'
 description_col: 'description'
 date_col: 'retrieval_date'
+
+chunk_size: 10000
