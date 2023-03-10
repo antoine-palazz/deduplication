@@ -1,3 +1,5 @@
+project_path: 'deduplication'
+
 concatenated_col_name: 'text'
 lemmatized_col_name: 'lemmatized_text'
 

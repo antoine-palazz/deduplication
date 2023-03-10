@@ -3,6 +3,8 @@ This is a boilerplate pipeline 'all_duplicates_reunion'
 generated using Kedro 0.18.6
 """
 
+from kedro.config import ConfigLoader
+from kedro.framework.project import settings
 import pandas as pd
 
 
@@ -30,10 +32,26 @@ def combine_all_duplicates_one_model(
 
 def combine_all_duplicates_from_best_models(
     full_duplicates: pd.DataFrame,
-    best_subtle_duplicates_temporal: pd.DataFrame,
-    best_subtle_duplicates_partial: pd.DataFrame,
-    best_subtle_duplicates_semantic: pd.DataFrame
+    best_model_temporal: str,
+    best_model_partial: str,
+    best_model_semantic: str,
+    str_subtle_duplicates: str = 'subtle_duplicates',
+    project_path: str = 'deduplication'
 ) -> pd.DataFrame:
+
+    conf_path = str(project_path / settings.CONF_SOURCE)
+    conf_loader = ConfigLoader(conf_source=conf_path, env="local")
+    catalog = conf_loader["catalog"]
+
+    best_subtle_duplicates_temporal = catalog.load(
+        str_subtle_duplicates + best_model_temporal
+        )
+    best_subtle_duplicates_partial = catalog.load(
+        str_subtle_duplicates + best_model_partial
+        )
+    best_subtle_duplicates_semantic = catalog.load(
+        str_subtle_duplicates + best_model_semantic
+        )
 
     all_duplicates = pd.concat(  # From most specific to least specific
         [

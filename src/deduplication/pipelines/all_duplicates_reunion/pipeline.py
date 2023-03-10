@@ -65,9 +65,11 @@ def create_pipeline(**kwargs) -> Pipeline:
             node(
                 func=combine_all_duplicates_from_best_models,
                 inputs=["full_duplicates",
-                        "params:best_subtle_duplicates_temporal",
-                        "params:best_subtle_duplicates_partial",
-                        "params:best_subtle_duplicates_semantic"],
+                        "params:best_model_temporal",
+                        "params:best_model_partial",
+                        "params:best_model_semantic",
+                        "params:str_subtle_duplicates",
+                        "params:project_path"],
                 outputs="best_duplicates",
                 name="combine_all_duplicates_from_best_models",
                 tags=['best_model']

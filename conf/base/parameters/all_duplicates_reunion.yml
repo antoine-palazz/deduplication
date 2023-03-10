@@ -4,6 +4,8 @@
 # Documentation for this file format can be found in "Parameters"
 # Link: https://kedro.readthedocs.io/en/0.18.6/kedro_project_setup/configuration.html#parameters
 
-best_subtle_duplicates_temporal: subtle_duplicates_tf_idf
-best_subtle_duplicates_partial: subtle_duplicates_tf_idf
-best_subtle_duplicates_semantic: subtle_duplicates_tf_idf
+str_subtle_duplicates: 'subtle_duplicates_'
+
+best_model_temporal: tf_idf
+best_model_partial: tf_idf
+best_model_semantic: tf_idf
