@@ -28,5 +28,11 @@ def create_pipeline(**kwargs) -> Pipeline:
                 name="lemmatize_data_node"
             ),
         ],
-        tags=['full', 'tf_idf', 'multilingual_bert', 'xlm_roberta']
+        tags=[
+            'full',
+            'best_model',
+            'tf_idf',
+            'multilingual_bert',
+            'xlm_roberta'
+            ]
     )

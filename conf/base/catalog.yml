@@ -11,11 +11,13 @@ processed_dataset:
   type: pandas.ParquetDataSet
   filepath: data/03_primary/processed_dataset.pq
 
+
 full_duplicates:
   type: pandas.ParquetDataSet
   filepath: data/06_models/full_duplicates.pq
   save_args:
       index: False
+
 
 subtle_duplicates_tf_idf:
   type: pandas.ParquetDataSet
@@ -39,6 +41,7 @@ all_duplicates_tf_idf_description:
   save_args:
       index: False
 
+
 subtle_duplicates_multilingual_bert:
   type: pandas.ParquetDataSet
   filepath: data/06_models/subtle_duplicates_multilingual_bert.pq
@@ -58,5 +61,28 @@ all_duplicates_multilingual_bert:
 all_duplicates_multilingual_bert_description:
   type: pandas.CSVDataSet
   filepath: data/08_reporting/all_duplicates_multilingual_bert_description.csv
+  save_args:
+      index: False
+
+
+subtle_duplicates_xlm_roberta:
+  type: pandas.ParquetDataSet
+  filepath: data/06_models/subtle_duplicates_xlm_roberta.pq
+  save_args:
+      index: False
+
+all_duplicates_xlm_roberta:
+  type: pandas.CSVDataSet
+  filepath: data/07_model_output/all_duplicates_xlm_roberta.pq
+  save_args:
+      index: False
+      header: False
+  load_args:
+      names:
+          ['id1', 'id2', 'type']
+
+all_duplicates_xlm_roberta_description:
+  type: pandas.CSVDataSet
+  filepath: data/08_reporting/all_duplicates_xlm_roberta_description.csv
   save_args:
       index: False
