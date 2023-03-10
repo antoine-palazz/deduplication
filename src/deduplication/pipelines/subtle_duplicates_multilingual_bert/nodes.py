@@ -59,9 +59,10 @@ def tokenize_multilingual_bert(
     model = BertModel.from_pretrained('bert-base-multilingual-cased')
 
     bert_texts = lemmatized_texts.progress_apply(
-        encode_text,
-        tokenizer,
-        model)
+        lambda x: encode_text(x,
+                              tokenizer,
+                              model)
+        )
 
     matrix_bert_texts = [list(x) for x in bert_texts]
     return matrix_bert_texts
