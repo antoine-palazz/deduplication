@@ -1,18 +1,6 @@
 concatenated_col_name: 'text'
+lemmatized_col_name: 'lemmatized_text'
 
 id_col: 'id'
 description_col: 'description'
 date_col: 'retrieval_date'
-
-languages_list:
-    ['danish',
-    'dutch',
-    'english',
-    'finnish',
-    'french',
-    'german',
-    'hungarian',
-    'portuguese',
-    'romanian',
-    'russian',
-    'spanish']

@@ -7,9 +7,9 @@ wi_dataset:
   type: deduplication.extras.datasets.broken_csv_dataset.BrokenCSVDataSet
   filepath: data/01_raw/wi_dataset.csv
 
-preprocessed_dataset:
+processed_dataset:
   type: pandas.ParquetDataSet
-  filepath: data/03_primary/preprocessed_dataset.pq
+  filepath: data/03_primary/processed_dataset.pq
 
 full_duplicates:
   type: pandas.ParquetDataSet

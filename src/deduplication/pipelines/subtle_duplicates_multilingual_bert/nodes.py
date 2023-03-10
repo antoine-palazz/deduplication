@@ -4,8 +4,6 @@ generated using Kedro 0.18.6
 """
 
 from deduplication.extras.utils import (
-    create_stopwords_list,
-    lemmatize_texts,
     find_subtle_duplicates_from_tokens
 )
 import pandas as pd
@@ -54,8 +52,7 @@ def tokenize_multilingual_bert(
 
 def identify_subtle_duplicates(
     data: pd.DataFrame,
-    languages_list: list,
-    concatenated_col_name: str = 'text',
+    lemmatized_col_name: str = 'lemmatized_text',
     description_col: str = 'description',
     date_col: str = 'retrieval_date',
     id_col: str = 'id',
@@ -64,17 +61,11 @@ def identify_subtle_duplicates(
     threshold_partial: int = 0.1
 ) -> pd.DataFrame:
 
-    stopwords_list = create_stopwords_list(languages_list)
-    lemmatized_texts = lemmatize_texts(
-        data[concatenated_col_name],
-        stopwords_list
-        )
-    tokenized_texts = tokenize_multilingual_bert(lemmatized_texts)
+    tokenized_texts = tokenize_multilingual_bert(data[lemmatized_col_name])
 
     duplicates = find_subtle_duplicates_from_tokens(
         data,
         tokenized_texts,
-        languages_list,
         description_col,
         date_col,
         id_col,

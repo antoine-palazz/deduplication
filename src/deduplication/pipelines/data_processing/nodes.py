@@ -3,14 +3,16 @@ This is a boilerplate pipeline 'data_processing'
 generated using Kedro 0.18.6
 """
 
-# import numpy as np
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
+import nltk
 import pandas as pd
 import re
-# import string
 from tqdm import tqdm
 from unidecode import unidecode
 import warnings
 
+nltk.download('stopwords')
 tqdm.pandas()
 warnings.filterwarnings('ignore')
 
@@ -59,5 +61,43 @@ def preprocess_data(
     data = normalize_strings(data, str_cols)
     data = create_concatenated_column(data, str_cols, concatenated_col_name)
     print(f'{len(data)} ads in the preprocessed file')
+
+    return data
+
+
+def create_stopwords_list(languages_list: list) -> list:
+    stopwords_list = stopwords.words(languages_list)
+    return stopwords_list
+
+
+def lemmatize_texts(
+    texts: pd.Series,
+    stopwords_list: list
+) -> pd.Series:
+
+    lem = WordNetLemmatizer()
+    lemmatized_texts = texts.progress_apply(
+        lambda x: ' '.join(
+            [lem.lemmatize(word) for word in x.split()
+             if word not in stopwords_list
+             ]
+        )
+    )
+
+    return lemmatized_texts
+
+
+def create_lemmatized_col(
+    data: pd.DataFrame,
+    languages_list: list,
+    concatenated_col_name: str = 'text',
+    lemmatized_col_name: str = 'lemmatized_text',
+) -> pd.DataFrame:
+
+    stopwords_list = create_stopwords_list(languages_list)
+    data[lemmatized_col_name] = lemmatize_texts(
+        data[concatenated_col_name],
+        stopwords_list
+        )
 
     return data

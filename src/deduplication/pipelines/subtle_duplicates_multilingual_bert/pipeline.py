@@ -12,9 +12,8 @@ def create_pipeline(**kwargs) -> Pipeline:
         [
             node(
                 func=identify_subtle_duplicates,
-                inputs=["preprocessed_dataset",
-                        "params:languages_list",
-                        "params:concatenated_col_name",
+                inputs=["processed_dataset",
+                        "params:lemmatized_col_name",
                         "params:description_col",
                         "params:date_col",
                         "params:id_col",

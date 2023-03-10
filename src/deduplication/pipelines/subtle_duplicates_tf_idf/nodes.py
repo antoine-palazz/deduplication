@@ -4,8 +4,6 @@ generated using Kedro 0.18.6
 """
 
 from deduplication.extras.utils import (
-    create_stopwords_list,
-    lemmatize_texts,
     find_subtle_duplicates_from_tokens
 )
 import pandas as pd
@@ -19,12 +17,10 @@ warnings.filterwarnings('ignore')
 
 def tokenize_tf_idf(
     texts: pd.Series,
-    stopwords_list: list,
     max_df_tokenizer: float = 0.01
 ):
 
     vectorizer = TfidfVectorizer(
-        stop_words=stopwords_list,
         max_df=max_df_tokenizer
     )
 
@@ -34,8 +30,7 @@ def tokenize_tf_idf(
 
 def identify_subtle_duplicates(
     data: pd.DataFrame,
-    languages_list: list,
-    concatenated_col_name: str = 'text',
+    lemmatized_col_name: str = 'lemmatized_text',
     description_col: str = 'description',
     date_col: str = 'retrieval_date',
     id_col: str = 'id',
@@ -45,20 +40,13 @@ def identify_subtle_duplicates(
     threshold_partial: int = 0.1
 ) -> pd.DataFrame:
 
-    stopwords_list = create_stopwords_list(languages_list)
-    lemmatized_texts = lemmatize_texts(
-        data[concatenated_col_name],
-        stopwords_list
-        )
     tokenized_texts = tokenize_tf_idf(
-        lemmatized_texts,
-        stopwords_list,
+        data[lemmatized_col_name],
         max_df_tokenizer
     )
     duplicates = find_subtle_duplicates_from_tokens(
         data,
         tokenized_texts,
-        languages_list,
         description_col,
         date_col,
         id_col,

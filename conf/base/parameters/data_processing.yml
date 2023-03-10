@@ -6,4 +6,16 @@
 
 str_cols:
     ['title', 'company_name', 'location', 'description']
-    
+
+languages_list:
+    ['danish',
+    'dutch',
+    'english',
+    'finnish',
+    'french',
+    'german',
+    'hungarian',
+    'portuguese',
+    'romanian',
+    'russian',
+    'spanish']
