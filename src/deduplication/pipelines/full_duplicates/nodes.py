@@ -30,6 +30,6 @@ def identify_full_duplicates(
                 })
             j += 1
 
-    print(len(full_duplicates))
+    print(f'{len(full_duplicates)} full duplicates have been found')
     full_duplicates = pd.DataFrame(full_duplicates)
     return(full_duplicates)

@@ -4,10 +4,8 @@
 # Link: https://kedro.readthedocs.io/en/stable/data/data_catalog.html
 
 wi_dataset:
-  type: pandas.CSVDataSet
+  type: deduplication.extras.datasets.broken_csv_dataset.BrokenCSVDataSet
   filepath: data/01_raw/wi_dataset.csv
-  load_args:
-      engine: "python"
 
 preprocessed_dataset:
   type: pandas.ParquetDataSet

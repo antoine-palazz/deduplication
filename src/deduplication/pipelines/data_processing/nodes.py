@@ -58,6 +58,6 @@ def preprocess_data(
     data = remove_nans(data)
     data = normalize_strings(data, str_cols)
     data = create_concatenated_column(data, str_cols, concatenated_col_name)
-    print(f'{len(data)} ads in the file')
+    print(f'{len(data)} ads in the preprocessed file')
 
     return data

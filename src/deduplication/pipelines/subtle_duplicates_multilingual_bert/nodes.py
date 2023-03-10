@@ -3,7 +3,7 @@ This is a boilerplate pipeline 'subtle_duplicates_tf_idf'
 generated using Kedro 0.18.6
 """
 
-from deduplication.utils import (
+from deduplication.extras.utils import (
     create_stopwords_list,
     find_subtle_duplicates_from_tokens
 )

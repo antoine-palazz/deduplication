@@ -72,6 +72,9 @@ def find_subtle_duplicates_from_tokens(
                              'id2': data.loc[j, id_col], 'type': 'SEMANTIC'})
 
         compteur_end = len(duplicates)
-        print(compteur_end-compteur_init)
+        print(
+            f'{compteur_end-compteur_init} duplicates \
+               found in chunck n°{chunk_start+1}'
+            )
 
     return(duplicates)
