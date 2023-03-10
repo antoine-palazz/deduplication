@@ -64,7 +64,7 @@ def find_subtle_duplicates_from_tokens(
         compteur_end = len(duplicates)
         print(
             f'{compteur_end-compteur_init} duplicates \
-               found in chunck n°{chunk_start+1}'
+               found in chunck n°{chunk_start/chunk_size+1}'
             )
 
     return(duplicates)
