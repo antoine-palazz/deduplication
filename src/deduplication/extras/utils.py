@@ -8,8 +8,10 @@ def compute_chunk_cosine_similarity(
     start: int,
     end: int
 ):
-
-    end = min(end, tokenized_texts.shape[0])
+    try:
+        end = min(end, tokenized_texts.shape[0])
+    except AttributeError:
+        end = min(end, len(tokenized_texts))
     cosine_similarity_matrix = cosine_similarity(
         X=tokenized_texts[start:end],
         Y=tokenized_texts
