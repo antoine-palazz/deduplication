@@ -14,7 +14,7 @@ def compute_chunk_cosine_similarity(
         end = min(end, len(tokenized_texts))
     cosine_similarity_matrix = cosine_similarity(
         X=tokenized_texts[start:end],
-        Y=tokenized_texts
+        Y=tokenized_texts[start:]
         )
     return cosine_similarity_matrix
 
@@ -31,8 +31,12 @@ def find_subtle_duplicates_from_tokens(
 ) -> pd.DataFrame:
 
     duplicates = []
+    try:
+        n_ads = tokenized_texts.shape[0]
+    except AttributeError:
+        n_ads = len(tokenized_texts)
 
-    for chunk_start in range(0, len(data), chunk_size):
+    for chunk_start in range(0, n_ads, chunk_size):
         similarity_matrix_chunk = compute_chunk_cosine_similarity(
             tokenized_texts,
             chunk_start,
@@ -40,33 +44,36 @@ def find_subtle_duplicates_from_tokens(
         compteur_init = len(duplicates)
 
         for i in tqdm(range(chunk_size)):
-            for j in range(chunk_start+i+1, len(data)):
+            for j in range(i+1, n_ads):
                 if similarity_matrix_chunk[i][j] > threshold_semantic:
                     if (data.loc[chunk_start+i, date_col] !=
                             data.loc[j, date_col]):
                         duplicates.append(
                             {'id1': data.loc[chunk_start+i, id_col],
-                             'id2': data.loc[j, id_col], 'type': 'TEMPORAL'}
+                             'id2': data.loc[chunk_start+j, id_col],
+                             'type': 'TEMPORAL'}
                         )
                     elif abs(
                             len(data.loc[chunk_start+i, description_col]) -
-                            len(data.loc[j, description_col])
+                            len(data.loc[chunk_start+j, description_col])
                         ) / (1 + min(
                             len(data.loc[chunk_start+i, description_col]),
-                            len(data.loc[j, description_col])
+                            len(data.loc[chunk_start+j, description_col])
                             )) > threshold_partial:
                         duplicates.append(
                             {'id1': data.loc[chunk_start+i, id_col],
-                             'id2': data.loc[j, id_col], 'type': 'PARTIAL'})
+                             'id2': data.loc[chunk_start+j, id_col],
+                             'type': 'PARTIAL'})
                     else:
                         duplicates.append(
                             {'id1': data.loc[chunk_start+i, id_col],
-                             'id2': data.loc[j, id_col], 'type': 'SEMANTIC'})
+                             'id2': data.loc[chunk_start+j, id_col],
+                             'type': 'SEMANTIC'})
 
         compteur_end = len(duplicates)
         print(
             f'{compteur_end-compteur_init} duplicates \
-               found in chunck n°{chunk_start/chunk_size+1}'
+               found in chunck n°{int(chunk_start/chunk_size+1)}'
             )
 
     return(duplicates)

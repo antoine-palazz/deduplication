@@ -17,6 +17,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:description_col",
                         "params:date_col",
                         "params:id_col",
+                        "params:batch_size",
                         "params:chunk_size",
                         "params:threshold_semantic_xlm_roberta",
                         "params:threshold_partial_xlm_roberta"],

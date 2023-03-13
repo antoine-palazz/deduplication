@@ -34,7 +34,8 @@ def encode_text(
 
 
 def tokenize_xlm_roberta(
-    texts: pd.Series
+    texts: pd.Series,
+    batch_size: int = 1
 ) -> list:
 
     tokenizer = XLMRobertaTokenizer.from_pretrained('xlm-roberta-base')
@@ -50,18 +51,52 @@ def tokenize_xlm_roberta(
     return matrix_roberta_texts
 
 
+def tokenize_xlm_roberta_by_batch(
+    texts: pd.Series,
+    batch_size: int = 128
+) -> list:
+
+    n_ads = len(texts)
+    matrix_bert_texts = []
+    tokenizer = XLMRobertaTokenizer.from_pretrained('xlm-roberta-base')
+    model = XLMRobertaModel.from_pretrained('xlm-roberta-base')
+
+    for i in tqdm(range(0, n_ads, batch_size)):
+        batch_texts = texts[i:i+batch_size]
+        batch_input_ids = []
+        for text in batch_texts:
+            input_ids = tokenizer.encode(text,
+                                         add_special_tokens=True,
+                                         truncation=True,
+                                         padding='max_length')
+            batch_input_ids.append(input_ids)
+        batch_input_ids = torch.tensor(batch_input_ids)
+        with torch.no_grad():
+            outputs = model(batch_input_ids)
+            last_hidden_states = outputs.last_hidden_state
+        matrix_bert_texts.extend(
+            [list(x[0]) for x in last_hidden_states.detach().numpy()]
+        )
+
+    return matrix_bert_texts
+
+
 def identify_subtle_duplicates(
     data: pd.DataFrame,
     lemmatized_col_name: str = 'lemmatized_text',
     description_col: str = 'description',
     date_col: str = 'retrieval_date',
     id_col: str = 'id',
+    batch_size: int = 128,
     chunk_size: int = 10000,
     threshold_semantic: int = 0.95,
     threshold_partial: int = 0.1
 ) -> pd.DataFrame:
 
-    tokenized_texts = tokenize_xlm_roberta(data[lemmatized_col_name])
+    tokenized_texts = tokenize_xlm_roberta_by_batch(
+        data[lemmatized_col_name],
+        batch_size=batch_size
+    )
 
     duplicates = find_subtle_duplicates_from_tokens(
         data,

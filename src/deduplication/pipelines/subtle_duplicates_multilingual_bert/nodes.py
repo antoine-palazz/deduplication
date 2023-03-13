@@ -28,13 +28,15 @@ def encode_text(
             truncation=True
         )
     ).unsqueeze(0)
-    outputs = model(input_ids)
-    last_hidden_state = outputs.last_hidden_state
+    with torch.no_grad():
+        outputs = model(input_ids)
+        last_hidden_state = outputs.last_hidden_state
     return last_hidden_state[0][0].detach().numpy()
 
 
 def tokenize_multilingual_bert(
-    texts: pd.Series
+    texts: pd.Series,
+    batch_size: int = 1
 ) -> list:
 
     tokenizer = BertTokenizer.from_pretrained('bert-base-multilingual-cased')
@@ -52,7 +54,7 @@ def tokenize_multilingual_bert(
 
 def tokenize_multilingual_bert_by_batch(
     texts: pd.Series,
-    batch_size: int = 64
+    batch_size: int = 128
 ) -> list:
 
     n_ads = len(texts)
@@ -60,7 +62,7 @@ def tokenize_multilingual_bert_by_batch(
     tokenizer = BertTokenizer.from_pretrained('bert-base-multilingual-cased')
     model = BertModel.from_pretrained('bert-base-multilingual-cased')
 
-    for i in tqdm(range(0, 64, batch_size)):
+    for i in tqdm(range(0, n_ads, batch_size)):
         batch_texts = texts[i:i+batch_size]
         batch_input_ids = []
         for text in batch_texts:
@@ -73,8 +75,9 @@ def tokenize_multilingual_bert_by_batch(
         with torch.no_grad():
             outputs = model(batch_input_ids)
             last_hidden_states = outputs.last_hidden_state
-        matrix_bert_texts.extend(list(last_hidden_states[0].detach().numpy()))
-    print(matrix_bert_texts)
+        matrix_bert_texts.extend(
+            [list(x[0]) for x in last_hidden_states.detach().numpy()]
+        )
 
     return matrix_bert_texts
 
@@ -85,13 +88,15 @@ def identify_subtle_duplicates(
     description_col: str = 'description',
     date_col: str = 'retrieval_date',
     id_col: str = 'id',
+    batch_size: int = 128,
     chunk_size: int = 10000,
     threshold_semantic: int = 0.95,
     threshold_partial: int = 0.1
 ) -> pd.DataFrame:
 
-    tokenized_texts = tokenize_multilingual_bert(
-        data[lemmatized_col_name]
+    tokenized_texts = tokenize_multilingual_bert_by_batch(
+        data[lemmatized_col_name],
+        batch_size=batch_size
     )
 
     duplicates = find_subtle_duplicates_from_tokens(
