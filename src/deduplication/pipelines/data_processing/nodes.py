@@ -22,7 +22,7 @@ def remove_nans(data: pd.DataFrame) -> pd.DataFrame:
     return data
 
 
-def normalize_strings(
+def normalize_strings(  # To improve, for instance with balises
     data: pd.DataFrame,
     str_cols: list
 ) -> pd.DataFrame:

@@ -53,7 +53,7 @@ def find_subtle_duplicates_from_tokens(
                              'id2': data.loc[chunk_start+j, id_col],
                              'type': 'TEMPORAL'}
                         )
-                    elif abs(
+                    elif abs(  # Condition to change
                             len(data.loc[chunk_start+i, description_col]) -
                             len(data.loc[chunk_start+j, description_col])
                         ) / (1 + min(

@@ -1,3 +1,4 @@
+import csv
 from kedro.io import AbstractDataSet
 import numpy as np
 import pandas as pd
@@ -19,8 +20,13 @@ class BrokenCSVDataSet(AbstractDataSet[pd.DataFrame, pd.DataFrame]):
         Returns:
             Data from the file as a Pandas dataframe.
         """
-        df = pd.read_csv(self._filepath,
-                         lineterminator='\n')  # Something is probably missing
+        with open(self._filepath, mode="rb") as file_in:
+            df = pd.read_csv(file_in,
+                             engine='c',
+                             delimiter=',',
+                             quotechar='"',
+                             quoting=csv.QUOTE_ALL,
+                             lineterminator='\n')
         print(f'{len(df)} rows in the dataset')
         return df
 
