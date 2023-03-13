@@ -37,7 +37,7 @@ def combine_all_duplicates_from_best_models(
     best_model_partial: str,
     best_model_semantic: str,
     str_subtle_duplicates: str = 'subtle_duplicates',
-    project_path: str = 'deduplication'
+    project_path: str = '/home/onyxia/work/deduplication/'
 ) -> pd.DataFrame:
 
     conf_path = str(project_path + settings.CONF_SOURCE)
