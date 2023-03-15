@@ -3,6 +3,7 @@ This is a boilerplate pipeline 'data_processing'
 generated using Kedro 0.18.6
 """
 
+import html
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 import nltk
@@ -28,7 +29,7 @@ def remove_html(
 ) -> pd.DataFrame:
 
     data[str_cols] = data[str_cols].progress_applymap(
-        lambda x: re.sub('<[^<]+?>', " ", x)
+        lambda x: re.sub('<[^<]+?>', " ", html.unescape(x))
     )
 
     return data
