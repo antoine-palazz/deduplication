@@ -19,6 +19,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                 func=differentiate_gross_semantic_duplicates,
                 inputs=["preprocessed_dataset",
                         "easy_gross_semantic_duplicates",
+                        "full_duplicates",
                         "params:description_col",
                         "params:date_col",
                         "params:id_col",
