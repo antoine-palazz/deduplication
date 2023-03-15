@@ -110,4 +110,5 @@ def identify_subtle_duplicates(
     )
 
     duplicates = pd.DataFrame(duplicates)
+    print(f'{len(duplicates)} subtle duplicates were found with xlm roberta')
     return(duplicates)

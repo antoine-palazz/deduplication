@@ -15,11 +15,21 @@ import pandas as pd
 def differentiate_gross_semantic_duplicates(
     data: pd.DataFrame,
     gross_semantic_duplicates: pd.DataFrame,
+    full_duplicates: pd.DataFrame,
     description_col: str = 'description',
     date_col: str = 'retrieval_date',
     id_col: str = 'id',
     threshold_partial: int = 0.1
 ) -> pd.DataFrame:
+
+    gross_semantic_duplicates = pd.concat(
+        [full_duplicates, gross_semantic_duplicates]
+    ).drop_duplicates()
+    gross_semantic_duplicates = gross_semantic_duplicates[
+        gross_semantic_duplicates["type"] != "FULL"
+    ]
+
+    print(f'{len(gross_semantic_duplicates)} "easy" duplicates to affect')
 
     n_gross_duplicates = len(gross_semantic_duplicates)
     for pair_id in range(n_gross_duplicates):
