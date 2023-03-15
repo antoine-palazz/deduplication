@@ -56,13 +56,13 @@ def normalize_strings(  # To improve, for instance with balises
 
 def create_concatenated_column(
     data: pd.DataFrame,
-    str_cols: list,
+    cols_to_concatenate: list,
     concatenated_col_name: str
 ) -> pd.DataFrame:
 
     data_with_new_col = data.copy()
-    data_with_new_col[concatenated_col_name] = data[str_cols[0]]
-    for col in tqdm(str_cols[1:]):
+    data_with_new_col[concatenated_col_name] = data[cols_to_concatenate[0]]
+    for col in tqdm(cols_to_concatenate[1:]):
         data_with_new_col[concatenated_col_name] += ' ' + data[col]
 
     return data_with_new_col
@@ -71,14 +71,19 @@ def create_concatenated_column(
 def preprocess_data(
     data: pd.DataFrame,
     str_cols: list = ['title', 'company_name', 'location', 'description'],
-    concatenated_col_name: str = 'text'
+    cols_to_concatenate: list = ['title',
+                                 'company_name',
+                                 'location',
+                                 'country_id',
+                                 'description'],
+    concatenated_col_name:  str = 'text'
 ) -> pd.DataFrame:
 
     data_1 = remove_nans(data)
     data_2 = remove_html(data_1, str_cols)
     data_3 = normalize_strings(data_2, str_cols)
     data_4 = create_concatenated_column(data_3,
-                                        str_cols,
+                                        cols_to_concatenate,
                                         concatenated_col_name)
     print(f'{len(data_4)} ads in the preprocessed file')
 

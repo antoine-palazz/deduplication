@@ -14,6 +14,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                 func=preprocess_data,
                 inputs=["wi_dataset",
                         "params:str_cols",
+                        "params:cols_to_concatenate",
                         "params:concatenated_col_name"],
                 outputs="preprocessed_dataset",
                 name="preprocess_data_node",

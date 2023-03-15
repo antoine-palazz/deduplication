@@ -7,6 +7,9 @@
 str_cols:
     ['title', 'company_name', 'location', 'description']
 
+cols_to_concatenate:
+    ['title', 'company_name', 'location', 'country_id', 'description']
+
 languages_list:
     ['chinese',
     'danish',
