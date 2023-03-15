@@ -82,7 +82,7 @@ def preprocess_data(
                                         concatenated_col_name)
     print(f'{len(data_4)} ads in the preprocessed file')
 
-    return data
+    return data_4
 
 
 def create_stopwords_list(languages_list: list) -> list:

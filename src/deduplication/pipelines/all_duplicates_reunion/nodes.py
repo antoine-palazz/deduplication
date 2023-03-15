@@ -10,6 +10,7 @@ from kedro.config import ConfigLoader
 from kedro.framework.project import settings
 from kedro.io import DataCatalog
 import pandas as pd
+from tqdm import tqdm
 
 
 def differentiate_gross_semantic_duplicates(
@@ -32,20 +33,21 @@ def differentiate_gross_semantic_duplicates(
     print(f'{len(true_gross_semantic_duplicates)} "easy" duplicates to affect')
 
     n_gross_duplicates = len(true_gross_semantic_duplicates)
-    for pair_id in range(n_gross_duplicates):
+    for pair_id in tqdm(range(n_gross_duplicates)):
 
-        row_1 = dict(data[
-                    (data[id_col] ==
-                     (true_gross_semantic_duplicates.loc[pair_id]["id1"]))
-                ])
-        row_2 = dict(data[
-                    (data[id_col] ==
-                     (true_gross_semantic_duplicates.loc[pair_id]["id2"]))
-                ])
+        id1 = true_gross_semantic_duplicates.loc[pair_id]["id1"]
+        row1 = data[
+                    data[id_col] == id1
+                ].reset_index(drop=True).loc[0]
+
+        id2 = true_gross_semantic_duplicates.loc[pair_id]["id2"]
+        row2 = data[
+                    data[id_col] == id2
+                ].reset_index(drop=True).loc[0]
 
         duplicates_type = differentiate_semantic_duplicates(
-                        row_1,
-                        row_2,
+                        row1,
+                        row2,
                         description_col,
                         date_col,
                         threshold_partial
