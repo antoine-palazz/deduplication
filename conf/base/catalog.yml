@@ -43,7 +43,7 @@ subtle_duplicates_tf_idf:
 
 all_duplicates_tf_idf:
   type: pandas.CSVDataSet
-  filepath: data/07_model_output/all_duplicates_tf_idf.pq
+  filepath: data/07_model_output/all_duplicates_tf_idf.csv
   save_args:
       index: False
       header: False
@@ -66,7 +66,7 @@ subtle_duplicates_multilingual_bert:
 
 all_duplicates_multilingual_bert:
   type: pandas.CSVDataSet
-  filepath: data/07_model_output/all_duplicates_multilingual_bert.pq
+  filepath: data/07_model_output/all_duplicates_multilingual_bert.csv
   save_args:
       index: False
       header: False
@@ -89,7 +89,7 @@ subtle_duplicates_xlm_roberta:
 
 all_duplicates_xlm_roberta:
   type: pandas.CSVDataSet
-  filepath: data/07_model_output/all_duplicates_xlm_roberta.pq
+  filepath: data/07_model_output/all_duplicates_xlm_roberta.csv
   save_args:
       index: False
       header: False
@@ -106,7 +106,7 @@ all_duplicates_xlm_roberta_description:
 
 best_duplicates:
   type: pandas.CSVDataSet
-  filepath: data/07_model_output/best_duplicates.pq
+  filepath: data/07_model_output/best_duplicates.csv
   save_args:
       index: False
       header: False

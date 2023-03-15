@@ -26,11 +26,11 @@ def differentiate_gross_semantic_duplicates(
 
         row_1 = dict(data[
                     (data[id_col] ==
-                     gross_semantic_duplicates.loc[pair_id]["id_1"])
+                     gross_semantic_duplicates.loc[pair_id]["id1"])
                 ])
         row_2 = dict(data[
                     (data[id_col] ==
-                     gross_semantic_duplicates.loc[pair_id]["id_2"])
+                     gross_semantic_duplicates.loc[pair_id]["id2"])
                 ])
 
         duplicates_type = differentiate_semantic_duplicates(
