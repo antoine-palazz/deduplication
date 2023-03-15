@@ -1,0 +1,63 @@
+submission_1_AP:
+    full:
+        nb_duplicates:
+        f1_score:
+    semantic:
+        nb_duplicates:
+        f1_score:
+    temporal:
+        nb_duplicates:
+        f1_score:
+    partial:
+        nb_duplicates:
+        f1_score:
+    global:
+        f1_score:
+
+submission_2_AP:
+    full:
+        nb_duplicates:
+        f1_score:
+    semantic:
+        nb_duplicates:
+        f1_score:
+    temporal:
+        nb_duplicates:
+        f1_score:
+    partial:
+        nb_duplicates:
+        f1_score:
+    global:
+        f1_score:
+
+submission_3_AP:
+    full:
+        nb_duplicates:
+        f1_score:
+    semantic:
+        nb_duplicates:
+        f1_score:
+    temporal:
+        nb_duplicates:
+        f1_score:
+    partial:
+        nb_duplicates:
+        f1_score:
+    global:
+        f1_score:
+
+submission_1_KF:
+    full:
+        nb_duplicates:
+        f1_score:
+    semantic:
+        nb_duplicates:
+        f1_score:
+    temporal:
+        nb_duplicates:
+        f1_score:
+    partial:
+        nb_duplicates:
+        f1_score:
+    global:
+        f1_score:
