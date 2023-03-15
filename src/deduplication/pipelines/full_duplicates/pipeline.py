@@ -23,7 +23,7 @@ def create_pipeline(**kwargs) -> Pipeline:
             node(
                 func=identify_full_duplicates,
                 inputs=["preprocessed_dataset",
-                        "SEMANTIC",
+                        "params:semantic_type",
                         "params:list_cols_to_match_gross_semantic",
                         "params:id_col"],
                 outputs="easy_gross_semantic_duplicates",
