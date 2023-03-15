@@ -110,6 +110,8 @@ def identify_subtle_duplicates(
         threshold_partial
     )
 
-    duplicates = pd.DataFrame(duplicates)
-    print(f'{len(duplicates)} subtle duplicates were found with bert')
-    return(duplicates)
+    df_duplicates = pd.DataFrame(duplicates)
+    print(
+        f'{len(df_duplicates)} subtle duplicates were found with bert'
+    )
+    return(df_duplicates)

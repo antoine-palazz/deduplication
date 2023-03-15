@@ -22,25 +22,25 @@ def differentiate_gross_semantic_duplicates(
     threshold_partial: int = 0.1
 ) -> pd.DataFrame:
 
-    gross_semantic_duplicates = pd.concat(
-        [full_duplicates, gross_semantic_duplicates]
+    all_duplicates = pd.concat(
+        [full_duplicates, gross_semantic_duplicates],
     ).drop_duplicates()
-    gross_semantic_duplicates = gross_semantic_duplicates[
-        gross_semantic_duplicates["type"] != "FULL"
-    ]
+    true_gross_semantic_duplicates = all_duplicates[
+        all_duplicates["type"] != "FULL"
+    ].reset_index(drop=True)
 
-    print(f'{len(gross_semantic_duplicates)} "easy" duplicates to affect')
+    print(f'{len(true_gross_semantic_duplicates)} "easy" duplicates to affect')
 
-    n_gross_duplicates = len(gross_semantic_duplicates)
+    n_gross_duplicates = len(true_gross_semantic_duplicates)
     for pair_id in range(n_gross_duplicates):
 
         row_1 = dict(data[
                     (data[id_col] ==
-                     gross_semantic_duplicates.loc[pair_id]["id1"])
+                     (true_gross_semantic_duplicates.loc[pair_id]["id1"]))
                 ])
         row_2 = dict(data[
                     (data[id_col] ==
-                     gross_semantic_duplicates.loc[pair_id]["id2"])
+                     (true_gross_semantic_duplicates.loc[pair_id]["id2"]))
                 ])
 
         duplicates_type = differentiate_semantic_duplicates(
@@ -51,9 +51,9 @@ def differentiate_gross_semantic_duplicates(
                         threshold_partial
                     )
 
-        gross_semantic_duplicates.loc[pair_id]["type"] = duplicates_type
+        true_gross_semantic_duplicates.loc[pair_id]["type"] = duplicates_type
 
-    return gross_semantic_duplicates
+    return true_gross_semantic_duplicates
 
 
 def combine_all_duplicates_one_model(
@@ -64,12 +64,13 @@ def combine_all_duplicates_one_model(
 
     all_duplicates = pd.concat(
         [full_duplicates, easy_duplicates, subtle_duplicates],
-        axis=0,
-        ignore_index=True
+        axis=0
     )
 
     all_duplicates.drop_duplicates(subset=['id1', 'id2'], inplace=True)
-    all_duplicates.sort_values(by=['id1', 'id2'], inplace=True)
+    all_duplicates.sort_values(by=['id1', 'id2'],
+                               inplace=True,
+                               ignore_index=True)
 
     if len(all_duplicates[
         all_duplicates['id1'] >= all_duplicates['id2']
@@ -117,12 +118,13 @@ def combine_all_duplicates_from_best_models(
             best_subtle_duplicates_semantic['type'] == 'SEMANTIC'
             ]
         ],
-        axis=0,
-        ignore_index=True
+        axis=0
     )
 
     all_duplicates.drop_duplicates(subset=['id1', 'id2'], inplace=True)
-    all_duplicates.sort_values(by=['id1', 'id2'], inplace=True)
+    all_duplicates.sort_values(by=['id1', 'id2'],
+                               inplace=True,
+                               ignore_index=True)
 
     if len(all_duplicates[
         all_duplicates['id1'] >= all_duplicates['id2']

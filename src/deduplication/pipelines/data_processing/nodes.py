@@ -19,8 +19,8 @@ warnings.filterwarnings('ignore')
 
 
 def remove_nans(data: pd.DataFrame) -> pd.DataFrame:
-    data = data.fillna("")
-    return data
+    data_without_nans = data.fillna("")
+    return data_without_nans
 
 
 def remove_html(
@@ -28,11 +28,12 @@ def remove_html(
     str_cols: list
 ) -> pd.DataFrame:
 
-    data[str_cols] = data[str_cols].progress_applymap(
+    data_without_html = data.copy()
+    data_without_html[str_cols] = data[str_cols].progress_applymap(
         lambda x: re.sub('<[^<]+?>', " ", html.unescape(x))
     )
 
-    return data
+    return data_without_html
 
 
 def normalize_strings(  # To improve, for instance with balises
@@ -40,7 +41,8 @@ def normalize_strings(  # To improve, for instance with balises
     str_cols: list
 ) -> pd.DataFrame:
 
-    data[str_cols] = data[str_cols].progress_apply(
+    clean_data = data.copy()
+    clean_data[str_cols] = data[str_cols].progress_apply(
         lambda x: x.str.replace(
             r'\r|\n', ' ', regex=True
         ).replace(
@@ -49,7 +51,7 @@ def normalize_strings(  # To improve, for instance with balises
             r' +', ' ', regex=True
         ).apply(unidecode).str.lower().str.strip()
     )
-    return data
+    return clean_data
 
 
 def create_concatenated_column(
@@ -58,11 +60,12 @@ def create_concatenated_column(
     concatenated_col_name: str
 ) -> pd.DataFrame:
 
-    data[concatenated_col_name] = data[str_cols[0]]
+    data_with_new_col = data.copy()
+    data_with_new_col[concatenated_col_name] = data[str_cols[0]]
     for col in tqdm(str_cols[1:]):
-        data[concatenated_col_name] += ' ' + data[col]
+        data_with_new_col[concatenated_col_name] += ' ' + data[col]
 
-    return data
+    return data_with_new_col
 
 
 def preprocess_data(
@@ -71,11 +74,13 @@ def preprocess_data(
     concatenated_col_name: str = 'text'
 ) -> pd.DataFrame:
 
-    data = remove_nans(data)
-    data = remove_html(data, str_cols)
-    data = normalize_strings(data, str_cols)
-    data = create_concatenated_column(data, str_cols, concatenated_col_name)
-    print(f'{len(data)} ads in the preprocessed file')
+    data_1 = remove_nans(data)
+    data_2 = remove_html(data_1, str_cols)
+    data_3 = normalize_strings(data_2, str_cols)
+    data_4 = create_concatenated_column(data_3,
+                                        str_cols,
+                                        concatenated_col_name)
+    print(f'{len(data_4)} ads in the preprocessed file')
 
     return data
 
@@ -110,9 +115,10 @@ def create_lemmatized_col(
 ) -> pd.DataFrame:
 
     stopwords_list = create_stopwords_list(languages_list)
-    data[lemmatized_col_name] = lemmatize_texts(
+    data_with_lemmas = data.copy()
+    data_with_lemmas[lemmatized_col_name] = lemmatize_texts(
         data[concatenated_col_name],
         stopwords_list
         )
 
-    return data
+    return data_with_lemmas
