@@ -30,8 +30,15 @@ def create_pipeline(**kwargs) -> Pipeline:
                     'best_model',
                     'tf_idf',
                     'multilingual_bert',
-                    'xlm_robertta'
+                    'xlm_roberta'
                     ]
+            ),
+            node(
+                func=describe_duplicates,
+                inputs=["easy_duplicates"],
+                outputs="beasy_duplicates_description",
+                name="describe_easy_duplicates_node",
+                tags=['easy']
             ),
 
             node(
