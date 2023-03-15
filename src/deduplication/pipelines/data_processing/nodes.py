@@ -58,7 +58,7 @@ def create_concatenated_column(
     data: pd.DataFrame,
     cols_to_concatenate: list,
     concatenated_col_name: str,
-    threshold_short: int = 100
+    threshold_short_description: int = 200
 ) -> pd.DataFrame:
 
     data_with_new_cols = data.copy()
@@ -66,10 +66,13 @@ def create_concatenated_column(
     for col in tqdm(cols_to_concatenate[1:]):
         data_with_new_cols[concatenated_col_name] += ' ' + data[col]
 
-    # Also throw a short description in the lot
-    data_with_new_cols['short_description'] = data_with_new_cols[
+    # Also throw shorts description in the lot
+    data_with_new_cols['beginning_description'] = data_with_new_cols[
         'description'
-    ].apply(lambda x: x[:threshold_short])
+    ].apply(lambda x: x[:threshold_short_description])
+    data_with_new_cols['end_description'] = data_with_new_cols[
+        'description'
+    ].apply(lambda x: x[-threshold_short_description:])
 
     return data_with_new_cols
 
@@ -83,7 +86,7 @@ def preprocess_data(
                                  'country_id',
                                  'description'],
     concatenated_col_name:  str = 'text',
-    threshold_short: int = 100
+    threshold_short_description: int = 200
 ) -> pd.DataFrame:
 
     data_1 = remove_nans(data)
@@ -91,7 +94,8 @@ def preprocess_data(
     data_3 = normalize_strings(data_2, str_cols)
     data_4 = create_concatenated_column(data_3,
                                         cols_to_concatenate,
-                                        concatenated_col_name)
+                                        concatenated_col_name,
+                                        threshold_short_description)
     print(f'{len(data_4)} ads in the preprocessed file')
 
     return data_4

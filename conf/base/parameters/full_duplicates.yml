@@ -9,17 +9,18 @@ list_cols_to_match_full:
         ['title', 'description']
     ]
 
-list_cols_to_match_gross_semantic:
+list_cols_to_match_gross_semantic: # How about country_id and retrieval_date?
     [
-        ['title', 'company_name', 'location', 'retrieval_date'],
-        ['title', 'short_description'],
+        ['title', 'company_name', 'location'],
+        ['title', 'beginning_description', 'location'],
+        ['title', 'end_description', 'location']
     ]
 
 backup_cols_to_match_full:
     ['company_name', 'location']
 
 backup_cols_to_match_gross_semantic:
-    ['short_description', 'company_name', 'location']
+    ['company_name', 'end_description']
 
 full_type: "FULL"
 semantic_type: "SEMANTIC"
