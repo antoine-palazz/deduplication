@@ -16,6 +16,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:str_cols",
                         "params:cols_to_concatenate",
                         "params:concatenated_col_name",
+                        "params:description_col",
                         "params:threshold_short_description"],
                 outputs="preprocessed_dataset",
                 name="preprocess_data_node",

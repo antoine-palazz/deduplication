@@ -59,6 +59,7 @@ def create_concatenated_column(
     data: pd.DataFrame,
     cols_to_concatenate: list,
     concatenated_col_name: str,
+    description_col: str,
     threshold_short_description: int = 200
 ) -> pd.DataFrame:
 
@@ -69,10 +70,10 @@ def create_concatenated_column(
 
     # Also throw shorts description in the lot
     data_with_new_cols['beginning_description'] = data_with_new_cols[
-        'description'
+        description_col
     ].apply(lambda x: x[:threshold_short_description])
     data_with_new_cols['end_description'] = data_with_new_cols[
-        'description'
+        description_col
     ].apply(lambda x: x[-threshold_short_description:])
 
     return data_with_new_cols
@@ -87,6 +88,7 @@ def preprocess_data(
                                  'country_id',
                                  'description'],
     concatenated_col_name:  str = 'text',
+    description_col: str = 'description',
     threshold_short_description: int = 200
 ) -> pd.DataFrame:
 
@@ -96,6 +98,7 @@ def preprocess_data(
     data_4 = create_concatenated_column(data_3,
                                         cols_to_concatenate,
                                         concatenated_col_name,
+                                        description_col,
                                         threshold_short_description)
     print(f'{len(data_4)} ads in the preprocessed file')
 
