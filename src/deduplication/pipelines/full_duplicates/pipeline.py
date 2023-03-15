@@ -35,6 +35,6 @@ def create_pipeline(**kwargs) -> Pipeline:
             'best_model',
             'tf_idf',
             'multilingual_bert',
-            'xlm_robertta'
+            'xlm_roberta'
             ]
     )
