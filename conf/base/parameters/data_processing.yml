@@ -10,6 +10,8 @@ str_cols:
 cols_to_concatenate:
     ['title', 'company_name', 'location', 'country_id', 'description']
 
+threshold_short: 100
+
 languages_list:
     ['chinese',
     'danish',

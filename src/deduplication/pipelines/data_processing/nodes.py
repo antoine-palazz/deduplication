@@ -57,15 +57,21 @@ def normalize_strings(  # To improve, for instance with balises
 def create_concatenated_column(
     data: pd.DataFrame,
     cols_to_concatenate: list,
-    concatenated_col_name: str
+    concatenated_col_name: str,
+    threshold_short: int = 100
 ) -> pd.DataFrame:
 
-    data_with_new_col = data.copy()
-    data_with_new_col[concatenated_col_name] = data[cols_to_concatenate[0]]
+    data_with_new_cols = data.copy()
+    data_with_new_cols[concatenated_col_name] = data[cols_to_concatenate[0]]
     for col in tqdm(cols_to_concatenate[1:]):
-        data_with_new_col[concatenated_col_name] += ' ' + data[col]
+        data_with_new_cols[concatenated_col_name] += ' ' + data[col]
 
-    return data_with_new_col
+    # Also throw a short description in the lot
+    data_with_new_cols['short_description'] = data_with_new_cols[
+        'description'
+    ].apply(lambda x: x[:threshold_short])
+
+    return data_with_new_cols
 
 
 def preprocess_data(
@@ -76,7 +82,8 @@ def preprocess_data(
                                  'location',
                                  'country_id',
                                  'description'],
-    concatenated_col_name:  str = 'text'
+    concatenated_col_name:  str = 'text',
+    threshold_short: int = 100
 ) -> pd.DataFrame:
 
     data_1 = remove_nans(data)
