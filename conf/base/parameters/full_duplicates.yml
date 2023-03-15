@@ -6,10 +6,10 @@
 
 list_cols_to_match_full:
     [
-        ['title', 'description']
+        ['title', 'description']  # How about location?
     ]
 
-list_cols_to_match_gross_semantic: # How about country_id and retrieval_date?
+list_cols_to_match_gross_semantic:  # How about country_id and retrieval_date?
     [
         ['title', 'company_name', 'location'],
         ['title', 'beginning_description', 'location'],
