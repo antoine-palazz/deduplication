@@ -4,5 +4,12 @@
 # Documentation for this file format can be found in "Parameters"
 # Link: https://kedro.readthedocs.io/en/0.18.6/kedro_project_setup/configuration.html#parameters
 
-cols_to_match:
-    ['title', 'description']
+list_cols_to_match_full:
+    [
+        ['title', 'description']
+    ]
+
+list_cols_to_match_gross_semantic:
+    [
+        ['title', 'company_name', 'location', 'retrieval_date']
+    ]

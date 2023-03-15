@@ -16,7 +16,11 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:str_cols",
                         "params:concatenated_col_name"],
                 outputs="preprocessed_dataset",
-                name="preprocess_data_node"
+                name="preprocess_data_node",
+                tags=[
+                    'full',
+                    'easy',
+                     ]
             ),
             node(
                 func=create_lemmatized_col,
@@ -29,7 +33,6 @@ def create_pipeline(**kwargs) -> Pipeline:
             ),
         ],
         tags=[
-            'full',
             'best_model',
             'tf_idf',
             'multilingual_bert',

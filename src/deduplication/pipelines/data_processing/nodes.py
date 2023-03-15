@@ -22,6 +22,18 @@ def remove_nans(data: pd.DataFrame) -> pd.DataFrame:
     return data
 
 
+def remove_html(
+    data: pd.DataFrame,
+    str_cols: list
+) -> pd.DataFrame:
+
+    data[str_cols] = data[str_cols].progress_applymap(
+        lambda x: re.sub('<[^<]+?>', " ", x)
+    )
+
+    return data
+
+
 def normalize_strings(  # To improve, for instance with balises
     data: pd.DataFrame,
     str_cols: list
@@ -29,11 +41,12 @@ def normalize_strings(  # To improve, for instance with balises
 
     data[str_cols] = data[str_cols].progress_apply(
         lambda x: x.str.replace(
-            '\n\r', ' ').replace(
-                '\n', ' ').replace(
-                    r'\W', ' ').apply(
-            lambda x: unidecode(re.sub(' +', ' ', x))
-        ).str.strip().str.lower()
+            r'\r|\n', ' ', regex=True
+        ).replace(
+            r'\W', ' ', regex=True
+        ).replace(
+            r' +', ' ', regex=True
+        ).apply(unidecode).str.lower().str.strip()
     )
     return data
 
@@ -58,6 +71,7 @@ def preprocess_data(
 ) -> pd.DataFrame:
 
     data = remove_nans(data)
+    data = remove_html(data, str_cols)
     data = normalize_strings(data, str_cols)
     data = create_concatenated_column(data, str_cols, concatenated_col_name)
     print(f'{len(data)} ads in the preprocessed file')

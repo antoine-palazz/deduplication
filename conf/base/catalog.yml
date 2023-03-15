@@ -7,6 +7,10 @@ wi_dataset:
   type: deduplication.extras.datasets.broken_csv_dataset.BrokenCSVDataSet
   filepath: data/01_raw/wi_dataset.csv
 
+preprocessed_dataset:
+  type: pandas.ParquetDataSet
+  filepath: data/02_intermediate/preprocessed_dataset.pq
+
 processed_dataset:
   type: pandas.ParquetDataSet
   filepath: data/03_primary/processed_dataset.pq
@@ -15,6 +19,12 @@ processed_dataset:
 full_duplicates:
   type: pandas.ParquetDataSet
   filepath: data/06_models/full_duplicates.pq
+  save_args:
+      index: False
+
+easy_gross_semantic_duplicates:
+  type: pandas.ParquetDataSet
+  filepath: data/06_models/easy_gross_semantic_duplicates.pq
   save_args:
       index: False
 

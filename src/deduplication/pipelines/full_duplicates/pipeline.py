@@ -12,18 +12,29 @@ def create_pipeline(**kwargs) -> Pipeline:
         [
             node(
                 func=identify_full_duplicates,
-                inputs=["processed_dataset",
-                        "params:cols_to_match",
+                inputs=["preprocessed_dataset",
+                        "FULL",
+                        "params:list_cols_to_match_full",
                         "params:id_col"],
                 outputs="full_duplicates",
-                name="identify_full_duplicates"
+                name="identify_full_duplicates_node",
+                tags=['full']
+            ),
+            node(
+                func=identify_full_duplicates,
+                inputs=["preprocessed_dataset",
+                        "SEMANTIC",
+                        "params:list_cols_to_match_gross_semantic",
+                        "params:id_col"],
+                outputs="easy_gross_semantic_duplicates",
+                name="identify_easy_gross_semantic_duplicates_node"
             )
         ],
         tags=[
-            'full',
+            'easy',
             'best_model',
             'tf_idf',
             'multilingual_bert',
-            'xlm_roberta'
+            'xlm_robertta'
             ]
     )
