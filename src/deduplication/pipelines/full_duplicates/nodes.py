@@ -21,7 +21,7 @@ def identify_full_duplicates(
         data.sort_values(by=cols_to_match+[id_col],
                          inplace=True,
                          ignore_index=True)
-        print(data.head())
+
         for i in tqdm(range(n_ads-1)):
             j = i+1
             while (j < n_ads) and (

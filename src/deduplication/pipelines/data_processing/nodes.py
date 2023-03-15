@@ -58,7 +58,7 @@ def create_concatenated_column(
 ) -> pd.DataFrame:
 
     data[concatenated_col_name] = data[str_cols[0]]
-    for col in str_cols[1:]:
+    for col in tqdm(str_cols[1:]):
         data[concatenated_col_name] += ' ' + data[col]
 
     return data
