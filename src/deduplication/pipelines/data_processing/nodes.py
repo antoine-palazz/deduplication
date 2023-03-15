@@ -14,6 +14,7 @@ from unidecode import unidecode
 import warnings
 
 nltk.download('stopwords')
+nltk.download('wordnet')
 tqdm.pandas()
 warnings.filterwarnings('ignore')
 
