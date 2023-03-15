@@ -24,7 +24,13 @@ full_duplicates:
 
 easy_gross_semantic_duplicates:
   type: pandas.ParquetDataSet
-  filepath: data/06_models/easy_gross_semantic_duplicates.pq
+  filepath: data/05_model_inputs/easy_gross_semantic_duplicates.pq
+  save_args:
+      index: False
+
+easy_duplicates:
+  type: pandas.ParquetDataSet
+  filepath: data/06_models/easy_duplicates.pq
   save_args:
       index: False
 
@@ -94,5 +100,22 @@ all_duplicates_xlm_roberta:
 all_duplicates_xlm_roberta_description:
   type: pandas.CSVDataSet
   filepath: data/08_reporting/all_duplicates_xlm_roberta_description.csv
+  save_args:
+      index: False
+
+
+best_duplicates:
+  type: pandas.CSVDataSet
+  filepath: data/07_model_output/best_duplicates.pq
+  save_args:
+      index: False
+      header: False
+  load_args:
+      names:
+          ['id1', 'id2', 'type']
+
+best_duplicates_description:
+  type: pandas.CSVDataSet
+  filepath: data/08_reporting/best_duplicates_description.csv
   save_args:
       index: False

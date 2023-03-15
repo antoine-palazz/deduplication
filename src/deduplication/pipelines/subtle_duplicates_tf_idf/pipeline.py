@@ -22,7 +22,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:threshold_semantic_tf_idf",
                         "params:threshold_partial_tf_idf"],
                 outputs="subtle_duplicates_tf_idf",
-                name="identify_subtle_duplicates_tf_idf"
+                name="identify_subtle_duplicates_tf_idf_node"
             )
         ],
         tags=['tf_idf', 'best_model']

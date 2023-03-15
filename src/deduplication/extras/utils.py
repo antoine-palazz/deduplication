@@ -19,6 +19,30 @@ def compute_chunk_cosine_similarity(
     return cosine_similarity_matrix
 
 
+def differentiate_semantic_duplicates(
+    row_1,
+    row_2,
+    description_col: str = 'description',
+    date_col: str = 'retrieval_date',
+    threshold_partial: float = 0.10
+) -> str:
+
+    if row_1[date_col] != row_2[date_col]:
+        return "TEMPORAL"
+
+    if abs(
+        len(row_1[description_col]) -
+        len(row_2[description_col])
+        ) / (1 + min(
+            len(row_1[description_col]),
+            len(row_2[description_col]))
+            ) > threshold_partial:
+
+        return "PARTIAL"
+
+    return "SEMANTIC"
+
+
 def find_subtle_duplicates_from_tokens(
     data: pd.DataFrame,
     tokenized_texts,
@@ -46,29 +70,20 @@ def find_subtle_duplicates_from_tokens(
         for i in tqdm(range(chunk_size)):
             for j in range(i+1, n_ads):
                 if similarity_matrix_chunk[i][j] > threshold_semantic:
-                    if (data.loc[chunk_start+i, date_col] !=
-                            data.loc[j, date_col]):
-                        duplicates.append(
-                            {'id1': data.loc[chunk_start+i, id_col],
-                             'id2': data.loc[chunk_start+j, id_col],
-                             'type': 'TEMPORAL'}
+
+                    duplicates_type = differentiate_semantic_duplicates(
+                        data.iloc[chunk_start+i],
+                        data.iloc[chunk_start+j],
+                        description_col,
+                        date_col,
+                        threshold_partial
+                    )
+
+                    duplicates.append(
+                        {'id1': data.loc[chunk_start+i, id_col],
+                         'id2': data.loc[chunk_start+j, id_col],
+                         'type': duplicates_type}
                         )
-                    elif abs(  # Condition to change
-                            len(data.loc[chunk_start+i, description_col]) -
-                            len(data.loc[chunk_start+j, description_col])
-                        ) / (1 + min(
-                            len(data.loc[chunk_start+i, description_col]),
-                            len(data.loc[chunk_start+j, description_col])
-                            )) > threshold_partial:
-                        duplicates.append(
-                            {'id1': data.loc[chunk_start+i, id_col],
-                             'id2': data.loc[chunk_start+j, id_col],
-                             'type': 'PARTIAL'})
-                    else:
-                        duplicates.append(
-                            {'id1': data.loc[chunk_start+i, id_col],
-                             'id2': data.loc[chunk_start+j, id_col],
-                             'type': 'SEMANTIC'})
 
         compteur_end = len(duplicates)
         print(

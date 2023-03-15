@@ -22,7 +22,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:threshold_semantic_multilingual_bert",
                         "params:threshold_partial_multilingual_bert"],
                 outputs="subtle_duplicates_multilingual_bert",
-                name="identify_subtle_duplicates_multilingual_bert"
+                name="identify_subtle_duplicates_multilingual_bert_node"
             )
         ],
         tags=['multilingual_bert']

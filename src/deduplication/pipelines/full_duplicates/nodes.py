@@ -35,8 +35,7 @@ def identify_full_duplicates(
                     })
                 j += 1
 
-    if (type_to_return == 'FULL') and len(list_cols_to_match) == 1:
-        print(f'{len(full_duplicates)} full duplicates have been found')
-
     full_duplicates = pd.DataFrame(full_duplicates).drop_duplicates()
+
+    print(f'{len(full_duplicates)} {type_to_return} duplicates were found')
     return(full_duplicates)
