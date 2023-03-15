@@ -1,63 +1,70 @@
 submission_1_AP:
+    description:
+        "TF-IDF with threshold at 0.9"
     full:
-        nb_duplicates:
-        f1_score:
+        nb_duplicates: 358053
+        f1_score: 0.30
     semantic:
-        nb_duplicates:
-        f1_score:
+        nb_duplicates: 283637
+        f1_score: 0.02
     temporal:
-        nb_duplicates:
-        f1_score:
+        nb_duplicates: 2742317
+        f1_score: 0.01
     partial:
-        nb_duplicates:
-        f1_score:
-    global:
-        f1_score:
+        nb_duplicates: 5782
+        f1_score: 0.03
+    macro_f1: 0.27
 
 submission_2_AP:
+    description:
+        "TF-IDF with threshold at 0.8"
     full:
-        nb_duplicates:
-        f1_score:
+        nb_duplicates: 244932
+        f1_score: 0.30
     semantic:
-        nb_duplicates:
-        f1_score:
+        nb_duplicates: 197038  # Top performer
+        f1_score: 0.06
     temporal:
-        nb_duplicates:
-        f1_score:
+        nb_duplicates: 1892174
+        f1_score: 0.01
     partial:
-        nb_duplicates:
-        f1_score:
+        nb_duplicates: 4002  # Top performer
+        f1_score: 0.03
     global:
-        f1_score:
+        f1_score: 0.28
 
-submission_3_AP:
+submission_3_AP:  # Top performer
+    description:
+        "TF-IDF with threshold at 0.95 / Partial before Temporal"
     full:
-        nb_duplicates:
-        f1_score:
+        nb_duplicates: 278593
+        f1_score: 0.29
     semantic:
-        nb_duplicates:
-        f1_score:
+        nb_duplicates: 42318
+        f1_score: 0.01
     temporal:
-        nb_duplicates:
-        f1_score:
+        nb_duplicates: 117234  # Top performer
+        f1_score: 0.21
     partial:
-        nb_duplicates:
-        f1_score:
+        nb_duplicates: 1945
+        f1_score: 0.01
     global:
-        f1_score:
+        f1_score: 0.30
 
 submission_1_KF:
+    description:
+        "BERT with threshold at 0.996"
     full:
-        nb_duplicates:
-        f1_score:
+        nb_duplicates: 357477
+        f1_score: 0.30
     semantic:
-        nb_duplicates:
-        f1_score:
+        nb_duplicates: 24274
+        f1_score: 0.03
     temporal:
-        nb_duplicates:
-        f1_score:
+        nb_duplicates: 173093
+        f1_score: 0.01
     partial:
-        nb_duplicates:
-        f1_score:
+        nb_duplicates: 73721
+        f1_score: 0.00
     global:
-        f1_score:
+        f1_score: 0.27
