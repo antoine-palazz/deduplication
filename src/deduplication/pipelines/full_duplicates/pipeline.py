@@ -13,7 +13,7 @@ def create_pipeline(**kwargs) -> Pipeline:
             node(
                 func=identify_full_duplicates,
                 inputs=["preprocessed_dataset",
-                        "FULL",
+                        "params:full_type",
                         "params:list_cols_to_match_full",
                         "params:id_col"],
                 outputs="full_duplicates",

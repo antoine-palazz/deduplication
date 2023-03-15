@@ -13,3 +13,5 @@ list_cols_to_match_gross_semantic:
     [
         ['title', 'company_name', 'location', 'retrieval_date']
     ]
+
+full_type: "FULL"

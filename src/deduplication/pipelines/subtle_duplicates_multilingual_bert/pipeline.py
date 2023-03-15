@@ -20,7 +20,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:batch_size",
                         "params:chunk_size",
                         "params:threshold_semantic_multilingual_bert",
-                        "params:threshold_partial_multilingual_bert"],
+                        "params:threshold_partial"],
                 outputs="subtle_duplicates_multilingual_bert",
                 name="identify_subtle_duplicates_multilingual_bert_node"
             )

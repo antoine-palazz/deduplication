@@ -20,7 +20,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:batch_size",
                         "params:chunk_size",
                         "params:threshold_semantic_xlm_roberta",
-                        "params:threshold_partial_xlm_roberta"],
+                        "params:threshold_partial"],
                 outputs="subtle_duplicates_xlm_roberta",
                 name="identify_subtle_duplicates_xlm_roberta_node"
             )

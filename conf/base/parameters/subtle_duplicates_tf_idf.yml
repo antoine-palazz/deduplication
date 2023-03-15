@@ -5,5 +5,4 @@
 # Link: https://kedro.readthedocs.io/en/0.18.6/kedro_project_setup/configuration.html#parameters
 
 max_df_tokenizer: 0.01
-threshold_semantic_tf_idf: 0.95
 threshold_partial_tf_idf: 0.1

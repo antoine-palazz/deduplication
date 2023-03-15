@@ -20,7 +20,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:max_df_tokenizer",
                         "params:chunk_size",
                         "params:threshold_semantic_tf_idf",
-                        "params:threshold_partial_tf_idf"],
+                        "params:threshold_partial"],
                 outputs="subtle_duplicates_tf_idf",
                 name="identify_subtle_duplicates_tf_idf_node"
             )
