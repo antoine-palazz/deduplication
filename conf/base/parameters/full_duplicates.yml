@@ -11,8 +11,15 @@ list_cols_to_match_full:
 
 list_cols_to_match_gross_semantic:
     [
-        ['title', 'company_name', 'location', 'retrieval_date']
+        ['title', 'company_name', 'location', 'retrieval_date'],
+        ['title', 'short_description'],
     ]
+
+backup_cols_to_match_full:
+    ['company_name', 'location']
+
+backup_cols_to_match_gross_semantic:
+    ['short_description', 'company_name', 'location']
 
 full_type: "FULL"
 semantic_type: "SEMANTIC"

@@ -15,6 +15,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                 inputs=["preprocessed_dataset",
                         "params:full_type",
                         "params:list_cols_to_match_full",
+                        "params:backup_cols_to_match_full",
                         "params:id_col"],
                 outputs="full_duplicates",
                 name="identify_full_duplicates_node",
@@ -25,6 +26,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                 inputs=["preprocessed_dataset",
                         "params:semantic_type",
                         "params:list_cols_to_match_gross_semantic",
+                        "params:backup_cols_to_match_gross_semantic",
                         "params:id_col"],
                 outputs="easy_gross_semantic_duplicates",
                 name="identify_easy_gross_semantic_duplicates_node"

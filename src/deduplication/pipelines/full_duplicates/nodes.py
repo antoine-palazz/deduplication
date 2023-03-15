@@ -11,6 +11,7 @@ def identify_full_duplicates(
     data: pd.DataFrame,
     type_to_return: str = 'FULL',
     list_cols_to_match: list = [['title', 'description']],
+    backup_cols_to_match: list = ['company_name', 'location'],
     id_col: str = 'id'
 ) -> pd.DataFrame:
 
@@ -25,11 +26,28 @@ def identify_full_duplicates(
 
         for i in tqdm(range(n_ads-1)):
             j = i+1
-            while (j < n_ads) and (
+            while (
+                j < n_ads
+            ) and (
                 (
                     data_for_duplicates.loc[i, cols_to_match] ==
                     data_for_duplicates.loc[j, cols_to_match]
                 ).all()
+            ) and (
+                ((data_for_duplicates.loc[
+                    i,
+                    cols_to_match
+                  ].str.len() > 0).all() and (
+                    data_for_duplicates.loc[
+                        j,
+                        cols_to_match
+                    ].str.len() > 0).all()
+                 ) or (
+                    (
+                        data_for_duplicates.loc[i, backup_cols_to_match] ==
+                        data_for_duplicates.loc[j, backup_cols_to_match]
+                    ).all()
+                )
             ):
                 full_duplicates.append(
                     {
