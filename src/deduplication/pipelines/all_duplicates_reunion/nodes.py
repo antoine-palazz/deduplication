@@ -25,7 +25,7 @@ def differentiate_gross_semantic_duplicates(
 
     all_duplicates = pd.concat(
         [full_duplicates, gross_semantic_duplicates],
-    ).drop_duplicates()
+    ).drop_duplicates(subset=['id1', 'id2'])
     true_gross_semantic_duplicates = all_duplicates[
         all_duplicates["type"] != "FULL"
     ].reset_index(drop=True)

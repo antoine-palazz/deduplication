@@ -109,7 +109,11 @@ def identify_subtle_duplicates(
         threshold_partial
     )
 
-    df_duplicates = pd.DataFrame(duplicates)
+    df_duplicates = pd.DataFrame(
+        duplicates
+    ).drop_duplicates(
+    ).sort_values(by=['id1', 'id2'],
+                  ignore_index=True)
     print(
         f'{len(df_duplicates)} subtle duplicates were found with xlm roberta'
     )

@@ -39,7 +39,11 @@ def identify_full_duplicates(
                     })
                 j += 1
 
-    df_full_duplicates = pd.DataFrame(full_duplicates).drop_duplicates()
+    df_full_duplicates = pd.DataFrame(
+        full_duplicates
+    ).drop_duplicates(
+    ).sort_values(by=['id1', 'id2'],
+                  ignore_index=True)
 
     print(f'{len(df_full_duplicates)} {type_to_return} duplicates were found')
     return(df_full_duplicates)
