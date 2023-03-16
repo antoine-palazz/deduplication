@@ -23,31 +23,31 @@ def identify_full_duplicates(
             by=cols_to_match+[id_col],
             ignore_index=True
         )
+        cols_to_match_idxs = [
+            data_for_duplicates.columns.get_loc(col)
+            for col in cols_to_match
+        ]
+        backup_cols_to_match_idxs = [
+            data_for_duplicates.columns.get_loc(col)
+            for col in backup_cols_to_match
+        ]
+        data_for_dups_arr = data_for_duplicates.values
 
         for i in tqdm(range(n_ads-1)):
             j = i+1
             while (
-                j < n_ads
-            ) and (
-                (
-                    data_for_duplicates.loc[i, cols_to_match] ==
-                    data_for_duplicates.loc[j, cols_to_match]
-                ).all()
-            ) and (
-                ((data_for_duplicates.loc[
-                    i,
-                    cols_to_match
-                  ].str.len() > 0).all() and (
-                    data_for_duplicates.loc[
-                        j,
-                        cols_to_match
-                    ].str.len() > 0).all()
-                 ) or (
-                    (
-                        data_for_duplicates.loc[i, backup_cols_to_match] ==
-                        data_for_duplicates.loc[j, backup_cols_to_match]
+                data_for_dups_arr[i, cols_to_match_idxs] ==
+                data_for_dups_arr[j, cols_to_match_idxs]
+            ).all() and (
+                ((data_for_dups_arr[i, cols_to_match_idxs] != ''
+                  ).all() and (
+                    data_for_dups_arr[j, cols_to_match_idxs] != ''
                     ).all()
-                )
+                 ) or (
+                    (data_for_dups_arr[i, backup_cols_to_match_idxs] ==
+                        data_for_dups_arr[j, backup_cols_to_match_idxs]
+                     ).all()
+                    )
             ):
                 full_duplicates.append(
                     {
