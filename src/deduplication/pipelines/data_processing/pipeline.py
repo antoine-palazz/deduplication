@@ -30,7 +30,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                 inputs=["preprocessed_dataset",
                         "params:languages_list",
                         "params:concatenated_col_name",
-                        "params:lemmatized_col_name"],
+                        "params:reduced_col_name"],
                 outputs="processed_dataset",
                 name="lemmatize_data_node"
             ),
