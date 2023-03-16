@@ -11,18 +11,21 @@ from multiprocessing import Pool, cpu_count
 import pandas as pd
 import torch
 from tqdm import tqdm
-from transformers import BertTokenizer, BertModel
+from transformers import BertTokenizer, BertModel, logging
 import warnings
 
+logging.set_verbosity_error()
 tqdm.pandas()
 warnings.filterwarnings('ignore')
 
 
 def encode_text(
     text: str,
-    tokenizer,
-    model
+    tokenizer
 ):
+
+    model = BertModel.from_pretrained('bert-base-multilingual-cased')
+
     input_ids = torch.tensor(
         tokenizer.encode(
             text,
@@ -41,13 +44,11 @@ def tokenize_multilingual_bert(
 ) -> list:
 
     tokenizer = BertTokenizer.from_pretrained('bert-base-multilingual-cased')
-    model = BertModel.from_pretrained('bert-base-multilingual-cased')
 
     with Pool(int(cpu_count()/4)) as pool:
         bert_texts = pool.map(
             partial(encode_text,
-                    tokenizer=tokenizer,
-                    model=model),
+                    tokenizer=tokenizer),
             tqdm(texts)
         )
 
