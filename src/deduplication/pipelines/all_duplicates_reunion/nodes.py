@@ -53,7 +53,7 @@ def differentiate_gross_semantic_duplicates(
                         threshold_partial
                     )
 
-        true_gross_semantic_duplicates.loc[pair_id]["type"] = duplicates_type
+        true_gross_semantic_duplicates.loc[pair_id, "type"] = duplicates_type
 
     return true_gross_semantic_duplicates
 

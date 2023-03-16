@@ -34,6 +34,12 @@ easy_duplicates:
   save_args:
       index: False
 
+easy_duplicates_description:
+  type: pandas.CSVDataSet
+  filepath: data/08_reporting/easy_duplicates_description.csv
+  save_args:
+      index: False
+
 
 subtle_duplicates_tf_idf:
   type: pandas.ParquetDataSet
