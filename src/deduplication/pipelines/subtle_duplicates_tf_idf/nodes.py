@@ -30,7 +30,7 @@ def tokenize_tf_idf(
 
 def identify_subtle_duplicates(
     data: pd.DataFrame,
-    lemmatized_col_name: str = 'lemmatized_text',
+    reduced_col_name: str = 'reduced_text',
     description_col: str = 'description',
     date_col: str = 'retrieval_date',
     id_col: str = 'id',
@@ -41,7 +41,7 @@ def identify_subtle_duplicates(
 ) -> pd.DataFrame:
 
     tokenized_texts = tokenize_tf_idf(
-        data[lemmatized_col_name],
+        data[reduced_col_name],
         max_df_tokenizer
     )
     duplicates = find_subtle_duplicates_from_tokens(

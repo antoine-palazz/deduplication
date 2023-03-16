@@ -118,7 +118,8 @@ def remove_stopwords(
     texts_no_stopwords = texts.progress_apply(
         lambda x: ' '.join(
             [word for word in x.split()
-             if word not in stopwords_list
+             if word not in stopwords_list or
+                len(word) < 2
              ]
         )
     )
