@@ -117,4 +117,4 @@ def identify_subtle_duplicates(
     print(
         f'{len(df_duplicates)} subtle duplicates were found with xlm roberta'
     )
-    return(df_duplicates)
+    return df_duplicates

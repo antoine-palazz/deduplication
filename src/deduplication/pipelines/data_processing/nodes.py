@@ -3,6 +3,7 @@ This is a boilerplate pipeline 'data_processing'
 generated using Kedro 0.18.6
 """
 
+from functools import partial
 import html
 from multiprocessing import Pool, cpu_count
 from nltk.corpus import stopwords
@@ -101,7 +102,7 @@ def preprocess_data(
                                         threshold_short_description)
     print(f'{len(data_4)} ads in the preprocessed file')
 
-    return data_4
+    return data_4.sort_values(by='id')
 
 
 def create_stopwords_list(languages_list: list) -> set:
@@ -128,12 +129,12 @@ def remove_stopwords(
 
 
 def lemmatize_text(
-    text: str
+    text: str,
+    lemmatizer
 ) -> str:
 
-    lem = WordNetLemmatizer()
     lemmatized_text = ' '.join(
-        [lem.lemmatize(word) for word in text.split()]
+        [lemmatizer.lemmatize(word) for word in text.split()]
     )
 
     return lemmatized_text
@@ -144,10 +145,11 @@ def lemmatize_texts(
 ) -> pd.Series:
 
     nltk.download('wordnet')
+    lem = WordNetLemmatizer()
 
-    with Pool(cpu_count()) as pool:
+    with Pool(int(cpu_count()/4)) as pool:
         lemmatized_texts = pool.map(
-            lemmatize_text,
+            partial(lemmatize_text, lemmatizer=lem),
             tqdm(texts)
         )
 

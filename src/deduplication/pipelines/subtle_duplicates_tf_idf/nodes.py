@@ -34,7 +34,7 @@ def identify_subtle_duplicates(
     description_col: str = 'description',
     date_col: str = 'retrieval_date',
     id_col: str = 'id',
-    max_df_tokenizer: float = 0.01,
+    max_df_tokenizer: float = 0.001,
     chunk_size: int = 5000,
     threshold_semantic: int = 0.95,
     threshold_partial: int = 0.1
@@ -63,4 +63,4 @@ def identify_subtle_duplicates(
     print(
         f'{len(df_duplicates)} subtle duplicates were found with tf idf'
     )
-    return(df_duplicates)
+    return df_duplicates

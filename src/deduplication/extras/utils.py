@@ -91,4 +91,4 @@ def find_subtle_duplicates_from_tokens(
                found in chunck n°{int(chunk_start/chunk_size+1)}'
             )
 
-    return(duplicates)
+    return duplicates

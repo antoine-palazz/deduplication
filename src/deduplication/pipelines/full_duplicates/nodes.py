@@ -64,4 +64,4 @@ def identify_full_duplicates(
                   ignore_index=True)
 
     print(f'{len(df_full_duplicates)} {type_to_return} duplicates were found')
-    return(df_full_duplicates)
+    return df_full_duplicates
