@@ -103,23 +103,38 @@ def preprocess_data(
     return data_4
 
 
-def create_stopwords_list(languages_list: list) -> list:
+def create_stopwords_list(languages_list: list) -> set:
     nltk.download('stopwords')
-    stopwords_list = stopwords.words(languages_list)
+    stopwords_list = set(stopwords.words(languages_list))
     return stopwords_list
+
+
+def remove_stopwords(
+    texts: pd.Series,
+    stopwords_list: set
+) -> pd.Series:
+
+    texts_no_stopwords = texts.progress_apply(
+        lambda x: ' '.join(
+            [word for word in x.split()
+             if word not in stopwords_list
+             ]
+        )
+    )
+
+    return texts_no_stopwords
 
 
 def lemmatize_texts(
     texts: pd.Series,
-    stopwords_list: list
 ) -> pd.Series:
 
     nltk.download('wordnet')
     lem = WordNetLemmatizer()
+
     lemmatized_texts = texts.progress_apply(
         lambda x: ' '.join(
             [lem.lemmatize(word) for word in x.split()
-             if word not in stopwords_list
              ]
         )
     )
@@ -127,18 +142,24 @@ def lemmatize_texts(
     return lemmatized_texts
 
 
-def create_lemmatized_col(
+def create_reduced_text_col(
     data: pd.DataFrame,
     languages_list: list,
     concatenated_col_name: str = 'text',
-    lemmatized_col_name: str = 'lemmatized_text',
+    reduced_col_name: str = 'reduced_text',
 ) -> pd.DataFrame:
 
     stopwords_list = create_stopwords_list(languages_list)
-    data_with_lemmas = data.copy()
-    data_with_lemmas[lemmatized_col_name] = lemmatize_texts(
-        data[concatenated_col_name],
-        stopwords_list
-        )
+    reduced_texts = data[concatenated_col_name]
+    data_with_reduced_text = data.copy()
 
-    return data_with_lemmas
+    reduced_texts_1 = remove_stopwords(
+        reduced_texts,
+        stopwords_list
+    )
+    reduced_texts_2 = lemmatize_texts(
+        reduced_texts_1
+    )
+
+    data_with_reduced_text[reduced_col_name] = reduced_texts_2
+    return data_with_reduced_text
