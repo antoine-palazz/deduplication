@@ -49,7 +49,7 @@ def find_subtle_duplicates_from_tokens(
     description_col: str = 'description',
     date_col: str = 'retrieval_date',
     id_col: str = 'id',
-    chunk_size: int = 10000,
+    chunk_size: int = 5000,
     threshold_semantic: int = 0.95,
     threshold_partial: int = 0.1
 ) -> pd.DataFrame:
@@ -68,7 +68,7 @@ def find_subtle_duplicates_from_tokens(
         compteur_init = len(duplicates)
 
         for i in tqdm(range(chunk_size)):
-            for j in range(i+1, n_ads):
+            for j in range(i+1, n_ads-chunk_start):
                 if similarity_matrix_chunk[i][j] > threshold_semantic:
 
                     duplicates_type = differentiate_semantic_duplicates(
