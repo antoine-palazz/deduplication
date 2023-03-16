@@ -17,7 +17,7 @@ warnings.filterwarnings('ignore')
 
 def tokenize_tf_idf(
     texts: pd.Series,
-    max_df_tokenizer: float = 0.01
+    max_df_tokenizer: float = 0.001
 ):
 
     vectorizer = TfidfVectorizer(
@@ -35,7 +35,7 @@ def identify_subtle_duplicates(
     date_col: str = 'retrieval_date',
     id_col: str = 'id',
     max_df_tokenizer: float = 0.01,
-    chunk_size: int = 10000,
+    chunk_size: int = 5000,
     threshold_semantic: int = 0.95,
     threshold_partial: int = 0.1
 ) -> pd.DataFrame:
