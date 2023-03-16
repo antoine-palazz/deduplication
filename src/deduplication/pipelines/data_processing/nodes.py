@@ -4,6 +4,7 @@ generated using Kedro 0.18.6
 """
 
 import html
+from multiprocessing import Pool, cpu_count
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 import nltk
@@ -125,21 +126,31 @@ def remove_stopwords(
     return texts_no_stopwords
 
 
+def lemmatize_text(
+    text: str
+) -> str:
+
+    lem = WordNetLemmatizer()
+    lemmatized_text = ' '.join(
+        [lem.lemmatize(word) for word in text.split()]
+    )
+
+    return lemmatized_text
+
+
 def lemmatize_texts(
     texts: pd.Series,
 ) -> pd.Series:
 
     nltk.download('wordnet')
-    lem = WordNetLemmatizer()
 
-    lemmatized_texts = texts.progress_apply(
-        lambda x: ' '.join(
-            [lem.lemmatize(word) for word in x.split()
-             ]
+    with Pool(cpu_count()) as pool:
+        lemmatized_texts = pool.map(
+            lemmatize_text,
+            tqdm(texts)
         )
-    )
 
-    return lemmatized_texts
+    return pd.Series(lemmatized_texts)
 
 
 def create_reduced_text_col(

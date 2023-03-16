@@ -4,7 +4,7 @@ generated using Kedro 0.18.6
 """
 
 from kedro.pipeline import Pipeline, node, pipeline
-from .nodes import preprocess_data, create_lemmatized_col
+from .nodes import preprocess_data, create_reduced_text_col
 
 
 def create_pipeline(**kwargs) -> Pipeline:
@@ -26,13 +26,13 @@ def create_pipeline(**kwargs) -> Pipeline:
                      ]
             ),
             node(
-                func=create_lemmatized_col,
+                func=create_reduced_text_col,
                 inputs=["preprocessed_dataset",
                         "params:languages_list",
                         "params:concatenated_col_name",
                         "params:reduced_col_name"],
                 outputs="processed_dataset",
-                name="lemmatize_data_node"
+                name="create_reduced_text_node"
             ),
         ],
         tags=[
