@@ -6,52 +6,67 @@ generated using Kedro 0.18.6
 from deduplication.extras.utils import (
     find_subtle_duplicates_from_tokens
 )
-from multiprocessing import Pool, cpu_count
 import pandas as pd
 import torch
+from torch.utils.data import DataLoader, Dataset
 from tqdm import tqdm
 from transformers import BertTokenizer, BertModel, logging
 import warnings
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print(f"The device is {device}")
 logging.set_verbosity_error()
 tqdm.pandas()
 warnings.filterwarnings('ignore')
 
 tokenizer_multilingual_bert = BertTokenizer.from_pretrained(
-    'bert-base-multilingual-cased'
+    'bert-base-multilingual-uncased'
 )
 model_multilingual_bert = BertModel.from_pretrained(
-    'bert-base-multilingual-cased'
+    'bert-base-multilingual-uncased'
     )
+model_multilingual_bert.to(device)
 
 
-def encode_text(
-    text: str
-):
-    input_ids = torch.tensor(
-        tokenizer_multilingual_bert.encode(
+class TextDataset(Dataset):
+    def __init__(self, texts):
+        self.texts = texts
+
+    def __len__(self):
+        return len(self.texts)
+
+    def __getitem__(self, index):
+        text = self.texts[index]
+        input_ids = tokenizer_multilingual_bert.encode(
             text,
             add_special_tokens=True,
-            truncation=True
+            padding='max_length',
+            truncation=True,
         )
-    ).unsqueeze(0)
-    with torch.no_grad():
-        outputs = model_multilingual_bert(input_ids)
-        last_hidden_state = outputs.last_hidden_state
-    return last_hidden_state[0][0].detach().numpy()
+        return torch.tensor(input_ids)
 
 
 def tokenize_multilingual_bert(
-    texts: pd.Series
+    texts: pd.Series,
+    batch_size: int = 64
 ) -> list:
 
-    with Pool(int(cpu_count()/3)) as pool:
-        bert_texts = pool.map(
-            encode_text,
-            tqdm(texts)
-        )
+    dataset = TextDataset(texts)
+    dataloader = DataLoader(
+        dataset,
+        batch_size=batch_size
+    )
 
-    matrix_bert_texts = [list(x) for x in bert_texts]
+    matrix_bert_texts = []
+    with torch.no_grad():
+        for batch in tqdm(dataloader):
+            batch = batch.to(device)
+            outputs = model_multilingual_bert(batch)
+            last_hidden_state = outputs.last_hidden_state
+            matrix_bert_texts.append(
+                last_hidden_state[:, 0, :].detach().cpu().numpy().tolist()
+            )
+
     return matrix_bert_texts
 
 
