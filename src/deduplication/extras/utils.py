@@ -60,6 +60,7 @@ def find_subtle_duplicates_from_tokens(
     except AttributeError:
         n_ads = len(tokenized_texts)
 
+    n_chunks = len(range(0, n_ads, chunk_size))
     for chunk_start in range(0, n_ads, chunk_size):
         similarity_matrix_chunk = compute_chunk_cosine_similarity(
             tokenized_texts,
@@ -88,7 +89,7 @@ def find_subtle_duplicates_from_tokens(
         compteur_end = len(duplicates)
         print(
             f'{compteur_end-compteur_init} duplicates \
-               found in chunck n°{int(chunk_start/chunk_size+1)}'
+               found in chunck n°{int(chunk_start/chunk_size+1)} / {n_chunks}'
             )
 
     return duplicates
