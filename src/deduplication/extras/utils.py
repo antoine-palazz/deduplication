@@ -19,16 +19,17 @@ def compute_chunk_cosine_similarity(
     return cosine_similarity_matrix
 
 
-def differentiate_semantic_duplicates(
+def differentiate_easy_duplicates(
     row_1,
     row_2,
+    current_type: str = "FULL",
     description_col: str = 'description',
     date_col: str = 'retrieval_date',
     threshold_partial: float = 0.10
 ) -> str:
 
     if row_1[date_col] != row_2[date_col]:
-        return "TEMPORAL"  # Not clear if it should come before 'PARTIAL'
+        return "TEMPORAL"
 
     if abs(
         len(row_1[description_col]) -
@@ -40,7 +41,7 @@ def differentiate_semantic_duplicates(
 
         return "PARTIAL"
 
-    return "SEMANTIC"
+    return current_type
 
 
 def find_subtle_duplicates_from_tokens(
@@ -72,9 +73,10 @@ def find_subtle_duplicates_from_tokens(
             for j in range(i+1, n_ads-chunk_start):
                 if similarity_matrix_chunk[i][j] > threshold_semantic:
 
-                    duplicates_type = differentiate_semantic_duplicates(
+                    duplicates_type = differentiate_easy_duplicates(
                         data.iloc[chunk_start+i],
                         data.iloc[chunk_start+j],
+                        "SEMANTIC",
                         description_col,
                         date_col,
                         threshold_partial

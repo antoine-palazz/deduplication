@@ -22,15 +22,22 @@ processed_dataset:
 
 full_duplicates:
   type: pandas.ParquetDataSet
-  filepath: data/06_models/full_duplicates.pq
+  filepath: data/05_model_inputs/full_duplicates.pq
   save_args:
       index: False
 
-easy_gross_semantic_duplicates:
+partial_duplicates:
   type: pandas.ParquetDataSet
-  filepath: data/05_model_inputs/easy_gross_semantic_duplicates.pq
+  filepath: data/06_models/partial_duplicates.pq
   save_args:
       index: False
+
+gross_semantic_duplicates:
+  type: pandas.ParquetDataSet
+  filepath: data/05_model_inputs/gross_semantic_duplicates.pq
+  save_args:
+      index: False
+
 
 easy_duplicates:
   type: pandas.ParquetDataSet

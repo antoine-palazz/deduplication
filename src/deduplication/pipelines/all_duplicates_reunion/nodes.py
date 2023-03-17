@@ -4,7 +4,7 @@ generated using Kedro 0.18.6
 """
 
 from deduplication.extras.utils import (
-    differentiate_semantic_duplicates
+    differentiate_easy_duplicates
 )
 from kedro.config import ConfigLoader
 from kedro.framework.project import settings
@@ -13,59 +13,58 @@ import pandas as pd
 from tqdm import tqdm
 
 
-def differentiate_gross_semantic_duplicates(
+def differentiate_df_easy_duplicates(
     data: pd.DataFrame,
-    gross_semantic_duplicates: pd.DataFrame,
     full_duplicates: pd.DataFrame,
+    partial_duplicates: pd.DataFrame,
+    gross_semantic_duplicates: pd.DataFrame,
     description_col: str = 'description',
     date_col: str = 'retrieval_date',
     id_col: str = 'id',
     threshold_partial: float = 0.1
 ) -> pd.DataFrame:
 
-    all_duplicates = pd.concat(
-        [full_duplicates, gross_semantic_duplicates],
-    ).drop_duplicates(subset=['id1', 'id2'])
-    true_gross_semantic_duplicates = all_duplicates[
-        all_duplicates["type"] != "FULL"
-    ].reset_index(drop=True)
+    easy_duplicates = pd.concat(
+        [full_duplicates, partial_duplicates, gross_semantic_duplicates],
+    ).drop_duplicates(subset=['id1', 'id2']
+                      ).reset_index(drop=True)
 
-    print(f'{len(true_gross_semantic_duplicates)} "easy" duplicates to affect')
+    n_easy_duplicates = len(easy_duplicates)
+    print(f'{n_easy_duplicates} "easy" duplicates to affect')
 
-    n_gross_duplicates = len(true_gross_semantic_duplicates)
-    for pair_id in tqdm(range(n_gross_duplicates)):
+    for pair_id in tqdm(range(n_easy_duplicates)):
 
-        id1 = true_gross_semantic_duplicates.loc[pair_id]["id1"]
+        id1 = easy_duplicates.loc[pair_id]["id1"]
         row1 = data[
                     data[id_col] == id1
                 ].reset_index(drop=True).loc[0]
 
-        id2 = true_gross_semantic_duplicates.loc[pair_id]["id2"]
+        id2 = easy_duplicates.loc[pair_id]["id2"]
         row2 = data[
                     data[id_col] == id2
                 ].reset_index(drop=True).loc[0]
 
-        duplicates_type = differentiate_semantic_duplicates(
+        duplicates_type = differentiate_easy_duplicates(
                         row1,
                         row2,
+                        easy_duplicates.loc[pair_id, "type"],
                         description_col,
                         date_col,
                         threshold_partial
                     )
 
-        true_gross_semantic_duplicates.loc[pair_id, "type"] = duplicates_type
+        easy_duplicates.loc[pair_id, "type"] = duplicates_type
 
-    return true_gross_semantic_duplicates
+    return easy_duplicates
 
 
 def combine_all_duplicates_one_model(
-    full_duplicates: pd.DataFrame,
     easy_duplicates: pd.DataFrame,
     subtle_duplicates: pd.DataFrame
 ) -> pd.DataFrame:
 
     all_duplicates = pd.concat(
-        [full_duplicates, easy_duplicates, subtle_duplicates],
+        [easy_duplicates, subtle_duplicates],
         axis=0
     )
 
@@ -83,7 +82,6 @@ def combine_all_duplicates_one_model(
 
 
 def combine_all_duplicates_from_best_models(
-    full_duplicates: pd.DataFrame,
     easy_duplicates: pd.DataFrame,
     best_model_temporal: str,
     best_model_partial: str,
@@ -108,7 +106,6 @@ def combine_all_duplicates_from_best_models(
 
     all_duplicates = pd.concat(  # From most specific to least specific
         [
-         full_duplicates,
          easy_duplicates,
          best_subtle_duplicates_temporal[
             best_subtle_duplicates_temporal['type'] == 'TEMPORAL'

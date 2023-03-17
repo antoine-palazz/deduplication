@@ -15,4 +15,4 @@ very_reduced_description_col_name: 'very_reduced_description'
 batch_size: 64
 chunk_size: 5000
 
-threshold_partial: 0.05
+threshold_partial: 0.20

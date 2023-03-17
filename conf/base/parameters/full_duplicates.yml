@@ -6,22 +6,34 @@
 
 list_cols_to_match_full:
     [
-        ['title', 'description']  # How about location?
-    ]
-
-list_cols_to_match_gross_semantic:  # How about country_id and retrieval_date?
-    [
-        ['title', 'company_name', 'location'],
-        ['title', 'beginning_description', 'location'],
-        ['title', 'end_description', 'location'],
-        ['title', 'very_reduced_description', 'location']
+        ['title', 'description', 'company_name', 'location']
     ]
 
 backup_cols_to_match_full:
-    ['company_name', 'location']
+    []
+
+
+list_cols_to_match_partial:
+    [
+        ['title', 'company_name', 'location'],
+        ['title', 'description', 'location'],
+        ['title', 'description', 'company_name'],
+    ]
+
+backup_cols_to_match_partial:
+    ['description', 'country_id']
+
+
+list_cols_to_match_gross_semantic:
+    [
+        ['title', 'very_reduced_description', 'location'],
+        ['title', 'beginning_description', 'location'],
+        ['title', 'end_description', 'location']
+    ]
 
 backup_cols_to_match_gross_semantic:
     ['company_name', 'very_reduced_description']
 
 full_type: "FULL"
+partial_type: "PARTIAL"
 semantic_type: "SEMANTIC"

@@ -37,7 +37,10 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:proportion_words_to_filter_out"
                         ],
                 outputs="preprocessed_dataset_with_extended_descriptions",
-                name="create_reduced_descriptions_node"
+                name="create_reduced_descriptions_node",
+                tags=[
+                    'easy'
+                     ]
             ),
             node(
                 func=create_reduced_text_cols,

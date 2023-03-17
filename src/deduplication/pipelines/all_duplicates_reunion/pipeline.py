@@ -8,7 +8,7 @@ from .nodes import (
     combine_all_duplicates_one_model,
     combine_all_duplicates_from_best_models,
     describe_duplicates,
-    differentiate_gross_semantic_duplicates
+    differentiate_df_easy_duplicates
 )
 
 
@@ -16,16 +16,17 @@ def create_pipeline(**kwargs) -> Pipeline:
     return pipeline(
         [
             node(
-                func=differentiate_gross_semantic_duplicates,
+                func=differentiate_df_easy_duplicates,
                 inputs=["preprocessed_dataset",
-                        "easy_gross_semantic_duplicates",
                         "full_duplicates",
+                        "partial_duplicates",
+                        "gross_semantic_duplicates",
                         "params:very_reduced_description_col_name",
                         "params:date_col",
                         "params:id_col",
                         "params:threshold_partial"],
                 outputs="easy_duplicates",
-                name="differentiate_gross_semantic_duplicates_node",
+                name="differentiate_easy_duplicates_node",
                 tags=[
                     'easy',
                     'best_model',
@@ -50,8 +51,7 @@ def create_pipeline(**kwargs) -> Pipeline:
 
             node(
                 func=combine_all_duplicates_one_model,
-                inputs=["full_duplicates",
-                        "easy_duplicates",
+                inputs=["easy_duplicates",
                         "subtle_duplicates_tf_idf"],
                 outputs="all_duplicates_tf_idf",
                 name="combine_all_duplicates_tf_idf_node",
@@ -67,8 +67,7 @@ def create_pipeline(**kwargs) -> Pipeline:
 
             node(
                 func=combine_all_duplicates_one_model,
-                inputs=["full_duplicates",
-                        "easy_duplicates",
+                inputs=["easy_duplicates",
                         "subtle_duplicates_multilingual_bert"],
                 outputs="all_duplicates_multilingual_bert",
                 name="combine_all_duplicates_multilingual_bert_node",
@@ -84,8 +83,7 @@ def create_pipeline(**kwargs) -> Pipeline:
 
             node(
                 func=combine_all_duplicates_one_model,
-                inputs=["full_duplicates",
-                        "easy_duplicates",
+                inputs=["easy_duplicates",
                         "subtle_duplicates_xlm_roberta"],
                 outputs="all_duplicates_xlm_roberta",
                 name="combine_all_duplicates_xlm_roberta_node",
@@ -101,8 +99,7 @@ def create_pipeline(**kwargs) -> Pipeline:
 
             node(
                 func=combine_all_duplicates_from_best_models,
-                inputs=["full_duplicates",
-                        "easy_duplicates",
+                inputs=["easy_duplicates",
                         "params:best_model_temporal",
                         "params:best_model_partial",
                         "params:best_model_semantic",

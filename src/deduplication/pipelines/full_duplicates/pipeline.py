@@ -23,6 +23,16 @@ def create_pipeline(**kwargs) -> Pipeline:
             ),
             node(
                 func=identify_full_duplicates,
+                inputs=["preprocessed_dataset",
+                        "params:partial_type",
+                        "params:list_cols_to_match_partial",
+                        "params:backup_cols_to_match_partial",
+                        "params:id_col"],
+                outputs="partial_duplicates",
+                name="identify_partial_duplicates_node"
+            ),
+            node(
+                func=identify_full_duplicates,
                 inputs=["preprocessed_dataset_with_extended_descriptions",
                         "params:semantic_type",
                         "params:list_cols_to_match_gross_semantic",
