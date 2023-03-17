@@ -11,7 +11,7 @@ cols_to_concatenate:
     ['title', 'company_name', 'location', 'country_id', 'description']
 
 threshold_short_description: 200
-proportion_words_to_filter_out: 0.50
+proportion_words_to_filter_out: 0.10
 
 languages_list:
     ['chinese',

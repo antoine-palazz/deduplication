@@ -15,6 +15,7 @@ from tqdm import tqdm
 from unidecode import unidecode
 import warnings
 
+nltk.download('punkt')
 nltk.download('stopwords')
 nltk.download('wordnet')
 tqdm.pandas()
@@ -114,8 +115,23 @@ def preprocess_data(
 
 
 def create_stopwords_list(languages_list: list) -> set:
-    stopwords_list = set(stopwords.words(languages_list))
+    stopwords_list = sorted(set(stopwords.words(languages_list)))
     return stopwords_list
+
+
+def remove_stopwords_from_text(
+    text: str,
+    stopwords_list: set
+) -> str:
+
+    text_no_stopwords = ' '.join(
+        [word for word in text.split()
+            if word not in stopwords_list or
+            len(word) < 2
+         ]
+    )
+
+    return text_no_stopwords
 
 
 def remove_stopwords(
@@ -123,14 +139,13 @@ def remove_stopwords(
     stopwords_list: set
 ) -> pd.Series:
 
-    texts_no_stopwords = texts.progress_apply(
-        lambda x: ' '.join(
-            [word for word in x.split()
-             if word not in stopwords_list or
-                len(word) < 2
-             ]
+    with Pool(int(cpu_count()/3)) as pool:
+        texts_no_stopwords = pool.map(
+            partial(
+                remove_stopwords_from_text,
+                stopwords_list=stopwords_list),
+            tqdm(texts)
         )
-    )
 
     return texts_no_stopwords
 
@@ -164,19 +179,22 @@ def lemmatize_texts(
 
 def filter_out_too_frequent_words(
     texts: pd.Series,
-    proportion_words_to_filter_out: float = 0.50,
+    proportion_words_to_filter_out: float = 0.25,
 ) -> pd.Series:
 
     corpus = " ".join(texts)
     tokens = nltk.word_tokenize(corpus)
     frequencies = nltk.FreqDist(tokens)
 
-    vocabulary_size = len(set(tokens))
-    n_to_filter_out = int(proportion_words_to_filter_out * vocabulary_size)
+    vocab_size = len(set(tokens))
+    n_to_filter_out = int(proportion_words_to_filter_out * vocab_size)
+    print(
+        f'{n_to_filter_out} too commons words out of {vocab_size} filtered out'
+    )
 
-    most_common_words = [
+    most_common_words = sorted(set([
         word for word, freq in frequencies.most_common(n_to_filter_out)
-    ]
+    ]))
     filtered_texts = remove_stopwords(texts, most_common_words)
 
     return filtered_texts
@@ -188,7 +206,7 @@ def create_reduced_text_cols(
     concatenated_col_name: str = 'text',
     reduced_col_prefix: str = 'reduced_',
     very_reduced_col_prefix: str = 'very_reduced_',
-    proportion_words_to_filter_out: float = 0.50
+    proportion_words_to_filter_out: float = 0.25
 ) -> pd.DataFrame:
 
     stopwords_list = create_stopwords_list(languages_list)
