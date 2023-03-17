@@ -6,7 +6,6 @@ generated using Kedro 0.18.6
 from deduplication.extras.utils import (
     find_subtle_duplicates_from_tokens
 )
-from functools import partial
 from multiprocessing import Pool, cpu_count
 import pandas as pd
 import torch
@@ -18,23 +17,26 @@ logging.set_verbosity_error()
 tqdm.pandas()
 warnings.filterwarnings('ignore')
 
+tokenizer_multilingual_bert = BertTokenizer.from_pretrained(
+    'bert-base-multilingual-cased'
+)
+model_multilingual_bert = BertModel.from_pretrained(
+    'bert-base-multilingual-cased'
+    )
+
 
 def encode_text(
-    text: str,
-    tokenizer
+    text: str
 ):
-
-    model = BertModel.from_pretrained('bert-base-multilingual-cased')
-
     input_ids = torch.tensor(
-        tokenizer.encode(
+        tokenizer_multilingual_bert.encode(
             text,
             add_special_tokens=True,
             truncation=True
         )
     ).unsqueeze(0)
     with torch.no_grad():
-        outputs = model(input_ids)
+        outputs = model_multilingual_bert(input_ids)
         last_hidden_state = outputs.last_hidden_state
     return last_hidden_state[0][0].detach().numpy()
 
@@ -43,12 +45,9 @@ def tokenize_multilingual_bert(
     texts: pd.Series
 ) -> list:
 
-    tokenizer = BertTokenizer.from_pretrained('bert-base-multilingual-cased')
-
-    with Pool(int(cpu_count()/4)) as pool:
+    with Pool(int(cpu_count()/3)) as pool:
         bert_texts = pool.map(
-            partial(encode_text,
-                    tokenizer=tokenizer),
+            encode_text,
             tqdm(texts)
         )
 

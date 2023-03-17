@@ -15,6 +15,8 @@ from tqdm import tqdm
 from unidecode import unidecode
 import warnings
 
+nltk.download('stopwords')
+nltk.download('wordnet')
 tqdm.pandas()
 warnings.filterwarnings('ignore')
 
@@ -106,7 +108,6 @@ def preprocess_data(
 
 
 def create_stopwords_list(languages_list: list) -> set:
-    nltk.download('stopwords')
     stopwords_list = set(stopwords.words(languages_list))
     return stopwords_list
 
@@ -144,10 +145,9 @@ def lemmatize_texts(
     texts: pd.Series,
 ) -> pd.Series:
 
-    nltk.download('wordnet')
     lem = WordNetLemmatizer()
 
-    with Pool(int(cpu_count()/4)) as pool:
+    with Pool(int(cpu_count()/3)) as pool:
         lemmatized_texts = pool.map(
             partial(lemmatize_text, lemmatizer=lem),
             tqdm(texts)
