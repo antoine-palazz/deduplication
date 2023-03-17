@@ -10,4 +10,4 @@ date_col: 'retrieval_date'
 batch_size: 64
 chunk_size: 5000
 
-threshold_partial: 0.1
+threshold_partial: 0.05

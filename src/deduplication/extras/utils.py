@@ -28,7 +28,7 @@ def differentiate_semantic_duplicates(
 ) -> str:
 
     if row_1[date_col] != row_2[date_col]:
-        return "TEMPORAL"
+        return "TEMPORAL"  # Not clear if it should come before 'PARTIAL'
 
     if abs(
         len(row_1[description_col]) -
