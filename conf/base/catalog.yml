@@ -40,8 +40,8 @@ gross_semantic_duplicates:
 
 
 easy_duplicates:
-  type: pandas.ParquetDataSet
-  filepath: data/06_models/easy_duplicates.pq
+  type: pandas.CSVDataSet
+  filepath: data/06_models/easy_duplicates.csv
   save_args:
       index: False
 
