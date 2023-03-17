@@ -15,6 +15,7 @@ import warnings
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"The device is {device}")
+
 logging.set_verbosity_error()
 tqdm.pandas()
 warnings.filterwarnings('ignore')
@@ -76,13 +77,15 @@ def identify_subtle_duplicates(
     description_col: str = 'description',
     date_col: str = 'retrieval_date',
     id_col: str = 'id',
+    batch_size: int = 64,
     chunk_size: int = 5000,
     threshold_semantic: int = 0.995,
     threshold_partial: int = 0.1
 ) -> pd.DataFrame:
 
     tokenized_texts = tokenize_multilingual_bert(
-        data[reduced_col_name]
+        data[reduced_col_name],
+        batch_size=batch_size
     )
 
     duplicates = find_subtle_duplicates_from_tokens(

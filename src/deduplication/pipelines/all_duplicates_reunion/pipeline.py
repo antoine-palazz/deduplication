@@ -39,7 +39,13 @@ def create_pipeline(**kwargs) -> Pipeline:
                 inputs=["easy_duplicates"],
                 outputs="easy_duplicates_description",
                 name="describe_easy_duplicates_node",
-                tags=['easy']
+                tags=[
+                    'easy',
+                    'best_model',
+                    'tf_idf',
+                    'multilingual_bert',
+                    'xlm_roberta'
+                    ]
             ),
 
             node(
