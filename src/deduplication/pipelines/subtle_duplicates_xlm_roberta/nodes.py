@@ -70,10 +70,11 @@ def tokenize_xlm_roberta(
 
 def identify_subtle_duplicates(
     data: pd.DataFrame,
-    reduced_col_name: str = 'reduced_text',
+    concatenated_col_name: str = 'text',
     description_col: str = 'description',
     date_col: str = 'retrieval_date',
     id_col: str = 'id',
+    reduced_col_prefix: str = 'reduced_',
     batch_size: int = 64,
     chunk_size: int = 5000,
     threshold_semantic: float = 0.995,
@@ -81,7 +82,7 @@ def identify_subtle_duplicates(
 ) -> pd.DataFrame:
 
     tokenized_texts = tokenize_xlm_roberta(
-        data[reduced_col_name],
+        data[reduced_col_prefix+concatenated_col_name],
         batch_size=batch_size
     )
 

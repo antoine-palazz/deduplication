@@ -62,6 +62,8 @@ def create_concatenated_column(
     cols_to_concatenate: list,
     concatenated_col_name: str,
     description_col: str,
+    beginning_prefix: str,
+    end_prefix: str,
     threshold_short_description: int = 200
 ) -> pd.DataFrame:
 
@@ -71,10 +73,10 @@ def create_concatenated_column(
         data_with_new_cols[concatenated_col_name] += ' ' + data[col]
 
     # Also throw shorts description in the lot
-    data_with_new_cols['beginning_description'] = data_with_new_cols[
+    data_with_new_cols[beginning_prefix+description_col] = data_with_new_cols[
         description_col
     ].apply(lambda x: x[:threshold_short_description])
-    data_with_new_cols['end_description'] = data_with_new_cols[
+    data_with_new_cols[end_prefix+description_col] = data_with_new_cols[
         description_col
     ].apply(lambda x: x[-threshold_short_description:])
 
@@ -91,6 +93,8 @@ def preprocess_data(
                                  'description'],
     concatenated_col_name:  str = 'text',
     description_col: str = 'description',
+    beginning_prefix: str = 'beginning_',
+    end_prefix: str = 'end_',
     threshold_short_description: int = 200
 ) -> pd.DataFrame:
 
@@ -101,6 +105,8 @@ def preprocess_data(
                                         cols_to_concatenate,
                                         concatenated_col_name,
                                         description_col,
+                                        beginning_prefix,
+                                        end_prefix,
                                         threshold_short_description)
     print(f'{len(data_4)} ads in the preprocessed file')
 
@@ -156,16 +162,38 @@ def lemmatize_texts(
     return pd.Series(lemmatized_texts)
 
 
-def create_reduced_text_col(
+def filter_out_too_frequent_words(
+    texts: pd.Series,
+    proportion_words_to_filter_out: float = 0.50,
+) -> pd.Series:
+
+    corpus = " ".join(texts)
+    tokens = nltk.word_tokenize(corpus)
+    frequencies = nltk.FreqDist(tokens)
+
+    vocabulary_size = len(set(tokens))
+    n_to_filter_out = int(proportion_words_to_filter_out * vocabulary_size)
+
+    most_common_words = [
+        word for word, freq in frequencies.most_common(n_to_filter_out)
+    ]
+    filtered_texts = remove_stopwords(texts, most_common_words)
+
+    return filtered_texts
+
+
+def create_reduced_text_cols(
     data: pd.DataFrame,
     languages_list: list,
     concatenated_col_name: str = 'text',
-    reduced_col_name: str = 'reduced_text',
+    reduced_col_prefix: str = 'reduced_',
+    very_reduced_col_prefix: str = 'very_reduced_',
+    proportion_words_to_filter_out: float = 0.50
 ) -> pd.DataFrame:
 
     stopwords_list = create_stopwords_list(languages_list)
     reduced_texts = data[concatenated_col_name]
-    data_with_reduced_text = data.copy()
+    data_with_reduced_texts = data.copy()
 
     reduced_texts_1 = remove_stopwords(
         reduced_texts,
@@ -175,5 +203,16 @@ def create_reduced_text_col(
         reduced_texts_1
     )
 
-    data_with_reduced_text[reduced_col_name] = reduced_texts_2
-    return data_with_reduced_text
+    reduced_texts_3 = filter_out_too_frequent_words(
+        reduced_texts_2,
+        proportion_words_to_filter_out=proportion_words_to_filter_out
+    )
+
+    data_with_reduced_texts[
+        reduced_col_prefix + concatenated_col_name
+    ] = reduced_texts_2
+    data_with_reduced_texts[
+        very_reduced_col_prefix + concatenated_col_name
+    ] = reduced_texts_3
+
+    return data_with_reduced_texts

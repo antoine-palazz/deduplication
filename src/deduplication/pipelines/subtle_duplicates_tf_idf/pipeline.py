@@ -13,10 +13,11 @@ def create_pipeline(**kwargs) -> Pipeline:
             node(
                 func=identify_subtle_duplicates,
                 inputs=["processed_dataset",
-                        "params:reduced_col_name",
-                        "params:description_col",
+                        "params:concatenated_col_name",
+                        "params:very_reduced_description_col_name",
                         "params:date_col",
                         "params:id_col",
+                        "params:very_reduced_col_prefix",
                         "params:max_df_tokenizer",
                         "params:chunk_size",
                         "params:threshold_semantic_tf_idf",

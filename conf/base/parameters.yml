@@ -1,11 +1,16 @@
 project_path: '/home/onyxia/work/deduplication/'
 
-concatenated_col_name: 'text'
-reduced_col_name: 'reduced_text'
-
 id_col: 'id'
 description_col: 'description'
 date_col: 'retrieval_date'
+
+beginning_col_prefix: 'beginning_'
+end_col_prefix: 'end_'
+reduced_col_prefix: 'reduced_'
+very_reduced_col_prefix: 'very_reduced_'
+
+concatenated_col_name: 'text'
+very_reduced_description_col_name: 'very_reduced_description'
 
 batch_size: 64
 chunk_size: 5000

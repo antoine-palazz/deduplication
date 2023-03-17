@@ -20,7 +20,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                 inputs=["preprocessed_dataset",
                         "easy_gross_semantic_duplicates",
                         "full_duplicates",
-                        "params:description_col",
+                        "params:very_reduced_description_col_name",
                         "params:date_col",
                         "params:id_col",
                         "params:threshold_partial"],

@@ -11,6 +11,10 @@ preprocessed_dataset:
   type: pandas.ParquetDataSet
   filepath: data/02_intermediate/preprocessed_dataset.pq
 
+preprocessed_dataset_with_extended_descriptions:
+  type: pandas.ParquetDataSet
+  filepath: data/02_intermediate/preprocessed_dataset_with_extended_descriptions.pq
+
 processed_dataset:
   type: pandas.ParquetDataSet
   filepath: data/03_primary/processed_dataset.pq
