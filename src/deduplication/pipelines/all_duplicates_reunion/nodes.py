@@ -20,7 +20,7 @@ def differentiate_gross_semantic_duplicates(
     description_col: str = 'description',
     date_col: str = 'retrieval_date',
     id_col: str = 'id',
-    threshold_partial: int = 0.1
+    threshold_partial: float = 0.1
 ) -> pd.DataFrame:
 
     all_duplicates = pd.concat(

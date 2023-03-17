@@ -25,6 +25,10 @@ def tokenize_tf_idf(
     )
 
     tokenized_texts = vectorizer.fit_transform(texts)
+
+    print(
+        f'Vocabulary size reduced to {len(vectorizer.get_feature_names_out())}'
+    )
     return tokenized_texts
 
 
@@ -36,8 +40,8 @@ def identify_subtle_duplicates(
     id_col: str = 'id',
     max_df_tokenizer: float = 0.001,
     chunk_size: int = 5000,
-    threshold_semantic: int = 0.95,
-    threshold_partial: int = 0.1
+    threshold_semantic: float = 0.95,
+    threshold_partial: float = 0.1
 ) -> pd.DataFrame:
 
     tokenized_texts = tokenize_tf_idf(

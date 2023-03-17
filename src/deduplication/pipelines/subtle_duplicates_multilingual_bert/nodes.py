@@ -79,8 +79,8 @@ def identify_subtle_duplicates(
     id_col: str = 'id',
     batch_size: int = 64,
     chunk_size: int = 5000,
-    threshold_semantic: int = 0.995,
-    threshold_partial: int = 0.1
+    threshold_semantic: float = 0.995,
+    threshold_partial: float = 0.1
 ) -> pd.DataFrame:
 
     tokenized_texts = tokenize_multilingual_bert(

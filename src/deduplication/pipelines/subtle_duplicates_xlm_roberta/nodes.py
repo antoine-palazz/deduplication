@@ -89,8 +89,8 @@ def identify_subtle_duplicates(
     id_col: str = 'id',
     batch_size: int = 128,
     chunk_size: int = 10000,
-    threshold_semantic: int = 0.95,
-    threshold_partial: int = 0.1
+    threshold_semantic: float = 0.95,
+    threshold_partial: float = 0.1
 ) -> pd.DataFrame:
 
     tokenized_texts = tokenize_xlm_roberta_by_batch(

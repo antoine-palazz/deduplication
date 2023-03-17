@@ -2,7 +2,7 @@ submission_1_AP:
     description:
         "TF-IDF with threshold at 0.9"
     full:
-        nb_duplicates: 358053
+        nb_duplicates: 358053  # Top performer
         f1_score: 0.30
     semantic:
         nb_duplicates: 283637
@@ -11,7 +11,7 @@ submission_1_AP:
         nb_duplicates: 2742317
         f1_score: 0.01
     partial:
-        nb_duplicates: 5782
+        nb_duplicates: 5782  # Top performer
         f1_score: 0.03
     macro_f1: 0.27
 

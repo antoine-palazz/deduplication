@@ -50,8 +50,8 @@ def find_subtle_duplicates_from_tokens(
     date_col: str = 'retrieval_date',
     id_col: str = 'id',
     chunk_size: int = 5000,
-    threshold_semantic: int = 0.95,
-    threshold_partial: int = 0.1
+    threshold_semantic: float = 0.95,
+    threshold_partial: float = 0.1
 ) -> pd.DataFrame:
 
     duplicates = []
