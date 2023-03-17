@@ -8,77 +8,63 @@ from deduplication.extras.utils import (
 )
 import pandas as pd
 import torch
+from torch.utils.data import DataLoader, Dataset
 from tqdm import tqdm
-from transformers import XLMRobertaTokenizer, XLMRobertaModel
+from transformers import XLMRobertaTokenizer, XLMRobertaModel, logging
 import warnings
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print(f"The device is {device}")
+
+logging.set_verbosity_error()
 tqdm.pandas()
 warnings.filterwarnings('ignore')
 
+tokenizer_xlm_roberta = XLMRobertaTokenizer.from_pretrained('xlm-roberta-base')
+model_xlm_roberta = XLMRobertaModel.from_pretrained('xlm-roberta-base')
+model_xlm_roberta.to(device)
 
-def encode_text(
-    text: str,
-    tokenizer,
-    model
-):
-    input_ids = torch.tensor(
-        tokenizer.encode(
+
+class TextDataset(Dataset):
+    def __init__(self, texts):
+        self.texts = texts
+
+    def __len__(self):
+        return len(self.texts)
+
+    def __getitem__(self, index):
+        text = self.texts[index]
+        input_ids = tokenizer_xlm_roberta.encode(
             text,
             add_special_tokens=True,
-            truncation=True
+            padding='max_length',
+            truncation=True,
         )
-    ).unsqueeze(0)
-    outputs = model(input_ids)
-    last_hidden_state = outputs.last_hidden_state
-    return last_hidden_state[0][0].detach().numpy()
+        return torch.tensor(input_ids)
 
 
 def tokenize_xlm_roberta(
     texts: pd.Series,
-    batch_size: int = 1
+    batch_size: int = 64
 ) -> list:
 
-    tokenizer = XLMRobertaTokenizer.from_pretrained('xlm-roberta-base')
-    model = XLMRobertaModel.from_pretrained('xlm-roberta-base')
+    dataset = TextDataset(texts)
+    dataloader = DataLoader(
+        dataset,
+        batch_size=batch_size
+    )
 
-    roberta_texts = texts.progress_apply(
-        lambda x: encode_text(x,
-                              tokenizer,
-                              model)
-        )
+    matrix_roberta_texts = []
+    with torch.no_grad():
+        for batch in tqdm(dataloader):
+            batch = batch.to(device)
+            outputs = model_xlm_roberta(batch)
+            last_hidden_state = outputs.last_hidden_state
+            matrix_roberta_texts.append(
+                last_hidden_state[:, 0, :].detach().cpu().numpy().tolist()
+            )
 
-    matrix_roberta_texts = [list(x) for x in roberta_texts]
     return matrix_roberta_texts
-
-
-def tokenize_xlm_roberta_by_batch(
-    texts: pd.Series,
-    batch_size: int = 128
-) -> list:
-
-    n_ads = len(texts)
-    matrix_bert_texts = []
-    tokenizer = XLMRobertaTokenizer.from_pretrained('xlm-roberta-base')
-    model = XLMRobertaModel.from_pretrained('xlm-roberta-base')
-
-    for i in tqdm(range(0, n_ads, batch_size)):
-        batch_texts = texts[i:i+batch_size]
-        batch_input_ids = []
-        for text in batch_texts:
-            input_ids = tokenizer.encode(text,
-                                         add_special_tokens=True,
-                                         truncation=True,
-                                         padding='max_length')
-            batch_input_ids.append(input_ids)
-        batch_input_ids = torch.tensor(batch_input_ids)
-        with torch.no_grad():
-            outputs = model(batch_input_ids)
-            last_hidden_states = outputs.last_hidden_state
-        matrix_bert_texts.extend(
-            [list(x[0]) for x in last_hidden_states.detach().numpy()]
-        )
-
-    return matrix_bert_texts
 
 
 def identify_subtle_duplicates(
@@ -87,13 +73,13 @@ def identify_subtle_duplicates(
     description_col: str = 'description',
     date_col: str = 'retrieval_date',
     id_col: str = 'id',
-    batch_size: int = 128,
-    chunk_size: int = 10000,
-    threshold_semantic: float = 0.95,
+    batch_size: int = 64,
+    chunk_size: int = 5000,
+    threshold_semantic: float = 0.995,
     threshold_partial: float = 0.1
 ) -> pd.DataFrame:
 
-    tokenized_texts = tokenize_xlm_roberta_by_batch(
+    tokenized_texts = tokenize_xlm_roberta(
         data[reduced_col_name],
         batch_size=batch_size
     )

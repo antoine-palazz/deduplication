@@ -1,5 +1,5 @@
 """
-This is a boilerplate pipeline 'subtle_duplicates_multilingual_bert'
+This is a boilerplate pipeline 'subtle_duplicates_xlm_roberta'
 generated using Kedro 0.18.6
 """
 
