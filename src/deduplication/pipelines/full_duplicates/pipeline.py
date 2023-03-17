@@ -38,8 +38,8 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:list_cols_to_match_gross_semantic",
                         "params:backup_cols_to_match_gross_semantic",
                         "params:id_col"],
-                outputs="easy_gross_semantic_duplicates",
-                name="identify_easy_gross_semantic_duplicates_node"
+                outputs="gross_semantic_duplicates",
+                name="identify_gross_semantic_duplicates_node"
             )
         ],
         tags=[
