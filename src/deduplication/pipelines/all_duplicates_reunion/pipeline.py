@@ -17,7 +17,7 @@ def create_pipeline(**kwargs) -> Pipeline:
         [
             node(
                 func=differentiate_df_easy_duplicates,
-                inputs=["preprocessed_dataset",
+                inputs=["processed_dataset",
                         "full_duplicates",
                         "partial_duplicates",
                         "gross_semantic_duplicates",

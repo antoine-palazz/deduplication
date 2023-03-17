@@ -21,18 +21,21 @@ list_cols_to_match_partial:
     ]
 
 backup_cols_to_match_partial:
-    ['description', 'country_id']
+    []
 
 
 list_cols_to_match_gross_semantic:
     [
         ['title', 'very_reduced_description', 'location'],
         ['title', 'beginning_description', 'location'],
-        ['title', 'end_description', 'location']
+        ['title', 'end_description', 'location'],
+        ['title', 'very_reduced_description', 'company_name'],
+        ['title', 'beginning_description', 'company_name'],
+        ['title', 'end_description', 'company_name']
     ]
 
 backup_cols_to_match_gross_semantic:
-    ['company_name', 'very_reduced_description']
+    []
 
 full_type: "FULL"
 partial_type: "PARTIAL"

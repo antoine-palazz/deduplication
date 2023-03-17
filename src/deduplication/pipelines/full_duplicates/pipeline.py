@@ -16,6 +16,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:full_type",
                         "params:list_cols_to_match_full",
                         "params:backup_cols_to_match_full",
+                        "params:description_col",
                         "params:id_col"],
                 outputs="full_duplicates",
                 name="identify_full_duplicates_node",
@@ -27,6 +28,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:partial_type",
                         "params:list_cols_to_match_partial",
                         "params:backup_cols_to_match_partial",
+                        "params:description_col",
                         "params:id_col"],
                 outputs="partial_duplicates",
                 name="identify_partial_duplicates_node"
@@ -37,6 +39,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:semantic_type",
                         "params:list_cols_to_match_gross_semantic",
                         "params:backup_cols_to_match_gross_semantic",
+                        "params:description_col",
                         "params:id_col"],
                 outputs="gross_semantic_duplicates",
                 name="identify_gross_semantic_duplicates_node"

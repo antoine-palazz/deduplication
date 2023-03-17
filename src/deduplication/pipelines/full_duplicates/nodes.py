@@ -12,12 +12,17 @@ def identify_full_duplicates(
     type_to_return: str = 'FULL',
     list_cols_to_match: list = [['title', 'description']],
     backup_cols_to_match: list = ['company_name', 'location'],
+    description_col: str = 'description',
     id_col: str = 'id'
 ) -> pd.DataFrame:
 
     if type_to_return in ['FULL', 'PARTIAL']:
         data = data[
             (data.apply(lambda x: x == "").sum(axis=1) < 2)
+        ]
+    elif type_to_return in ['SEMANTIC']:
+        data = data[
+            (data[description_col].str.len() > 0)
         ]
 
     n_ads = len(data)
