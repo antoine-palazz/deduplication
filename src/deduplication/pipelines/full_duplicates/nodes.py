@@ -16,7 +16,9 @@ def identify_full_duplicates(
 ) -> pd.DataFrame:
 
     if type_to_return in ['FULL', 'PARTIAL']:
-        data = data[(data.str.len() == 0).sum() < 2]
+        data = data[
+            (data.apply(lambda x: x == "").sum(axis=1) < 2)
+        ]
 
     n_ads = len(data)
     full_duplicates = []
