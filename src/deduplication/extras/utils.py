@@ -22,10 +22,10 @@ def compute_chunk_cosine_similarity(
 def differentiate_easy_duplicates(
     row_1,
     row_2,
-    current_type: str = "FULL",
-    description_col: str = 'description',
-    date_col: str = 'retrieval_date',
-    threshold_partial: float = 0.10
+    current_type: str,
+    description_col: str,
+    date_col: str,
+    threshold_partial: float
 ) -> str:
 
     if row_1[date_col] != row_2[date_col]:
@@ -47,22 +47,26 @@ def differentiate_easy_duplicates(
 def find_subtle_duplicates_from_tokens(
     data: pd.DataFrame,
     tokenized_texts,
-    description_col: str = 'description',
-    date_col: str = 'retrieval_date',
-    id_col: str = 'id',
-    chunk_size: int = 5000,
-    threshold_semantic: float = 0.95,
-    threshold_partial: float = 0.1
+    description_col: str,
+    date_col: str,
+    id_col: str,
+    threshold_semantic: float,
+    threshold_partial: float,
+    chunk_size: int
 ) -> pd.DataFrame:
 
     duplicates = []
+
     try:
         n_ads = tokenized_texts.shape[0]
     except AttributeError:
         n_ads = len(tokenized_texts)
 
-    n_chunks = len(range(0, n_ads, chunk_size))
-    for chunk_start in range(0, n_ads, chunk_size):
+    chunks = range(0, n_ads, chunk_size)
+    n_chunks = len(chunks)
+
+    for chunk_start in chunks:
+
         similarity_matrix_chunk = compute_chunk_cosine_similarity(
             tokenized_texts,
             chunk_start,

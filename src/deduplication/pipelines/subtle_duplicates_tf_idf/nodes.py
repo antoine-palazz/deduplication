@@ -8,16 +8,11 @@ from deduplication.extras.utils import (
 )
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
-from tqdm import tqdm
-import warnings
-
-tqdm.pandas()
-warnings.filterwarnings('ignore')
 
 
 def tokenize_tf_idf(
     texts: pd.Series,
-    max_df_tokenizer: float = 0.001
+    max_df_tokenizer: float
 ):
 
     vectorizer = TfidfVectorizer(
@@ -34,19 +29,18 @@ def tokenize_tf_idf(
 
 def identify_subtle_duplicates(
     data: pd.DataFrame,
-    concatenated_col_name: str = 'text',
-    description_col: str = 'description',
-    date_col: str = 'retrieval_date',
-    id_col: str = 'id',
-    reduced_col_prefix: str = 'very_reduced_',
-    max_df_tokenizer: float = 0.001,
-    chunk_size: int = 5000,
-    threshold_semantic: float = 0.95,
-    threshold_partial: float = 0.1
+    concatenated_col_name: str,
+    description_col: str,
+    date_col: str,
+    id_col: str,
+    max_df_tokenizer: float,
+    threshold_semantic: float,
+    threshold_partial: float,
+    chunk_size: int
 ) -> pd.DataFrame:
 
     tokenized_texts = tokenize_tf_idf(
-        data[reduced_col_prefix+concatenated_col_name],
+        data[concatenated_col_name],
         max_df_tokenizer
     )
     duplicates = find_subtle_duplicates_from_tokens(
