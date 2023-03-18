@@ -40,7 +40,7 @@ def remove_html(
     return data_without_html
 
 
-def normalize_strings(  # To improve, for instance with balises
+def normalize_strings(
     data: pd.DataFrame,
     str_cols: list
 ) -> pd.DataFrame:
@@ -50,73 +50,67 @@ def normalize_strings(  # To improve, for instance with balises
         lambda x: x.str.replace(
             r'\r|\n', ' ', regex=True
         ).replace(
-            r'\W', ' ', regex=True
-        ).replace(
             r' +', ' ', regex=True
-        ).apply(unidecode).str.lower().str.strip()
+        ).str.lower().str.strip()
     )
     return clean_data
 
 
-def create_concatenated_column(
+def preprocess_data_basic(
     data: pd.DataFrame,
-    cols_to_concatenate: list,
-    concatenated_col_name: str,
-    description_col: str,
-    beginning_prefix: str,
-    end_prefix: str,
-    threshold_short_description: int = 200
-) -> pd.DataFrame:
-
-    data_with_new_cols = data.copy()
-    data_with_new_cols[concatenated_col_name] = data[cols_to_concatenate[0]]
-    for col in tqdm(cols_to_concatenate[1:]):
-        data_with_new_cols[concatenated_col_name] += ' ' + data[col]
-
-    # Also throw shorts description in the lot
-    data_with_new_cols[beginning_prefix+description_col] = data_with_new_cols[
-        description_col
-    ].apply(lambda x: x[:threshold_short_description])
-    data_with_new_cols[end_prefix+description_col] = data_with_new_cols[
-        description_col
-    ].apply(lambda x: x[-threshold_short_description:])
-
-    return data_with_new_cols
-
-
-def preprocess_data(
-    data: pd.DataFrame,
-    str_cols: list = ['title', 'company_name', 'location', 'description'],
-    cols_to_concatenate: list = ['title',
-                                 'company_name',
-                                 'location',
-                                 'country_id',
-                                 'description'],
-    concatenated_col_name:  str = 'text',
-    description_col: str = 'description',
-    beginning_prefix: str = 'beginning_',
-    end_prefix: str = 'end_',
-    threshold_short_description: int = 200
+    str_cols: list,
 ) -> pd.DataFrame:
 
     data_1 = remove_nans(data)
     data_2 = remove_html(data_1, str_cols)
     data_3 = normalize_strings(data_2, str_cols)
-    data_4 = create_concatenated_column(data_3,
-                                        cols_to_concatenate,
-                                        concatenated_col_name,
-                                        description_col,
-                                        beginning_prefix,
-                                        end_prefix,
-                                        threshold_short_description)
-    print(f'{len(data_4)} ads in the preprocessed file')
 
-    return data_4.sort_values(by='id')
+    return data_3.sort_values(by='id')
 
 
-def create_stopwords_list(languages_list: list) -> set:
-    stopwords_list = sorted(set(stopwords.words(languages_list)))
-    return stopwords_list
+def filter_out_incomplete_offers(
+    data: pd.DataFrame,
+    required_cols: list,
+    nb_allowed_nans: int,
+
+) -> pd.DataFrame:
+
+    filtered_data_on_nans = data[
+        data.apply(lambda x: x == "").sum(axis=1) < nb_allowed_nans
+    ]
+
+    filtered_data_on_cols = filtered_data_on_nans[
+        (filtered_data_on_nans[required_cols] != "").all()
+    ]
+
+    return filtered_data_on_cols
+
+
+def remove_special_characters(
+    data: pd.DataFrame,
+    str_cols: list
+) -> pd.DataFrame:
+
+    clean_data = data.copy()
+    clean_data[str_cols] = data[str_cols].progress_apply(
+        lambda x: x.str.replace(
+            r'\W', ' ', regex=True
+        ).replace(
+            r' +', ' ', regex=True
+        ).apply(unidecode).str.strip()
+    )
+    return clean_data
+
+
+def create_stopwords_list(
+    languages_list: list,
+    without_accents: bool
+) -> set:
+    stopwords_list = stopwords.words(languages_list)
+    if without_accents:
+        stopwords_list = map(unidecode, stopwords_list)
+    stopwords_set = sorted(set(stopwords_list))
+    return stopwords_set
 
 
 def remove_stopwords_from_text(
@@ -179,7 +173,7 @@ def lemmatize_texts(
 
 def filter_out_too_frequent_words(
     texts: pd.Series,
-    proportion_words_to_filter_out: float = 0.25,
+    proportion_words_to_filter_out: float,
 ) -> pd.Series:
 
     corpus = " ".join(texts)
@@ -195,42 +189,99 @@ def filter_out_too_frequent_words(
     most_common_words = sorted(set([
         word for word, freq in frequencies.most_common(n_to_filter_out)
     ]))
-    filtered_texts = remove_stopwords(texts, most_common_words)
+    filtered_texts = remove_stopwords(
+        texts,
+        stopwords_list=most_common_words
+    )
 
     return filtered_texts
 
 
-def create_reduced_text_cols(
+def create_extra_cols_from_text_cols(
     data: pd.DataFrame,
-    languages_list: list,
-    concatenated_col_name: str = 'text',
-    reduced_col_prefix: str = 'reduced_',
-    very_reduced_col_prefix: str = 'very_reduced_',
-    proportion_words_to_filter_out: float = 0.25
+    cols_to_duplicate: list,
+    beginning_prefix: str,
+    end_prefix: str,
+    threshold_short_text: int
 ) -> pd.DataFrame:
 
-    stopwords_list = create_stopwords_list(languages_list)
-    reduced_texts = data[concatenated_col_name]
-    data_with_reduced_texts = data.copy()
+    data_with_new_cols = data.copy()
 
-    reduced_texts_1 = remove_stopwords(
-        reduced_texts,
-        stopwords_list
-    )
-    reduced_texts_2 = lemmatize_texts(
-        reduced_texts_1
+    for col in cols_to_duplicate:
+
+        data_with_new_cols[beginning_prefix+col] = data_with_new_cols[
+            col
+        ].apply(lambda x: x[:threshold_short_text])
+        data_with_new_cols[end_prefix+col] = data_with_new_cols[
+            col
+        ].apply(lambda x: x[-threshold_short_text:])
+
+    return data_with_new_cols
+
+
+def create_concatenated_column(
+    data: pd.DataFrame,
+    cols_to_concatenate: list,
+    concatenated_col_name: str
+) -> pd.DataFrame:
+
+    data_with_new_cols = data.copy()
+    data_with_new_cols[concatenated_col_name] = data[cols_to_concatenate[0]]
+    for col in tqdm(cols_to_concatenate[1:]):
+        data_with_new_cols[concatenated_col_name] += ' ' + data[col]
+
+    return data_with_new_cols
+
+
+def preprocess_data_extensive(
+    preprocessed_data: pd.DataFrame,
+    str_cols: list,
+    description_col: list,
+    cols_to_concatenate: list,
+    concatenated_col_name: str,
+    languages_list: list,
+    beginning_prefix: str,
+    end_prefix: str,
+    proportion_words_to_filter_out: float,
+    threshold_short_text: int
+) -> pd.DataFrame:
+
+    preprocessed_data = preprocessed_data.copy()
+    stopwords_list = create_stopwords_list(
+        languages_list,
+        without_accents=True
     )
 
-    reduced_texts_3 = filter_out_too_frequent_words(
-        reduced_texts_2,
+    preprocessed_data[description_col] = remove_special_characters(
+        preprocessed_data[description_col]
+    )
+
+    preprocessed_data[description_col] = remove_stopwords(
+        preprocessed_data[description_col],
+        stopwords_list=stopwords_list
+    )
+
+    preprocessed_data[description_col] = lemmatize_texts(
+        preprocessed_data[description_col]
+    )
+
+    preprocessed_data[description_col] = filter_out_too_frequent_words(
+        preprocessed_data[description_col],
         proportion_words_to_filter_out=proportion_words_to_filter_out
     )
 
-    data_with_reduced_texts[
-        reduced_col_prefix + concatenated_col_name
-    ] = reduced_texts_2
-    data_with_reduced_texts[
-        very_reduced_col_prefix + concatenated_col_name
-    ] = reduced_texts_3
+    preprocessed_data = create_extra_cols_from_text_cols(
+        preprocessed_data,
+        cols_to_concatenate=[description_col],
+        beginning_prefix=beginning_prefix,
+        end_prefix=end_prefix,
+        threshold_short_text=threshold_short_text
+    )
 
-    return data_with_reduced_texts
+    preprocessed_data = create_concatenated_column(
+        preprocessed_data,
+        cols_to_duplicate=cols_to_concatenate,
+        concatenated_col_name=concatenated_col_name
+    )
+
+    return preprocessed_data

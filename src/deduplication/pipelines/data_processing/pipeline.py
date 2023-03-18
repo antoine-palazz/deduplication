@@ -4,58 +4,58 @@ generated using Kedro 0.18.6
 """
 
 from kedro.pipeline import Pipeline, node, pipeline
-from .nodes import preprocess_data, create_reduced_text_cols
+from .nodes import (
+    preprocess_data_basic,
+    filter_out_incomplete_offers,
+    preprocess_data_extensive
+)
 
 
 def create_pipeline(**kwargs) -> Pipeline:
     return pipeline(
         [
             node(
-                func=preprocess_data,
+                func=preprocess_data_basic,
                 inputs=["wi_dataset",
+                        "params:str_cols"],
+                outputs="preprocessed_dataset",
+                name="basic_preprocessing_data_node"
+            ),
+            node(
+                func=filter_out_incomplete_offers,
+                inputs=["preprocessed_dataset",
+                        "params:required_cols_full",
+                        "params:nb_allowed_nans_full"],
+                outputs="preprocessed_complete_offers",
+                name="filter_out_incomplete_offers_node"
+            ),
+
+            node(
+                func=preprocess_data_extensive,
+                inputs=["preprocessed_dataset",
                         "params:str_cols",
+                        "params:description_col",
                         "params:cols_to_concatenate",
                         "params:concatenated_col_name",
-                        "params:description_col",
-                        "params:beginning_col_prefix",
-                        "params:end_col_prefix",
-                        "params:threshold_short_description"],
-                outputs="preprocessed_dataset",
-                name="preprocess_data_node",
-                tags=[
-                    'full',
-                    'easy'
-                     ]
+                        "params:languages_list",
+                        "params:beginning_prefix",
+                        "params:end_prefix",
+                        "params:proportion_words_to_filter_out",
+                        "params:threshold_short_text"],
+                outputs="extensively_preprocessed_dataset",
+                name="extensive_preprocessing_data_node"
             ),
             node(
-                func=create_reduced_text_cols,
-                inputs=["preprocessed_dataset",
-                        "params:languages_list",
-                        "params:description_col",
-                        "params:reduced_col_prefix",
-                        "params:very_reduced_col_prefix",
-                        "params:proportion_words_to_filter_out"
-                        ],
-                outputs="preprocessed_dataset_with_extended_descriptions",
-                name="create_reduced_descriptions_node",
-                tags=[
-                    'easy'
-                     ]
-            ),
-            node(
-                func=create_reduced_text_cols,
-                inputs=["preprocessed_dataset_with_extended_descriptions",
-                        "params:languages_list",
-                        "params:concatenated_col_name",
-                        "params:reduced_col_prefix",
-                        "params:very_reduced_col_prefix",
-                        "params:proportion_words_to_filter_out"
-                        ],
-                outputs="processed_dataset",
-                name="create_reduced_texts_node"
-            ),
+                func=filter_out_incomplete_offers,
+                inputs=["extensively_preprocessed_dataset",
+                        "params:required_cols_semantic",
+                        "params:nb_allowed_nans_semantic"],
+                outputs="extensively_preprocessed_described_offers",
+                name="filter_out_undescribed_offers_node"
+            )
         ],
         tags=[
+            'easy',
             'best_model',
             'tf_idf',
             'multilingual_bert',
