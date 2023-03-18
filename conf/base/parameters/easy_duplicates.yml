@@ -1,0 +1,23 @@
+# This is a boilerplate parameters config generated for pipeline 'easy_duplicates'
+# using Kedro 0.18.6.
+#
+# Documentation for this file format can be found in "Parameters"
+# Link: https://kedro.readthedocs.io/en/0.18.6/kedro_project_setup/configuration.html#parameters
+
+list_cols_to_match_partial:
+    [
+        ['title', 'company_name', 'location'],
+        ['title', 'company_name', 'description'],
+        ['title', 'location', 'description']
+    ]
+
+list_cols_to_match_gross_semantic:
+    [
+        ['title', 'description'],
+        ['title', 'beginning_description', 'company_name', 'location'],
+        ['title', 'end_description', 'company_name', 'location']
+    ]
+
+type_full: "FULL"
+type_partial: "PARTIAL"
+type_semantix: "SEMANTIC"

@@ -4,8 +4,6 @@
 # Documentation for this file format can be found in "Parameters"
 # Link: https://kedro.readthedocs.io/en/0.18.6/kedro_project_setup/configuration.html#parameters
 
-str_cols:
-    ['title', 'company_name', 'location', 'description']
 cols_to_concatenate:
     ['title', 'company_name', 'location', 'country_id', 'description']
 

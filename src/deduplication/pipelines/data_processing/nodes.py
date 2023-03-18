@@ -252,17 +252,17 @@ def preprocess_data_extensive(
         without_accents=True
     )
 
-    preprocessed_data[description_col] = remove_special_characters(
-        preprocessed_data[description_col]
+    preprocessed_data[str_cols] = remove_special_characters(
+        preprocessed_data[str_cols]
     )
 
-    preprocessed_data[description_col] = remove_stopwords(
-        preprocessed_data[description_col],
+    preprocessed_data[str_cols] = remove_stopwords(
+        preprocessed_data[str_cols],
         stopwords_list=stopwords_list
     )
 
-    preprocessed_data[description_col] = lemmatize_texts(
-        preprocessed_data[description_col]
+    preprocessed_data[str_cols] = lemmatize_texts(
+        preprocessed_data[str_cols]
     )
 
     preprocessed_data[description_col] = filter_out_too_frequent_words(
@@ -272,7 +272,7 @@ def preprocess_data_extensive(
 
     preprocessed_data = create_extra_cols_from_text_cols(
         preprocessed_data,
-        cols_to_concatenate=[description_col],
+        cols_to_duplicate=[description_col],
         beginning_prefix=beginning_prefix,
         end_prefix=end_prefix,
         threshold_short_text=threshold_short_text
@@ -280,7 +280,7 @@ def preprocess_data_extensive(
 
     preprocessed_data = create_concatenated_column(
         preprocessed_data,
-        cols_to_duplicate=cols_to_concatenate,
+        cols_to_concatenate=cols_to_concatenate,
         concatenated_col_name=concatenated_col_name
     )
 

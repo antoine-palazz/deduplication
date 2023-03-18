@@ -1,5 +1,5 @@
 """
-This is a boilerplate test file for pipeline 'full_duplicates'
+This is a boilerplate test file for pipeline 'easy_duplicates'
 generated using Kedro 0.18.6.
 Please add your pipeline tests here.
 

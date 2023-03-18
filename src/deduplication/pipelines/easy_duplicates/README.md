@@ -1,4 +1,4 @@
-# Pipeline full_duplicates
+# Pipeline easy_duplicates
 
 > *Note:* This is a `README.md` boilerplate generated using `Kedro 0.18.6`.
 

@@ -9,6 +9,8 @@ concatenated_col_name: 'concatenated_offer'
 beginning_col_prefix: 'beginning_'
 end_col_prefix: 'end_'
 
+str_cols:
+    ['title', 'company_name', 'location', 'description']
 
 
 batch_size: 64
