@@ -76,7 +76,7 @@ def filter_out_incomplete_offers(
 ) -> pd.DataFrame:
 
     filtered_data_on_nans = data[
-        data.apply(lambda x: x == "").sum(axis=1) < nb_allowed_nans
+        data.apply(lambda x: x == "").sum(axis=1) <= nb_allowed_nans
     ]
 
     filtered_data_on_cols = filtered_data_on_nans[

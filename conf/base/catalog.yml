@@ -12,13 +12,18 @@ preprocessed_dataset:
   type: pandas.ParquetDataSet
   filepath: data/02_intermediate/preprocessed_dataset.pq
 
-preprocessed_dataset_with_extended_descriptions:
+extensively_preprocessed_dataset:
   type: pandas.ParquetDataSet
-  filepath: data/02_intermediate/preprocessed_dataset_with_extended_descriptions.pq
+  filepath: data/03_primary/extensively_preprocessed_dataset.pq
 
-processed_dataset:
+
+preprocessed_complete_offers:
   type: pandas.ParquetDataSet
-  filepath: data/03_primary/processed_dataset.pq
+  filepath: data/04_feature/preprocessed_complete_offers.pq
+
+extensively_preprocessed_described_offers:
+  type: pandas.ParquetDataSet
+  filepath: data/04_feature/extensively_preprocessed_described_offers.pq
 
 
 full_duplicates:
