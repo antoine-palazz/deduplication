@@ -41,17 +41,17 @@ def identify_subtle_duplicates(
 
     tokenized_texts = tokenize_tf_idf(
         data[concatenated_col_name],
-        max_df_tokenizer
+        max_df_tokenizer=max_df_tokenizer
     )
     duplicates = find_subtle_duplicates_from_tokens(
         data,
-        tokenized_texts,
-        description_col,
-        date_col,
-        id_col,
-        chunk_size,
-        threshold_semantic,
-        threshold_partial
+        tokenized_texts=tokenized_texts,
+        description_col=description_col,
+        date_col=date_col,
+        id_col=id_col,
+        threshold_semantic=threshold_semantic,
+        threshold_partial=threshold_partial,
+        chunk_size=chunk_size
     )
 
     df_duplicates = pd.DataFrame(
@@ -60,6 +60,6 @@ def identify_subtle_duplicates(
     ).sort_values(by=['id1', 'id2'],
                   ignore_index=True)
     print(
-        f'{len(df_duplicates)} subtle duplicates were found with tf idf'
+        f'{len(df_duplicates)} subtle duplicates found with tf idf'
     )
     return df_duplicates

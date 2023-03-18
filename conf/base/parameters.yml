@@ -16,4 +16,4 @@ str_cols:
 batch_size: 64
 chunk_size: 5000
 
-threshold_partial: 0.20
+threshold_partial: 0.10

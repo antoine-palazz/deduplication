@@ -69,8 +69,9 @@ def find_subtle_duplicates_from_tokens(
 
         similarity_matrix_chunk = compute_chunk_cosine_similarity(
             tokenized_texts,
-            chunk_start,
-            chunk_start+chunk_size)
+            start=chunk_start,
+            end=chunk_start+chunk_size
+        )
         compteur_init = len(duplicates)
 
         for i in tqdm(range(chunk_size)):
@@ -80,10 +81,10 @@ def find_subtle_duplicates_from_tokens(
                     duplicates_type = differentiate_easy_duplicates(
                         data.iloc[chunk_start+i],
                         data.iloc[chunk_start+j],
-                        "SEMANTIC",
-                        description_col,
-                        date_col,
-                        threshold_partial
+                        current_type="SEMANTIC",
+                        description_col=description_col,
+                        date_col=date_col,
+                        threshold_partial=threshold_partial
                     )
 
                     duplicates.append(

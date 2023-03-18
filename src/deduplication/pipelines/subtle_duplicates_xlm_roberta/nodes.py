@@ -10,7 +10,7 @@ import pandas as pd
 import torch
 from torch.utils.data import DataLoader, Dataset
 from tqdm import tqdm
-from transformers import XLMRobertaTokenizer, XLMRobertaModel, logging
+from transformers import AutoTokenizer, AutoModelForMaskedLM, logging
 import warnings
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -20,8 +20,8 @@ logging.set_verbosity_error()
 tqdm.pandas()
 warnings.filterwarnings('ignore')
 
-tokenizer_xlm_roberta = XLMRobertaTokenizer.from_pretrained('xlm-roberta-base')
-model_xlm_roberta = XLMRobertaModel.from_pretrained('xlm-roberta-base')
+tokenizer_xlm_roberta = AutoTokenizer.from_pretrained('xlm-roberta-base')
+model_xlm_roberta = AutoModelForMaskedLM.from_pretrained('xlm-roberta-base')
 model_xlm_roberta.to(device)
 
 
