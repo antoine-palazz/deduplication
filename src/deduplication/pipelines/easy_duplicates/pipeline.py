@@ -1,5 +1,5 @@
 """
-This is a boilerplate pipeline 'full_duplicates'
+This is a boilerplate pipeline 'easy_duplicates'
 generated using Kedro 0.18.6
 """
 
