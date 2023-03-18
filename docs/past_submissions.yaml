@@ -1,39 +1,21 @@
-submission_1_AP:
+submission_4_AP:
     description:
-        "TF-IDF with threshold at 0.9"
+        "Easy duplicates - New rules"
     full:
-        nb_duplicates: 358053  # Top performer
-        f1_score: 0.30
+        nb_duplicates: 49183
+        f1_score: 0.87  # Top performer
     semantic:
-        nb_duplicates: 283637
-        f1_score: 0.02
-    temporal:
-        nb_duplicates: 2742317
+        nb_duplicates: 16025
         f1_score: 0.01
-    partial:
-        nb_duplicates: 5782  # Top performer
-        f1_score: 0.03
-    macro_f1: 0.27
-
-submission_2_AP:
-    description:
-        "TF-IDF with threshold at 0.8"
-    full:
-        nb_duplicates: 244932
-        f1_score: 0.30
-    semantic:
-        nb_duplicates: 197038  # Top performer
-        f1_score: 0.06
     temporal:
-        nb_duplicates: 1892174
-        f1_score: 0.01
+        nb_duplicates: 343176
+        f1_score: 0.76  # Top performer
     partial:
-        nb_duplicates: 4002  # Top performer
-        f1_score: 0.03
-    global:
-        f1_score: 0.28
+        nb_duplicates: 21619
+        f1_score: 0.09  # Top performer
+    macro_f1: 0.55  # Top performer
 
-submission_3_AP:  # Top performer
+submission_3_AP:
     description:
         "TF-IDF with threshold at 0.95 / Partial before Temporal"
     full:
@@ -43,13 +25,49 @@ submission_3_AP:  # Top performer
         nb_duplicates: 42318
         f1_score: 0.01
     temporal:
-        nb_duplicates: 117234  # Top performer
+        nb_duplicates: 117234
         f1_score: 0.21
     partial:
         nb_duplicates: 1945
         f1_score: 0.01
     global:
         f1_score: 0.30
+
+submission_2_AP:
+    description:
+        "TF-IDF with threshold at 0.8"
+    full:
+        nb_duplicates: 244932
+        f1_score: 0.30
+    semantic:
+        nb_duplicates: 197038
+        f1_score: 0.06  # Top performer
+    temporal:
+        nb_duplicates: 1892174
+        f1_score: 0.01
+    partial:
+        nb_duplicates: 4002
+        f1_score: 0.03
+    global:
+        f1_score: 0.28
+
+submission_1_AP:
+    description:
+        "TF-IDF with threshold at 0.9"
+    full:
+        nb_duplicates: 358053
+        f1_score: 0.30
+    semantic:
+        nb_duplicates: 283637
+        f1_score: 0.02
+    temporal:
+        nb_duplicates: 2742317
+        f1_score: 0.01
+    partial:
+        nb_duplicates: 5782
+        f1_score: 0.03
+    macro_f1: 0.27
+
 
 submission_1_KF:
     description:
