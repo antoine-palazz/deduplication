@@ -12,16 +12,16 @@ def create_pipeline(**kwargs) -> Pipeline:
         [
             node(
                 func=identify_subtle_duplicates,
-                inputs=["processed_dataset",
+                inputs=["extensively_preprocessed_dataset",
                         "params:concatenated_col_name",
-                        "params:very_reduced_description_col_name",
+                        "params:description_col",
                         "params:date_col",
                         "params:id_col",
-                        "params:very_reduced_col_prefix",
-                        "params:batch_size",
-                        "params:chunk_size",
                         "params:threshold_semantic_xlm_roberta",
-                        "params:threshold_partial"],
+                        "params:threshold_partial",
+                        "params:batch_size",
+                        "params:chunk_size"
+                        ],
                 outputs="subtle_duplicates_xlm_roberta",
                 name="identify_subtle_duplicates_xlm_roberta_node"
             )

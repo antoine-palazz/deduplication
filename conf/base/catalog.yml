@@ -65,6 +65,13 @@ subtle_duplicates_multilingual_bert:
   save_args:
       index: False
 
+subtle_duplicates_xlm_roberta:
+  type: pandas.ParquetDataSet
+  filepath: data/06_models/subtle_duplicates_xlm_roberta.pq
+  save_args:
+      index: False
+
+
 
 
 all_duplicates_tf_idf:
@@ -103,11 +110,7 @@ all_duplicates_multilingual_bert_description:
       index: False
 
 
-subtle_duplicates_xlm_roberta:
-  type: pandas.ParquetDataSet
-  filepath: data/06_models/subtle_duplicates_xlm_roberta.pq
-  save_args:
-      index: False
+
 
 all_duplicates_xlm_roberta:
   type: pandas.CSVDataSet
