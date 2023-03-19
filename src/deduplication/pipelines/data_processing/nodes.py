@@ -80,7 +80,9 @@ def filter_out_incomplete_offers(
     ]
 
     filtered_data_on_cols = filtered_data_on_nans[
-        (filtered_data_on_nans[required_cols] != "").all()
+        (
+            filtered_data_on_nans[required_cols].apply(lambda x: x == "")
+        ).all(axis=1)
     ]
 
     return filtered_data_on_cols
@@ -179,9 +181,6 @@ def filter_out_too_frequent_words(
 
     vocab_size = len(set(tokens))
     n_to_filter_out = int(proportion_words_to_filter_out * vocab_size)
-    print(
-        f'{n_to_filter_out} too commons words out of {vocab_size} filtered out'
-    )
 
     most_common_words = sorted(set([
         word for word, freq in frequencies.most_common(n_to_filter_out)
@@ -191,6 +190,9 @@ def filter_out_too_frequent_words(
         stopwords_list=most_common_words
     )
 
+    print(
+        f'{n_to_filter_out} too commons words out of {vocab_size} filtered out'
+    )
     return filtered_texts
 
 
