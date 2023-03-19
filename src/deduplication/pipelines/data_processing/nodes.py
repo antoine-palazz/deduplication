@@ -222,7 +222,7 @@ def filter_out_too_frequent_words(
             proportion_words_to_filter_out=proportion_words_to_filter_out
         )
 
-        well_described_data.loc[
+        well_described_data.iloc[
             data_lang_idxs, description_col
         ] = filtered_descriptions_lang
 

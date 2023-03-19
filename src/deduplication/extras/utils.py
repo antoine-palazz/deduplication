@@ -100,8 +100,8 @@ def find_subtle_duplicates_from_tokens(
                 if similarity_matrix_chunk[i][j] > threshold_semantic:
 
                     duplicates_type = differentiate_duplicates(
-                        data.iloc[chunk_start+i],
-                        data.iloc[chunk_start+j],
+                        data.loc[chunk_start+i],
+                        data.loc[chunk_start+j],
                         current_type="SEMANTIC",
                         str_cols=str_cols,
                         cols_to_be_similar=cols_to_be_similar,

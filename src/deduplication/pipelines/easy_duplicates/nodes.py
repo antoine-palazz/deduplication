@@ -48,8 +48,8 @@ def identify_exact_duplicates(
             ).all():
 
                 duplicates_type = differentiate_duplicates(
-                    data_for_duplicates.iloc[i],
-                    data_for_duplicates.iloc[j],
+                    data_for_duplicates.loc[i],
+                    data_for_duplicates.loc[j],
                     current_type=default_type,
                     str_cols=str_cols,
                     cols_to_be_similar=cols_to_be_similar,
