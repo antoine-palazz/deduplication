@@ -63,7 +63,7 @@ def aggregate_easy_duplicates(
 
         if preprocessed_data[
             preprocessed_data[id_col] == id1
-           ].loc[0].apply(lambda x: x == "").sum(axis=1) != 0:
+           ].iloc[0].apply(lambda x: x == "").sum() != 0:
 
             matchs_of_id1 = set(partial_duplicates[
                 partial_duplicates['id1'] == id1
@@ -72,7 +72,7 @@ def aggregate_easy_duplicates(
             for id2 in matchs_of_id1:
                 if preprocessed_data[
                     preprocessed_data[id_col] == id2
-                   ].loc[0].apply(lambda x: x == "").sum(axis=1) == 0:
+                   ].iloc[0].apply(lambda x: x == "").sum() == 0:
 
                     dict_matchs_with_complete_offers[id1] = True
                     break
@@ -86,10 +86,10 @@ def aggregate_easy_duplicates(
             if (
                 preprocessed_data[
                     preprocessed_data[id_col] == id1
-                ].loc[0, cols_to_concatenate] ==
+                ].iloc[0][cols_to_concatenate] ==
                 preprocessed_data[
                     preprocessed_data[id_col] == id2
-                ].loc[0, cols_to_concatenate]
+                ].iloc[0][cols_to_concatenate]
                ).all():
 
                 easy_duplicates.loc[idx_pair, 'type'] = 'FULL'
