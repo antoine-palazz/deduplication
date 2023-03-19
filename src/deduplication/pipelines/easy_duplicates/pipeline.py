@@ -27,7 +27,7 @@ def create_pipeline(**kwargs) -> Pipeline:
             ),
             node(
                 func=identify_exact_duplicates,
-                inputs=["preprocessed_complete_offers",
+                inputs=["preprocessed_quasi_complete_offers",
                         "params:list_cols_to_match_partial",
                         "params:type_partial",
                         "params:str_cols",

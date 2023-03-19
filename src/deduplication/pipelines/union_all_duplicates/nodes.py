@@ -7,6 +7,7 @@ from kedro.config import ConfigLoader
 from kedro.framework.project import settings
 from kedro.io import DataCatalog
 import pandas as pd
+from tqdm import tqdm
 
 
 def aggregate_duplicates_list(
@@ -26,9 +27,12 @@ def aggregate_duplicates_list(
 
 
 def aggregate_easy_duplicates(
+    preprocessed_data: pd.DataFrame,
     gross_full_duplicates: pd.DataFrame,
     gross_partial_duplicates: pd.DataFrame,
-    gross_semantic_duplicates: pd.DataFrame
+    gross_semantic_duplicates: pd.DataFrame,
+    cols_to_concatenate: list,
+    id_col: str
 ) -> pd.DataFrame:
 
     easy_duplicates = aggregate_duplicates_list(
@@ -39,11 +43,59 @@ def aggregate_easy_duplicates(
 
     n_easy_duplicates = len(easy_duplicates)
     print(f'{n_easy_duplicates} "easy" duplicates isolated')
-
     if len(easy_duplicates[
         easy_duplicates['id1'] >= easy_duplicates['id2']
             ]) > 0:
         print('PROBLEM: id1 >= id2 in the "easy" duplicates table')
+
+    # "Two identical partial 1 and 2 duplicates of the same record
+    # (job posting) 3, are considered full duplicates"
+    # Let's save the partial duplicates that can be changed into full ones!
+
+    count_saved = 0
+    partial_duplicates = easy_duplicates[easy_duplicates['type'] == 'PARTIAL']
+    partial_id1s = set(partial_duplicates['id1'])
+    dict_matchs_with_complete_offers = {}
+
+    for id1 in tqdm(partial_id1s):
+        # Fill a dictionary of the indexes that match with a complete offer
+        dict_matchs_with_complete_offers[id1] = False
+
+        if preprocessed_data[
+            preprocessed_data[id_col] == id1
+           ].loc[0].apply(lambda x: x == "").sum(axis=1) != 0:
+
+            matchs_of_id1 = set(partial_duplicates[
+                partial_duplicates['id1'] == id1
+            ]['id2'])
+
+            for id2 in matchs_of_id1:
+                if preprocessed_data[
+                    preprocessed_data[id_col] == id2
+                   ].loc[0].apply(lambda x: x == "").sum(axis=1) == 0:
+
+                    dict_matchs_with_complete_offers[id1] = True
+                    break
+
+    for idx_pair in tqdm(partial_duplicates.index):
+        # Correct the identical pairs matching with at least one complete offer
+        id1 = partial_duplicates.iloc[idx_pair, 'id1']
+        id2 = partial_duplicates.iloc[idx_pair, 'id2']
+
+        if dict_matchs_with_complete_offers[id1]:
+            if (
+                preprocessed_data[
+                    preprocessed_data[id_col] == id1
+                ].loc[0, cols_to_concatenate] ==
+                preprocessed_data[
+                    preprocessed_data[id_col] == id2
+                ].loc[0, cols_to_concatenate]
+               ).all():
+
+                easy_duplicates.iloc[idx_pair, 'type'] = 'FULL'
+                count_saved += 1
+
+    print(f'{count_saved} partial duplicates became full ones')
 
     return easy_duplicates
 
