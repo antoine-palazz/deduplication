@@ -2,6 +2,7 @@ project_path: '/home/onyxia/work/deduplication/'
 
 id_col: 'id'
 description_col: 'description'
+language_col: 'country_id'
 date_col: 'retrieval_date'
 
 concatenated_col_name: 'concatenated_offer'

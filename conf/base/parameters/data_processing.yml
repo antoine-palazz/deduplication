@@ -15,9 +15,9 @@ required_cols_semantic:
     ['description']
 
 nb_allowed_nans_full: 1
-nb_allowed_nans_semantic: 2
+nb_allowed_nans_semantic: 3
 
-proportion_words_to_filter_out: 0.05
+proportion_words_to_filter_out: 0.001
 threshold_short_text: 250
 
 languages_list:

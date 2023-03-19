@@ -35,6 +35,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                 inputs=["preprocessed_dataset",
                         "params:str_cols",
                         "params:description_col",
+                        "params:language_col",
                         "params:cols_to_concatenate",
                         "params:concatenated_col_name",
                         "params:languages_list",

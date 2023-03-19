@@ -28,32 +28,28 @@ def remove_nans(data: pd.DataFrame) -> pd.DataFrame:
 
 
 def remove_html(
-    data: pd.DataFrame,
-    str_cols: list
-) -> pd.DataFrame:
+    texts: pd.Series
+) -> pd.Series:
 
-    data_without_html = data.copy()
-    data_without_html[str_cols] = data[str_cols].progress_applymap(
+    texts_without_html = texts.apply(
         lambda x: re.sub('<[^<]+?>', " ", html.unescape(x))
     )
 
-    return data_without_html
+    return texts_without_html
 
 
 def normalize_strings(
-    data: pd.DataFrame,
-    str_cols: list
-) -> pd.DataFrame:
+    texts: pd.Series
+) -> pd.Series:
 
-    clean_data = data.copy()
-    clean_data[str_cols] = data[str_cols].progress_apply(
+    clean_texts = texts.apply(
         lambda x: x.str.replace(
             r'\r|\n', ' ', regex=True
         ).replace(
             r' +', ' ', regex=True
         ).str.lower().str.strip()
     )
-    return clean_data
+    return clean_texts
 
 
 def preprocess_data_basic(
@@ -61,11 +57,17 @@ def preprocess_data_basic(
     str_cols: list,
 ) -> pd.DataFrame:
 
-    data_1 = remove_nans(data)
-    data_2 = remove_html(data_1, str_cols)
-    data_3 = normalize_strings(data_2, str_cols)
+    preprocessed_data = remove_nans(data)
 
-    return data_3.sort_values(by='id')
+    preprocessed_data[str_cols] = preprocessed_data[str_cols].progress_apply(
+        remove_html
+    )
+
+    preprocessed_data[str_cols] = preprocessed_data[str_cols].progress_apply(
+        normalize_strings
+    )
+
+    return preprocessed_data.sort_values(by='id')
 
 
 def filter_out_incomplete_offers(
@@ -106,10 +108,17 @@ def create_stopwords_list(
     without_accents: bool
 ) -> set:
     stopwords_list = stopwords.words(languages_list)
+    lowered_stopwords_list = map(
+        lambda x: x.lower().strip(),
+        stopwords_list
+    )
     if without_accents:
-        stopwords_list = map(unidecode, stopwords_list)
-    stopwords_set = sorted(set(stopwords_list))
-    return stopwords_set
+        standardized_stopwords_list = map(
+            unidecode,
+            lowered_stopwords_list
+        )
+    final_stopwords_set = sorted(set(standardized_stopwords_list))
+    return final_stopwords_set
 
 
 def remove_stopwords_from_text(
@@ -137,7 +146,7 @@ def remove_stopwords(
             partial(
                 remove_stopwords_from_text,
                 stopwords_list=stopwords_list),
-            tqdm(texts)
+            texts
         )
 
     return texts_no_stopwords
@@ -170,9 +179,9 @@ def lemmatize_texts(
     return pd.Series(lemmatized_texts)
 
 
-def filter_out_too_frequent_words(
+def filter_out_too_frequent_words_in_one_language(
     texts: pd.Series,
-    proportion_words_to_filter_out: float,
+    proportion_words_to_filter_out: float
 ) -> pd.Series:
 
     corpus = " ".join(texts)
@@ -190,10 +199,38 @@ def filter_out_too_frequent_words(
         stopwords_list=most_common_words
     )
 
-    print(
-        f'{n_to_filter_out} too commons words out of {vocab_size} filtered out'
-    )
     return filtered_texts
+
+
+def filter_out_too_frequent_words(
+    data: pd.DataFrame,
+    description_col: str,
+    language_col: str,
+    proportion_words_to_filter_out: float
+) -> pd.DataFrame:
+
+    languages_list = set(data[language_col])
+    well_described_data = data.copy()
+
+    for language in tqdm(languages_list):
+
+        data_lang = data[data[language_col] == language]
+        data_lang_idxs = data_lang.index
+
+        filtered_descriptions_lang = data_lang[description_col].apply(
+            partial(
+                filter_out_too_frequent_words_in_one_language,
+                proportion_words_to_filter_out=proportion_words_to_filter_out
+            )
+        )
+        well_described_data.loc[
+            data_lang_idxs, description_col
+        ] = filtered_descriptions_lang
+
+    print(
+        f'Proportion of words removed: {proportion_words_to_filter_out}'
+        )
+    return well_described_data
 
 
 def create_extra_cols_from_text_cols(
@@ -233,9 +270,10 @@ def create_concatenated_column(
 
 
 def preprocess_data_extensive(
-    preprocessed_data: pd.DataFrame,
+    pre_preprocessed_data: pd.DataFrame,
     str_cols: list,
-    description_col: list,
+    description_col: str,
+    language_col: str,
     cols_to_concatenate: list,
     concatenated_col_name: str,
     languages_list: list,
@@ -245,7 +283,7 @@ def preprocess_data_extensive(
     threshold_short_text: int
 ) -> pd.DataFrame:
 
-    preprocessed_data = preprocessed_data.copy()
+    preprocessed_data = pre_preprocessed_data.copy()
     stopwords_list = create_stopwords_list(
         languages_list,
         without_accents=True
@@ -262,12 +300,14 @@ def preprocess_data_extensive(
         )
     )
 
-#    preprocessed_data[str_cols] = preprocessed_data[str_cols].progress_apply(
-#        lemmatize_texts
-#    )
+    preprocessed_data[str_cols] = preprocessed_data[str_cols].progress_apply(
+        lemmatize_texts
+    )
 
-    preprocessed_data[description_col] = filter_out_too_frequent_words(
-        preprocessed_data[description_col],
+    preprocessed_data = filter_out_too_frequent_words(
+        preprocessed_data,
+        description_col=description_col,
+        language_col=language_col,
         proportion_words_to_filter_out=proportion_words_to_filter_out
     )
 

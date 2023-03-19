@@ -6,14 +6,15 @@
 
 list_cols_to_match_full:
     [
-        ['title', 'company_name', 'location', 'description']
+        ['title', 'company_name', 'location', 'description', 'country_id']
     ]
 
 list_cols_to_match_partial:
     [
-        ['title', 'company_name', 'location'],
-        ['title', 'company_name', 'description'],
-        ['title', 'location', 'description']
+        ['title', 'company_name', 'location', 'description'],
+        ['title', 'company_name', 'location', 'country_id'],
+        ['title', 'company_name', 'description', 'country_id'],
+        ['title', 'location', 'description', 'country_id']
     ]
 
 list_cols_to_match_semantic:
