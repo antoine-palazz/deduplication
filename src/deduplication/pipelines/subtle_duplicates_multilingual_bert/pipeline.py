@@ -14,6 +14,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                 func=identify_subtle_duplicates,
                 inputs=["extensively_preprocessed_dataset",
                         "params:concatenated_col_name",
+                        "params:str_cols",
                         "params:description_col",
                         "params:date_col",
                         "params:id_col",

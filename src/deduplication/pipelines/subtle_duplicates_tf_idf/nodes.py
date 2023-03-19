@@ -30,6 +30,7 @@ def tokenize_tf_idf(
 def identify_subtle_duplicates(
     data: pd.DataFrame,
     concatenated_col_name: str,
+    str_cols: list,
     description_col: str,
     date_col: str,
     id_col: str,
@@ -46,6 +47,7 @@ def identify_subtle_duplicates(
     duplicates = find_subtle_duplicates_from_tokens(
         data,
         tokenized_texts=tokenized_texts,
+        str_cols=str_cols,
         description_col=description_col,
         date_col=date_col,
         id_col=id_col,

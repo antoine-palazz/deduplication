@@ -23,6 +23,7 @@ def differentiate_duplicates(
     row_1,
     row_2,
     current_type: str,
+    str_cols: list,
     description_col: str,
     date_col: str,
     threshold_partial: float
@@ -30,6 +31,12 @@ def differentiate_duplicates(
 
     if row_1[date_col] != row_2[date_col]:
         return "TEMPORAL"
+
+    for col in str_cols:
+        if (row_1[col] == "" or row_2[col] == "") and (
+            row_1[col] != row_2[col]
+        ):
+            return "PARTIAL"
 
     if abs(
         len(row_1[description_col]) -
@@ -47,6 +54,7 @@ def differentiate_duplicates(
 def find_subtle_duplicates_from_tokens(
     data: pd.DataFrame,
     tokenized_texts,
+    str_cols: list,
     description_col: str,
     date_col: str,
     id_col: str,
@@ -82,6 +90,7 @@ def find_subtle_duplicates_from_tokens(
                         data.iloc[chunk_start+i],
                         data.iloc[chunk_start+j],
                         current_type="SEMANTIC",
+                        str_cols=str_cols,
                         description_col=description_col,
                         date_col=date_col,
                         threshold_partial=threshold_partial

@@ -13,4 +13,4 @@ end_prefix: 'end_'
 batch_size: 64
 chunk_size: 5000
 
-threshold_partial: 0.10
+threshold_partial: 0.20
