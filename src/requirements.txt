@@ -1,4 +1,5 @@
 black~=22.0
+fastparquet
 flake8>=3.7.9, <5.0
 ipython>=7.31.1, <8.0; python_version < '3.8'
 ipython~=8.10; python_version >= '3.8'
@@ -16,6 +17,7 @@ nltk
 numpy
 pandas
 # pipenv
+pyarrow
 pytest-cov~=3.0
 pytest-mock>=1.7.1, <2.0
 pytest~=7.2
