@@ -65,7 +65,7 @@ def find_subtle_duplicates_from_tokens(
     chunks = range(0, n_ads, chunk_size)
     n_chunks = len(chunks)
 
-    for chunk_start in chunks:
+    for chunk_start in tqdm(chunks):
 
         similarity_matrix_chunk = compute_chunk_cosine_similarity(
             tokenized_texts,

@@ -87,19 +87,16 @@ def filter_out_incomplete_offers(
 
 
 def remove_special_characters(
-    data: pd.DataFrame,
-    str_cols: list
+    texts: pd.Series
 ) -> pd.DataFrame:
 
-    clean_data = data.copy()
-    clean_data[str_cols] = data[str_cols].progress_apply(
-        lambda x: x.str.replace(
-            r'\W', ' ', regex=True
-        ).replace(
-            r' +', ' ', regex=True
-        ).apply(unidecode).str.strip()
-    )
-    return clean_data
+    clean_texts = texts.str.replace(
+        r'\W', ' ', regex=True
+    ).replace(
+        r' +', ' ', regex=True
+    ).apply(unidecode).str.strip()
+
+    return clean_texts
 
 
 def create_stopwords_list(
@@ -252,17 +249,19 @@ def preprocess_data_extensive(
         without_accents=True
     )
 
-    preprocessed_data[str_cols] = remove_special_characters(
-        preprocessed_data[str_cols]
+    preprocessed_data[str_cols] = preprocessed_data[str_cols].progress_apply(
+        remove_special_characters
     )
 
-    preprocessed_data[str_cols] = remove_stopwords(
-        preprocessed_data[str_cols],
-        stopwords_list=stopwords_list
+    preprocessed_data[str_cols] = preprocessed_data[str_cols].progress_apply(
+        partial(
+            remove_stopwords,
+            stopwords_list=stopwords_list
+        )
     )
 
-    preprocessed_data[str_cols] = lemmatize_texts(
-        preprocessed_data[str_cols]
+    preprocessed_data[str_cols] = preprocessed_data[str_cols].progress_apply(
+        lemmatize_texts
     )
 
     preprocessed_data[description_col] = filter_out_too_frequent_words(
