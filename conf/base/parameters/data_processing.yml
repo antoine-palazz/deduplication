@@ -6,7 +6,7 @@
 
 str_cols:
     ['title', 'company_name', 'location', 'description']
-s_to_concatenate:
+cols_to_concatenate:
     ['title', 'company_name', 'location', 'country_id', 'description']
 
 required_cols_full:
