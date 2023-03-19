@@ -53,6 +53,12 @@ gross_semantic_duplicates:
       index: False
 
 
+easy_duplicates:
+  type: pandas.CSVDataSet
+  filepath: data/06_models/easy_duplicates.csv
+  save_args:
+      index: False
+
 subtle_duplicates_tf_idf:
   type: pandas.ParquetDataSet
   filepath: data/06_models/subtle_duplicates_tf_idf.pq
@@ -72,8 +78,6 @@ subtle_duplicates_xlm_roberta:
       index: False
 
 
-
-
 all_duplicates_tf_idf:
   type: pandas.CSVDataSet
   filepath: data/07_model_output/all_duplicates_tf_idf.csv
@@ -83,15 +87,6 @@ all_duplicates_tf_idf:
   load_args:
       names:
           ['id1', 'id2', 'type']
-
-all_duplicates_tf_idf_description:
-  type: pandas.CSVDataSet
-  filepath: data/08_reporting/all_duplicates_tf_idf_description.csv
-  save_args:
-      index: False
-
-
-
 
 all_duplicates_multilingual_bert:
   type: pandas.CSVDataSet
@@ -103,15 +98,6 @@ all_duplicates_multilingual_bert:
       names:
           ['id1', 'id2', 'type']
 
-all_duplicates_multilingual_bert_description:
-  type: pandas.CSVDataSet
-  filepath: data/08_reporting/all_duplicates_multilingual_bert_description.csv
-  save_args:
-      index: False
-
-
-
-
 all_duplicates_xlm_roberta:
   type: pandas.CSVDataSet
   filepath: data/07_model_output/all_duplicates_xlm_roberta.csv
@@ -122,18 +108,6 @@ all_duplicates_xlm_roberta:
       names:
           ['id1', 'id2', 'type']
 
-all_duplicates_xlm_roberta_description:
-  type: pandas.CSVDataSet
-  filepath: data/08_reporting/all_duplicates_xlm_roberta_description.csv
-  save_args:
-      index: False
-
-
-easy_duplicates:
-  type: pandas.CSVDataSet
-  filepath: data/06_models/easy_duplicates.csv
-  save_args:
-      index: False
 
 easy_duplicates_description:
   type: pandas.CSVDataSet
@@ -141,6 +115,23 @@ easy_duplicates_description:
   save_args:
       index: False
 
+all_duplicates_tf_idf_description:
+  type: pandas.CSVDataSet
+  filepath: data/08_reporting/all_duplicates_tf_idf_description.csv
+  save_args:
+      index: False
+
+all_duplicates_multilingual_bert_description:
+  type: pandas.CSVDataSet
+  filepath: data/08_reporting/all_duplicates_multilingual_bert_description.csv
+  save_args:
+      index: False
+
+all_duplicates_xlm_roberta_description:
+  type: pandas.CSVDataSet
+  filepath: data/08_reporting/all_duplicates_xlm_roberta_description.csv
+  save_args:
+      index: False
 
 
 best_duplicates:

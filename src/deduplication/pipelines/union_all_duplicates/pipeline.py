@@ -105,14 +105,14 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:project_path"],
                 outputs="best_duplicates",
                 name="aggregate_all_duplicates_from_best_models_node",
-                tags=['best_model']
+                tags=['final_models']
             ),
             node(
                 func=describe_duplicates,
                 inputs=["best_duplicates"],
                 outputs="best_duplicates_description",
                 name="describe_best_duplicates_node",
-                tags=['best_model']
+                tags=['final_models']
             )
         ]
     )
