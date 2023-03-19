@@ -11,7 +11,7 @@ list_cols_to_match_partial:
         ['title', 'location', 'description']
     ]
 
-list_cols_to_match_gross_semantic:
+list_cols_to_match_semantic:
     [
         ['title', 'description'],
         ['title', 'beginning_description', 'company_name', 'location'],
