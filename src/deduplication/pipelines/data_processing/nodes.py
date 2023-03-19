@@ -42,13 +42,13 @@ def normalize_strings(
     texts: pd.Series
 ) -> pd.Series:
 
-    clean_texts = texts.apply(
-        lambda x: x.str.replace(
-            r'\r|\n', ' ', regex=True
-        ).replace(
-            r' +', ' ', regex=True
-        ).str.lower().str.strip()
-    )
+    clean_texts = texts.str.replace(
+        r'\r|\n', ' ', regex=True
+    ).replace(
+        r' +', ' ', regex=True
+    ).str.lower(
+    ).str.strip()
+
     return clean_texts
 
 
