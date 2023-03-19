@@ -4,6 +4,11 @@
 # Documentation for this file format can be found in "Parameters"
 # Link: https://kedro.readthedocs.io/en/0.18.6/kedro_project_setup/configuration.html#parameters
 
+list_cols_to_match_full:
+    [
+        ['title', 'company_name', 'location', 'description']
+    ]
+
 list_cols_to_match_partial:
     [
         ['title', 'company_name', 'location'],
