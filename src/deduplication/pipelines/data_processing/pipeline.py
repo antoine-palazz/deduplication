@@ -56,9 +56,9 @@ def create_pipeline(**kwargs) -> Pipeline:
         ],
         tags=[
             'easy',
-            'best_model',
             'tf_idf',
             'multilingual_bert',
-            'xlm_roberta'
+            'xlm_roberta',
+            'final_models'
             ]
     )

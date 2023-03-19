@@ -1,4 +1,4 @@
-# Pipeline all_duplicates_reunion
+# Pipeline union_all_duplicates
 
 > *Note:* This is a `README.md` boilerplate generated using `Kedro 0.18.6`.
 

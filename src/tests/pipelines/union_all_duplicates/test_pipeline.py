@@ -1,5 +1,5 @@
 """
-This is a boilerplate test file for pipeline 'all_duplicates_reunion'
+This is a boilerplate test file for pipeline 'union_all_duplicates'
 generated using Kedro 0.18.6.
 Please add your pipeline tests here.
 

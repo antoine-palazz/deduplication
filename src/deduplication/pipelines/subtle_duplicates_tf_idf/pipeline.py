@@ -26,5 +26,5 @@ def create_pipeline(**kwargs) -> Pipeline:
                 name="identify_subtle_duplicates_tf_idf_node"
             )
         ],
-        tags=['tf_idf', 'best_model']
+        tags=['tf_idf', 'final_models']
     )

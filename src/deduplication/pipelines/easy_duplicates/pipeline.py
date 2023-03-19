@@ -15,7 +15,10 @@ def create_pipeline(**kwargs) -> Pipeline:
                 inputs=["preprocessed_complete_offers",
                         "params:str_cols",
                         "params:type_full",
-                        "params:id_col"],
+                        "params:description_col",
+                        "params:date_col",
+                        "params:id_col",
+                        "params:threshold_partial"],
                 outputs="gross_full_duplicates",
                 name="identify_gross_full_duplicates_node",
             ),
@@ -24,7 +27,10 @@ def create_pipeline(**kwargs) -> Pipeline:
                 inputs=["preprocessed_complete_offers",
                         "params:list_cols_to_match_partial",
                         "params:type_partial",
-                        "params:id_col"],
+                        "params:description_col",
+                        "params:date_col",
+                        "params:id_col",
+                        "params:threshold_partial"],
                 outputs="gross_partial_duplicates",
                 name="identify_gross_partial_duplicates_node",
             ),
@@ -33,16 +39,19 @@ def create_pipeline(**kwargs) -> Pipeline:
                 inputs=["extensively_preprocessed_described_offers",
                         "params:list_cols_to_match_semantic",
                         "params:type_semantic",
-                        "params:id_col"],
+                        "params:description_col",
+                        "params:date_col",
+                        "params:id_col",
+                        "params:threshold_partial"],
                 outputs="gross_semantic_duplicates",
                 name="identify_gross_semantic_duplicates_node",
             )
         ],
         tags=[
             'easy',
-            'best_model',
             'tf_idf',
             'multilingual_bert',
-            'xlm_roberta'
+            'xlm_roberta',
+            'final_models'
             ]
     )

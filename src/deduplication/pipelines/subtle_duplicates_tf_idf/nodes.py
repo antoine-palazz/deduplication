@@ -57,8 +57,10 @@ def identify_subtle_duplicates(
     df_duplicates = pd.DataFrame(
         duplicates
     ).drop_duplicates(
-    ).sort_values(by=['id1', 'id2'],
-                  ignore_index=True)
+    ).sort_values(
+        by=['id1', 'id2'],
+        ignore_index=True
+    )
     print(
         f'{len(df_duplicates)} subtle duplicates found with tf idf'
     )

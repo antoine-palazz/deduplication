@@ -1,14 +1,14 @@
 """
-This is a boilerplate pipeline 'all_duplicates_reunion'
+This is a boilerplate pipeline 'union_all_duplicates'
 generated using Kedro 0.18.6
 """
 
 from kedro.pipeline import Pipeline, node, pipeline
 from .nodes import (
-    combine_all_duplicates_one_model,
-    combine_all_duplicates_from_best_models,
-    describe_duplicates,
-    differentiate_df_easy_duplicates
+    aggregate_easy_duplicates,
+    aggregate_all_duplicates_one_model,
+    aggregate_all_duplicates_several_models,
+    describe_duplicates
 )
 
 
@@ -16,24 +16,19 @@ def create_pipeline(**kwargs) -> Pipeline:
     return pipeline(
         [
             node(
-                func=differentiate_df_easy_duplicates,
-                inputs=["processed_dataset",
-                        "full_duplicates",
-                        "partial_duplicates",
-                        "gross_semantic_duplicates",
-                        "params:very_reduced_description_col_name",
-                        "params:date_col",
-                        "params:id_col",
-                        "params:threshold_partial"],
+                func=aggregate_easy_duplicates,
+                inputs=["gross_full_duplicates",
+                        "gross_partial_duplicates",
+                        "gross_semantic_duplicates"],
                 outputs="easy_duplicates",
-                name="differentiate_easy_duplicates_node",
+                name="aggregate_easy_duplicates_node",
                 tags=[
                     'easy',
-                    'best_model',
                     'tf_idf',
                     'multilingual_bert',
-                    'xlm_roberta'
-                    ]
+                    'xlm_roberta',
+                    'final_models'
+                     ]
             ),
             node(
                 func=describe_duplicates,
@@ -42,35 +37,41 @@ def create_pipeline(**kwargs) -> Pipeline:
                 name="describe_easy_duplicates_node",
                 tags=[
                     'easy',
-                    'best_model',
                     'tf_idf',
                     'multilingual_bert',
-                    'xlm_roberta'
-                    ]
+                    'xlm_roberta',
+                    'final_models'
+                     ]
             ),
 
             node(
-                func=combine_all_duplicates_one_model,
+                func=aggregate_all_duplicates_one_model,
                 inputs=["easy_duplicates",
                         "subtle_duplicates_tf_idf"],
                 outputs="all_duplicates_tf_idf",
-                name="combine_all_duplicates_tf_idf_node",
-                tags=['tf_idf']
+                name="aggregate_all_duplicates_tf_idf_node",
+                tags=[
+                    'tf_idf',
+                    'final_models'
+                     ]
             ),
             node(
                 func=describe_duplicates,
                 inputs=["all_duplicates_tf_idf"],
                 outputs="all_duplicates_tf_idf_description",
                 name="describe_duplicates_tf_idf_node",
-                tags=['tf_idf']
+                tags=[
+                    'tf_idf',
+                    'final_models'
+                     ]
             ),
 
             node(
-                func=combine_all_duplicates_one_model,
+                func=aggregate_all_duplicates_one_model,
                 inputs=["easy_duplicates",
                         "subtle_duplicates_multilingual_bert"],
                 outputs="all_duplicates_multilingual_bert",
-                name="combine_all_duplicates_multilingual_bert_node",
+                name="aggregate_all_duplicates_multilingual_bert_node",
                 tags=['multilingual_bert']
             ),
             node(
@@ -82,11 +83,11 @@ def create_pipeline(**kwargs) -> Pipeline:
             ),
 
             node(
-                func=combine_all_duplicates_one_model,
+                func=aggregate_all_duplicates_one_model,
                 inputs=["easy_duplicates",
                         "subtle_duplicates_xlm_roberta"],
                 outputs="all_duplicates_xlm_roberta",
-                name="combine_all_duplicates_xlm_roberta_node",
+                name="aggregate_all_duplicates_xlm_roberta_node",
                 tags=['xlm_roberta']
             ),
             node(
@@ -98,15 +99,12 @@ def create_pipeline(**kwargs) -> Pipeline:
             ),
 
             node(
-                func=combine_all_duplicates_from_best_models,
+                func=aggregate_all_duplicates_several_models,
                 inputs=["easy_duplicates",
-                        "params:best_model_temporal",
-                        "params:best_model_partial",
-                        "params:best_model_semantic",
-                        "params:str_subtle_duplicates",
+                        "params:final_duplicates_str_list",
                         "params:project_path"],
                 outputs="best_duplicates",
-                name="combine_all_duplicates_from_best_models_node",
+                name="aggregate_all_duplicates_from_best_models_node",
                 tags=['best_model']
             ),
             node(
@@ -115,6 +113,6 @@ def create_pipeline(**kwargs) -> Pipeline:
                 outputs="best_duplicates_description",
                 name="describe_best_duplicates_node",
                 tags=['best_model']
-            ),
+            )
         ]
     )

@@ -3,6 +3,9 @@ This is a boilerplate pipeline 'easy_duplicates'
 generated using Kedro 0.18.6
 """
 
+from deduplication.extras.utils import (
+    differentiate_duplicates
+)
 import pandas as pd
 from tqdm import tqdm
 
@@ -10,8 +13,11 @@ from tqdm import tqdm
 def identify_exact_duplicates(
     data: pd.DataFrame,
     list_cols_to_match: list,
-    type_to_return: str,
-    id_col: str = 'id'
+    default_type: str,
+    description_col: str,
+    date_col: str,
+    id_col: str,
+    threshold_partial: float
 ) -> pd.DataFrame:
 
     n_ads = len(data)
@@ -38,21 +44,31 @@ def identify_exact_duplicates(
                 data_for_dups_arr[j, cols_to_match_idxs]
             ).all():
 
+                duplicates_type = differentiate_duplicates(
+                    data_for_duplicates.iloc[i],
+                    data_for_duplicates.iloc[j],
+                    default_type,
+                    description_col,
+                    date_col,
+                    threshold_partial
+                    )
+
                 exact_duplicates.append(
                     {
                         'id1': data_for_duplicates.loc[i, id_col],
                         'id2': data_for_duplicates.loc[j, id_col],
-                        'type': type_to_return
+                        'type': duplicates_type
                     })
                 j += 1
 
     df_exact_duplicates = pd.DataFrame(
         exact_duplicates
     ).drop_duplicates(
-    ).sort_values(by=['id1', 'id2'],
-                  ignore_index=True)
-
+    ).sort_values(
+        by=['id1', 'id2'],
+        ignore_index=True
+    )
     print(
-        f'{len(df_exact_duplicates)} gross {type_to_return} duplicates found'
+        f'{len(df_exact_duplicates)} gross {duplicates_type} duplicates found'
     )
     return df_exact_duplicates

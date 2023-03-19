@@ -1,5 +1,5 @@
 """
-This is a boilerplate pipeline 'all_duplicates_reunion'
+This is a boilerplate pipeline 'union_all_duplicates'
 generated using Kedro 0.18.6
 """
 
