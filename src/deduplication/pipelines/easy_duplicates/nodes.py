@@ -66,7 +66,8 @@ def identify_exact_duplicates(
                             'id2': data_for_duplicates.loc[j, id_col],
                             'type': duplicates_type
                         })
-                    j += 1
+
+                j += 1
 
     df_exact_duplicates = pd.DataFrame(
         exact_duplicates
