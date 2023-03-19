@@ -79,8 +79,8 @@ def aggregate_easy_duplicates(
 
     for idx_pair in tqdm(partial_duplicates.index):
         # Correct the identical pairs matching with at least one complete offer
-        id1 = partial_duplicates.iloc[idx_pair, 'id1']
-        id2 = partial_duplicates.iloc[idx_pair, 'id2']
+        id1 = partial_duplicates.loc[idx_pair, 'id1']
+        id2 = partial_duplicates.loc[idx_pair, 'id2']
 
         if dict_matchs_with_complete_offers[id1]:
             if (
@@ -92,7 +92,7 @@ def aggregate_easy_duplicates(
                 ].loc[0, cols_to_concatenate]
                ).all():
 
-                easy_duplicates.iloc[idx_pair, 'type'] = 'FULL'
+                easy_duplicates.loc[idx_pair, 'type'] = 'FULL'
                 count_saved += 1
 
     print(f'{count_saved} partial duplicates became full ones')
