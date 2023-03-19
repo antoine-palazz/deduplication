@@ -15,9 +15,11 @@ def identify_exact_duplicates(
     list_cols_to_match: list,
     default_type: str,
     str_cols: list,
+    title_col: str,
     description_col: str,
     date_col: str,
     id_col: str,
+    threshold_titles: float,
     threshold_partial: float
 ) -> pd.DataFrame:
 
@@ -50,18 +52,21 @@ def identify_exact_duplicates(
                     data_for_duplicates.iloc[j],
                     current_type=default_type,
                     str_cols=str_cols,
+                    title_col=title_col,
                     description_col=description_col,
                     date_col=date_col,
+                    threshold_titles=threshold_titles,
                     threshold_partial=threshold_partial
                 )
 
-                exact_duplicates.append(
-                    {
-                        'id1': data_for_duplicates.loc[i, id_col],
-                        'id2': data_for_duplicates.loc[j, id_col],
-                        'type': duplicates_type
-                    })
-                j += 1
+                if duplicates_type != "NON":
+                    exact_duplicates.append(
+                        {
+                            'id1': data_for_duplicates.loc[i, id_col],
+                            'id2': data_for_duplicates.loc[j, id_col],
+                            'type': duplicates_type
+                        })
+                    j += 1
 
     df_exact_duplicates = pd.DataFrame(
         exact_duplicates

@@ -1,3 +1,4 @@
+from jellyfish import jaro_winkler_similarity
 import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
 from tqdm import tqdm
@@ -24,19 +25,27 @@ def differentiate_duplicates(
     row_2,
     current_type: str,
     str_cols: list,
+    title_col: str,
     description_col: str,
     date_col: str,
+    threshold_titles: float,
     threshold_partial: float
 ) -> str:
 
+    if jaro_winkler_similarity(
+        row_1[title_col],
+        row_2[title_col]
+    ) > threshold_titles:
+        return "NON"  # Titles are too different
+
     if row_1[date_col] != row_2[date_col]:
-        return "TEMPORAL"
+        return "TEMPORAL"  # Dates are different
 
     for col in str_cols:
         if (row_1[col] == "" or row_2[col] == "") and (
             row_1[col] != row_2[col]
         ):
-            return "PARTIAL"
+            return "PARTIAL"  # A field is missing in only one of the ads
 
     if abs(
         len(row_1[description_col]) -
@@ -46,18 +55,20 @@ def differentiate_duplicates(
             len(row_2[description_col]))
             ) > threshold_partial:
 
-        return "PARTIAL"
+        return "PARTIAL"  # Description lengths are too different
 
-    return current_type
+    return current_type  # Nothing to change
 
 
 def find_subtle_duplicates_from_tokens(
     data: pd.DataFrame,
     tokenized_texts,
     str_cols: list,
+    title_col: list,
     description_col: str,
     date_col: str,
     id_col: str,
+    threshold_titles: float,
     threshold_semantic: float,
     threshold_partial: float,
     chunk_size: int
@@ -91,16 +102,19 @@ def find_subtle_duplicates_from_tokens(
                         data.iloc[chunk_start+j],
                         current_type="SEMANTIC",
                         str_cols=str_cols,
+                        title_col=title_col,
                         description_col=description_col,
                         date_col=date_col,
+                        threshold_titles=threshold_titles,
                         threshold_partial=threshold_partial
                     )
 
-                    duplicates.append(
-                        {'id1': data.loc[chunk_start+i, id_col],
-                         'id2': data.loc[chunk_start+j, id_col],
-                         'type': duplicates_type}
-                        )
+                    if duplicates_type != "NON":
+                        duplicates.append(
+                            {'id1': data.loc[chunk_start+i, id_col],
+                             'id2': data.loc[chunk_start+j, id_col],
+                             'type': duplicates_type}
+                            )
 
         compteur_end = len(duplicates)
         print(
