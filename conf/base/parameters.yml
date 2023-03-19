@@ -1,7 +1,6 @@
 project_path: '/home/onyxia/work/deduplication/'
 
 id_col: 'id'
-title_col: 'title'
 description_col: 'description'
 language_col: 'country_id'
 date_col: 'retrieval_date'
@@ -11,9 +10,11 @@ concatenated_col_name: 'concatenated_offer'
 beginning_prefix: 'beginning_'
 end_prefix: 'end_'
 
+cols_to_be_similar: ['title', 'location']
+
 batch_size: 64
 chunk_size: 5000
 
-threshold_titles: 0.8
-threshold_titles_multilingual: 0.4
+threshold_similarity: 0.8
+threshold_similarity_multilingual: 0.4
 threshold_partial: 0.20

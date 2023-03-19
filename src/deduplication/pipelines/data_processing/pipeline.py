@@ -27,7 +27,15 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:required_cols_full",
                         "params:nb_allowed_nans_full"],
                 outputs="preprocessed_complete_offers",
-                name="filter_out_incomplete_offers_node"
+                name="filter_out_incomplete_offers_for_full_node"
+            ),
+            node(
+                func=filter_out_incomplete_offers,
+                inputs=["preprocessed_dataset",
+                        "params:required_cols_partial",
+                        "params:nb_allowed_nans_partial"],
+                outputs="preprocessed_quasi_complete_offers",
+                name="filter_out_incomplete_offers_for_partial_node"
             ),
 
             node(
@@ -52,7 +60,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:required_cols_semantic",
                         "params:nb_allowed_nans_semantic"],
                 outputs="extensively_preprocessed_described_offers",
-                name="filter_out_undescribed_offers_node"
+                name="filter_out_undescribed_offers_for_semantic_node"
             )
         ],
         tags=[

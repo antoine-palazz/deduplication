@@ -27,6 +27,12 @@ preprocessed_complete_offers:
   save_args:
       index: False
 
+preprocessed_quasi_complete_offers:
+  type: pandas.ParquetDataSet
+  filepath: data/04_feature/preprocessed_complete_offers.pq
+  save_args:
+      index: False
+
 extensively_preprocessed_described_offers:
   type: pandas.ParquetDataSet
   filepath: data/04_feature/extensively_preprocessed_described_offers.pq

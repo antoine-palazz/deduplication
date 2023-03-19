@@ -25,18 +25,20 @@ def differentiate_duplicates(
     row_2,
     current_type: str,
     str_cols: list,
-    title_col: str,
+    cols_to_be_similar: list,
     description_col: str,
     date_col: str,
-    threshold_titles: float,
+    threshold_similarity: float,
     threshold_partial: float
 ) -> str:
 
-    if jaro_winkler_similarity(
-        row_1[title_col],
-        row_2[title_col]
-    ) > threshold_titles:
-        return "NON"  # Titles are too different
+    for col in cols_to_be_similar:
+        if row_1[col] != "" and row_2[col] != "":
+            if jaro_winkler_similarity(
+                row_1[col],
+                row_2[col]
+            ) < threshold_similarity:
+                return "NON"  # Desired columns are too different
 
     if row_1[date_col] != row_2[date_col]:
         return "TEMPORAL"  # Dates are different
@@ -64,11 +66,11 @@ def find_subtle_duplicates_from_tokens(
     data: pd.DataFrame,
     tokenized_texts,
     str_cols: list,
-    title_col: list,
+    cols_to_be_similar: list,
     description_col: str,
     date_col: str,
     id_col: str,
-    threshold_titles: float,
+    threshold_similarity: float,
     threshold_semantic: float,
     threshold_partial: float,
     chunk_size: int
@@ -102,10 +104,10 @@ def find_subtle_duplicates_from_tokens(
                         data.iloc[chunk_start+j],
                         current_type="SEMANTIC",
                         str_cols=str_cols,
-                        title_col=title_col,
+                        cols_to_be_similar=cols_to_be_similar,
                         description_col=description_col,
                         date_col=date_col,
-                        threshold_titles=threshold_titles,
+                        threshold_similarity=threshold_similarity,
                         threshold_partial=threshold_partial
                     )
 

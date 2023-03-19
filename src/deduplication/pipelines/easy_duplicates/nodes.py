@@ -15,11 +15,11 @@ def identify_exact_duplicates(
     list_cols_to_match: list,
     default_type: str,
     str_cols: list,
-    title_col: str,
+    cols_to_be_similar: list,
     description_col: str,
     date_col: str,
     id_col: str,
-    threshold_titles: float,
+    threshold_similarity: float,
     threshold_partial: float
 ) -> pd.DataFrame:
 
@@ -52,10 +52,10 @@ def identify_exact_duplicates(
                     data_for_duplicates.iloc[j],
                     current_type=default_type,
                     str_cols=str_cols,
-                    title_col=title_col,
+                    cols_to_be_similar=cols_to_be_similar,
                     description_col=description_col,
                     date_col=date_col,
-                    threshold_titles=threshold_titles,
+                    threshold_similarity=threshold_similarity,
                     threshold_partial=threshold_partial
                 )
 
