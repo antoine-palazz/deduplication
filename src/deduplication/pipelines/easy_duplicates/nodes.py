@@ -69,6 +69,6 @@ def identify_exact_duplicates(
         ignore_index=True
     )
     print(
-        f'{len(df_exact_duplicates)} gross {duplicates_type} duplicates found'
+        f'{len(df_exact_duplicates)} gross {default_type} duplicates found'
     )
     return df_exact_duplicates

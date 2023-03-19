@@ -70,6 +70,7 @@ def aggregate_all_duplicates_one_model(
 
 def aggregate_all_duplicates_several_models(
     easy_duplicates: pd.DataFrame,
+    dummy_duplicates: pd.DataFrame,
     duplicates_str_list: list,
     project_path: str
 ) -> pd.DataFrame:

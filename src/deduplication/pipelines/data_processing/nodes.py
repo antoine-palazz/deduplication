@@ -81,7 +81,7 @@ def filter_out_incomplete_offers(
 
     filtered_data_on_cols = filtered_data_on_nans[
         (
-            filtered_data_on_nans[required_cols].apply(lambda x: x == "")
+            filtered_data_on_nans[required_cols].apply(lambda x: x != "")
         ).all(axis=1)
     ]
 
@@ -119,8 +119,8 @@ def remove_stopwords_from_text(
 
     text_no_stopwords = ' '.join(
         [word for word in text.split()
-            if word not in stopwords_list or
-            len(word) < 2
+            if word not in stopwords_list and
+            len(word) >= 2
          ]
     )
 
@@ -262,9 +262,9 @@ def preprocess_data_extensive(
         )
     )
 
-    preprocessed_data[str_cols] = preprocessed_data[str_cols].progress_apply(
-        lemmatize_texts
-    )
+#    preprocessed_data[str_cols] = preprocessed_data[str_cols].progress_apply(
+#        lemmatize_texts
+#    )
 
     preprocessed_data[description_col] = filter_out_too_frequent_words(
         preprocessed_data[description_col],

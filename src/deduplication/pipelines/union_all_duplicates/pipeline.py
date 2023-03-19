@@ -101,6 +101,7 @@ def create_pipeline(**kwargs) -> Pipeline:
             node(
                 func=aggregate_all_duplicates_several_models,
                 inputs=["easy_duplicates",
+                        "subtle_duplicates_tf_idf",
                         "params:final_duplicates_str_list",
                         "params:project_path"],
                 outputs="best_duplicates",
