@@ -20,4 +20,4 @@ list_cols_to_match_gross_semantic:
 
 type_full: "FULL"
 type_partial: "PARTIAL"
-type_semantix: "SEMANTIC"
+type_semantic: "SEMANTIC"
