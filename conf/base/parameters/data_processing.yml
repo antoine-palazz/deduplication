@@ -16,7 +16,7 @@ required_cols_partial:
 required_cols_semantic:
     ['description']
 
-nb_allowed_nans_full: 0
+nb_allowed_nans_full: 2
 nb_allowed_nans_partial: 1
 nb_allowed_nans_semantic: 2
 
