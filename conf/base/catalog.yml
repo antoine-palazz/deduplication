@@ -29,7 +29,7 @@ preprocessed_complete_offers:
 
 preprocessed_quasi_complete_offers:
   type: pandas.ParquetDataSet
-  filepath: data/04_feature/preprocessed_complete_offers.pq
+  filepath: data/04_feature/preprocessed_quasi_complete_offers.pq
   save_args:
       index: False
 
