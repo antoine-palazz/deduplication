@@ -179,7 +179,7 @@ def lemmatize_texts(
     return pd.Series(lemmatized_texts)
 
 
-def filter_out_too_frequent_words_in_one_language(
+def filter_out_words_in_one_language(
     texts: pd.Series,
     proportion_words_to_filter_out: float
 ) -> pd.Series:
@@ -217,12 +217,11 @@ def filter_out_too_frequent_words(
         data_lang = data[data[language_col] == language]
         data_lang_idxs = data_lang.index
 
-        filtered_descriptions_lang = data_lang[description_col].apply(
-            partial(
-                filter_out_too_frequent_words_in_one_language,
-                proportion_words_to_filter_out=proportion_words_to_filter_out
-            )
+        filtered_descriptions_lang = filter_out_words_in_one_language(
+            data_lang[description_col],
+            proportion_words_to_filter_out=proportion_words_to_filter_out
         )
+
         well_described_data.loc[
             data_lang_idxs, description_col
         ] = filtered_descriptions_lang
