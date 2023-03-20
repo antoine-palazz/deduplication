@@ -3,7 +3,7 @@ submission_4_AP:
         "Easy duplicates - New rules"
     full:
         nb_duplicates: 49183
-        f1_score: 0.87  # Top performer
+        f1_score: 0.87
     semantic:
         nb_duplicates: 16025
         f1_score: 0.01
@@ -13,7 +13,7 @@ submission_4_AP:
     partial:
         nb_duplicates: 21619
         f1_score: 0.09  # Top performer
-    macro_f1: 0.55  # Top performer
+    macro_f1: 0.55
 
 submission_3_AP:
     description:
@@ -68,6 +68,24 @@ submission_1_AP:
         f1_score: 0.03
     macro_f1: 0.27
 
+
+submission_2_KF:
+    description:
+        "TF-IDF with threshold at 0.8 & new FULL"
+    full:
+        nb_duplicates:
+        f1_score: 0.99  # Top performer
+    semantic:
+        nb_duplicates:
+        f1_score: 0.02
+    temporal:
+        nb_duplicates:
+        f1_score: 0.75
+    partial:
+        nb_duplicates:
+        f1_score: 0.09
+    global:
+        f1_score: 0.57  # Top performer
 
 submission_1_KF:
     description:

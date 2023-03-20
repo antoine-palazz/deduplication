@@ -6,7 +6,7 @@
 
 list_cols_to_match_full:
     [
-        ['title', 'company_name', 'location', 'description', 'country_id']
+        ['title', 'company_name', 'location', 'description'] # country_id?
     ]
 
 list_cols_to_match_partial:
@@ -22,7 +22,8 @@ list_cols_to_match_semantic:
     [
         ['title', 'description'],
         ['title', 'beginning_description', 'country_id'],
-        ['title', 'end_description', 'country_id']
+        ['title', 'end_description', 'country_id'],
+        ['company_name', 'location', 'country_id', 'retrieval_date']
     ]
 
 type_full: "FULL"
