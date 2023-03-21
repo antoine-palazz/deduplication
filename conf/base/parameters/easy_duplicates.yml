@@ -11,11 +11,11 @@ list_cols_to_match_full:
 
 list_cols_to_match_partial:
     [
-        ['title', 'company_name', 'location', 'description'],
-        ['title', 'company_name', 'location', 'country_id'],
-        ['title', 'company_name', 'description', 'country_id'],
-        ['title', 'location', 'description', 'country_id'],
-        ['company_name', 'location', 'description', 'country_id']
+        # ['title', 'company_name', 'location', 'description'],
+        ['title', 'company_name', 'location'],  # country_id?
+        ['title', 'company_name', 'description'],  # country_id?
+        ['title', 'location', 'description'],  # country_id?
+        ['company_name', 'location', 'description']  # country_id?
     ]
 
 list_cols_to_match_semantic:
