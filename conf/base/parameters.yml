@@ -2,8 +2,9 @@ project_path: '/home/onyxia/work/deduplication/'
 
 id_col: 'id'
 description_col: 'description'
-language_col: 'country_id'
 date_col: 'retrieval_date'
+
+language_col: 'language'
 
 concatenated_col_name: 'concatenated_offer'
 
@@ -15,6 +16,12 @@ cols_to_be_similar: ['title', 'location']
 batch_size: 64
 chunk_size: 5000
 
-threshold_similarity: 0.8
-threshold_similarity_multilingual: 0.4
-threshold_partial: 0.20
+threshold_similarity:
+  title: 0.8
+  location: 0.7
+threshold_similarity_multilingual:
+  title: 0.2  # What is optimal?
+  location: 0.7  # What is optimal?
+
+threshold_partial: 0.15
+threshold_partial_multilingual: 0.50

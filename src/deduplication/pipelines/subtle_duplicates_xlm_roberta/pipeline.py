@@ -21,7 +21,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:id_col",
                         "params:threshold_similarity_multilingual",
                         "params:threshold_semantic_xlm_roberta",
-                        "params:threshold_partial",
+                        "params:threshold_partial_multilingual",
                         "params:batch_size",
                         "params:chunk_size"
                         ],

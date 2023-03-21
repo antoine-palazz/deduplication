@@ -21,9 +21,9 @@ extensively_preprocessed_dataset:
       index: False
 
 
-preprocessed_complete_offers:
+preprocessed_full_offers:
   type: pandas.ParquetDataSet
-  filepath: data/04_feature/preprocessed_complete_offers.pq
+  filepath: data/04_feature/preprocessed_full_offers.pq
   save_args:
       index: False
 
@@ -39,22 +39,34 @@ extensively_preprocessed_described_offers:
   save_args:
       index: False
 
+extensively_preprocessed_located_offers:
+  type: pandas.ParquetDataSet
+  filepath: data/04_feature/extensively_preprocessed_located_offers.pq
+  save_args:
+      index: False
+
 
 gross_full_duplicates:
   type: pandas.ParquetDataSet
-  filepath: data/05_model_inputs/gross_full_duplicates.pq
+  filepath: data/05_model_input/gross_full_duplicates.pq
   save_args:
       index: False
 
 gross_partial_duplicates:
   type: pandas.ParquetDataSet
-  filepath: data/05_model_inputs/gross_partial_duplicates.pq
+  filepath: data/05_model_input/gross_partial_duplicates.pq
   save_args:
       index: False
 
 gross_semantic_duplicates:
   type: pandas.ParquetDataSet
-  filepath: data/05_model_inputs/gross_semantic_duplicates.pq
+  filepath: data/05_model_input/gross_semantic_duplicates.pq
+  save_args:
+      index: False
+
+gross_semantic_multilingual_duplicates:
+  type: pandas.ParquetDataSet
+  filepath: data/05_model_input/gross_semantic_multilingual_duplicates.pq
   save_args:
       index: False
 

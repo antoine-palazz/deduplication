@@ -13,6 +13,7 @@ from tqdm import tqdm
 def identify_exact_duplicates(
     data: pd.DataFrame,
     list_cols_to_match: list,
+    cols_to_mismatch: list,
     default_type: str,
     str_cols: list,
     cols_to_be_similar: list,
@@ -37,6 +38,10 @@ def identify_exact_duplicates(
             data_for_duplicates.columns.get_loc(col)
             for col in cols_to_match
         ]
+        cols_to_mismatch_idxs = [
+            data_for_duplicates.columns.get_loc(col)
+            for col in cols_to_mismatch
+        ]
         data_for_dups_arr = data_for_duplicates.values
 
         for i in tqdm(range(n_ads-1)):
@@ -47,25 +52,30 @@ def identify_exact_duplicates(
                 data_for_dups_arr[j, cols_to_match_idxs]
             ).all():
 
-                duplicates_type = differentiate_duplicates(
-                    data_for_duplicates.loc[i],
-                    data_for_duplicates.loc[j],
-                    current_type=default_type,
-                    str_cols=str_cols,
-                    cols_to_be_similar=cols_to_be_similar,
-                    description_col=description_col,
-                    date_col=date_col,
-                    threshold_similarity=threshold_similarity,
-                    threshold_partial=threshold_partial
-                )
+                if (
+                    data_for_dups_arr[i, cols_to_mismatch_idxs] !=
+                    data_for_dups_arr[j, cols_to_mismatch_idxs]
+                ).all():
 
-                if duplicates_type != "NON":
-                    exact_duplicates.append(
-                        {
-                            'id1': data_for_duplicates.loc[i, id_col],
-                            'id2': data_for_duplicates.loc[j, id_col],
-                            'type': duplicates_type
-                        })
+                    duplicates_type = differentiate_duplicates(
+                        data_for_duplicates.loc[i],
+                        data_for_duplicates.loc[j],
+                        current_type=default_type,
+                        str_cols=str_cols,
+                        cols_to_be_similar=cols_to_be_similar,
+                        description_col=description_col,
+                        date_col=date_col,
+                        threshold_similarity=threshold_similarity,
+                        threshold_partial=threshold_partial
+                    )
+
+                    if duplicates_type != "NON":
+                        exact_duplicates.append(
+                            {
+                                'id1': data_for_duplicates.loc[i, id_col],
+                                'id2': data_for_duplicates.loc[j, id_col],
+                                'type': duplicates_type
+                            })
 
                 j += 1
 

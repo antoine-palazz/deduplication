@@ -3,6 +3,7 @@ This is a boilerplate pipeline 'data_processing'
 generated using Kedro 0.18.6
 """
 
+from ftlangdetect import detect
 from functools import partial
 import html
 from multiprocessing import Pool, cpu_count
@@ -232,6 +233,13 @@ def filter_out_too_frequent_words(
     return well_described_data
 
 
+def find_language_from_text(  # Add minimal score?
+    text: str
+) -> str:
+    text = detect(text)['lang']
+    return text
+
+
 def create_extra_cols_from_text_cols(
     data: pd.DataFrame,
     cols_to_duplicate: list,
@@ -288,6 +296,10 @@ def preprocess_data_extensive(
         without_accents=True
     )
 
+    preprocessed_data[language_col] = preprocessed_data[
+        description_col
+    ].progress_apply(find_language_from_text)
+
     preprocessed_data[str_cols] = preprocessed_data[str_cols].progress_apply(
         remove_special_characters
     )
@@ -299,9 +311,9 @@ def preprocess_data_extensive(
         )
     )
 
-    preprocessed_data[str_cols] = preprocessed_data[str_cols].progress_apply(
-        lemmatize_texts
-    )
+    # preprocessed_data[str_cols] = preprocessed_data[str_cols].progress_apply(
+    #     lemmatize_texts
+    # )
 
     preprocessed_data = filter_out_too_frequent_words(
         preprocessed_data,

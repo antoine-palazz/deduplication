@@ -6,7 +6,7 @@
 
 list_cols_to_match_full:
     [
-        ['title', 'company_name', 'location', 'description'] # country_id?
+        ['title', 'company_name', 'location', 'description']  # country_id?
     ]
 
 list_cols_to_match_partial:
@@ -20,11 +20,23 @@ list_cols_to_match_partial:
 
 list_cols_to_match_semantic:
     [
-        ['title', 'description'],
-        ['title', 'beginning_description', 'country_id'],
-        ['title', 'end_description', 'country_id'],
-        ['company_name', 'location', 'country_id', 'retrieval_date']
+        # ['title', 'description'],
+        ['title', 'beginning_description'],  # Is it safe?
+        ['title', 'end_description'],  # Is it safe?
+        ['company_name', 'location', 'retrieval_date']  # Is it safe?
     ]
+
+list_cols_to_match_semantic_multilingual:
+    [
+        ['company_name', 'retrieval_date']
+    ]
+
+
+cols_to_mismatch_full: []
+cols_to_mismatch_partial: []
+cols_to_mismatch_semantic: []
+cols_to_mismatch_semantic_multilingual: ['language']
+
 
 type_full: "FULL"
 type_partial: "PARTIAL"

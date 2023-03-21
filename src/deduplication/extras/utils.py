@@ -28,7 +28,7 @@ def differentiate_duplicates(
     cols_to_be_similar: list,
     description_col: str,
     date_col: str,
-    threshold_similarity: float,
+    threshold_similarity: dict,
     threshold_partial: float
 ) -> str:
 
@@ -37,7 +37,7 @@ def differentiate_duplicates(
             if jaro_winkler_similarity(
                 row_1[col],
                 row_2[col]
-            ) < threshold_similarity:
+            ) < threshold_similarity[col]:
                 return "NON"  # Desired columns are too different
 
     if row_1[date_col] != row_2[date_col]:
@@ -70,7 +70,7 @@ def find_subtle_duplicates_from_tokens(
     description_col: str,
     date_col: str,
     id_col: str,
-    threshold_similarity: float,
+    threshold_similarity: dict,
     threshold_semantic: float,
     threshold_partial: float,
     chunk_size: int

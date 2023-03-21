@@ -7,7 +7,6 @@ from kedro.config import ConfigLoader
 from kedro.framework.project import settings
 from kedro.io import DataCatalog
 import pandas as pd
-# from tqdm import tqdm
 
 
 def aggregate_duplicates_list(
@@ -31,6 +30,7 @@ def aggregate_easy_duplicates(
     gross_full_duplicates: pd.DataFrame,
     gross_partial_duplicates: pd.DataFrame,
     gross_semantic_duplicates: pd.DataFrame,
+    gross_semantic_multilingual_duplicates: pd.DataFrame,
     cols_to_concatenate: list,
     id_col: str
 ) -> pd.DataFrame:
@@ -38,11 +38,14 @@ def aggregate_easy_duplicates(
     easy_duplicates = aggregate_duplicates_list(
         [gross_full_duplicates,
          gross_partial_duplicates,
-         gross_semantic_duplicates]
+         gross_semantic_duplicates,
+         gross_semantic_multilingual_duplicates]
     )
 
     n_easy_duplicates = len(easy_duplicates)
-    print(f'{n_easy_duplicates} "easy" duplicates isolated')
+    print(f'{n_easy_duplicates} "easy" duplicates isolated:')
+    print(describe_duplicates(easy_duplicates))
+
     if len(easy_duplicates[
         easy_duplicates['id1'] >= easy_duplicates['id2']
             ]) > 0:
@@ -53,7 +56,9 @@ def aggregate_easy_duplicates(
     # Let's save the partial duplicates that can be changed into full ones!
 
     # count_saved = 0
-    # partial_duplicates = easy_duplicates[easy_duplicates['type'] == 'PARTIAL']
+    # partial_duplicates = easy_duplicates[
+    #     easy_duplicates['type'] == 'PARTIAL'
+    # ]
     # partial_id1s = set(partial_duplicates['id1'])
     # dict_matchs_with_complete_offers = {}
 
@@ -78,7 +83,7 @@ def aggregate_easy_duplicates(
     #                 break
 
     # for idx_pair in tqdm(partial_duplicates.index):
-    #     # Correct the identical pairs matching with at least one complete offer
+    #     # Correct identical pairs matching with at least one complete offer
     #     id1 = partial_duplicates.loc[idx_pair, 'id1']
     #     id2 = partial_duplicates.loc[idx_pair, 'id2']
 
@@ -100,6 +105,28 @@ def aggregate_easy_duplicates(
     return easy_duplicates
 
 
+def print_true_subtle_duplicates(
+    easy_duplicates: pd.DataFrame,
+    subtle_duplicates: pd.DataFrame
+) -> pd.DataFrame:
+
+    all_subtle_pairs = subtle_duplicates[['id1', 'id2']].merge(
+        easy_duplicates[['id1', 'id2']],
+        on=['id1', 'id2'],
+        how='left',
+        indicator=True
+    )
+
+    true_subtles_duplicates = subtle_duplicates[
+        ~all_subtle_pairs['_merge'].isin(['both'])
+    ]
+
+    print(
+        f'{len(true_subtles_duplicates)} duplicates isolated with this model:'
+    )
+    print(describe_duplicates(true_subtles_duplicates))
+
+
 def aggregate_all_duplicates_one_model(
     easy_duplicates: pd.DataFrame,
     subtle_duplicates: pd.DataFrame
@@ -109,20 +136,17 @@ def aggregate_all_duplicates_one_model(
         [easy_duplicates, subtle_duplicates]
     )
 
-    n_all_duplicates = len(all_duplicates)
-    print(f'{n_all_duplicates} duplicates isolated with this model')
-
     if len(all_duplicates[
         all_duplicates['id1'] >= all_duplicates['id2']
-            ]) > 0:
+    ]) > 0:
         print("PROBLEM: id1 >= id2 in the duplicates table")
 
+    print_true_subtle_duplicates(easy_duplicates, subtle_duplicates)
     return all_duplicates
 
 
 def aggregate_all_duplicates_several_models(
     easy_duplicates: pd.DataFrame,
-    dummy_duplicates: pd.DataFrame,
     duplicates_str_list: list,
     project_path: str
 ) -> pd.DataFrame:

@@ -21,6 +21,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "gross_full_duplicates",
                         "gross_partial_duplicates",
                         "gross_semantic_duplicates",
+                        "gross_semantic_multilingual_duplicates",
                         "params:cols_to_concatenate",
                         "params:id_col"],
                 outputs="easy_duplicates",
@@ -104,7 +105,6 @@ def create_pipeline(**kwargs) -> Pipeline:
             node(
                 func=aggregate_all_duplicates_several_models,
                 inputs=["easy_duplicates",
-                        "subtle_duplicates_tf_idf",
                         "params:final_duplicates_str_list",
                         "params:project_path"],
                 outputs="best_duplicates",
