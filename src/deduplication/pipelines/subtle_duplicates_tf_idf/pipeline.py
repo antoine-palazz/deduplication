@@ -4,6 +4,7 @@ generated using Kedro 0.18.6
 """
 
 from kedro.pipeline import Pipeline, node, pipeline
+
 from .nodes import identify_subtle_duplicates
 
 
@@ -20,6 +21,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:date_col",
                         "params:id_col",
                         "params:max_df_tokenizer",
+                        "params:dim_tokens",
                         "params:threshold_similarity",
                         "params:threshold_semantic_tf_idf",
                         "params:threshold_partial",

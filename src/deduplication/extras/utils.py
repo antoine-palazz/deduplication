@@ -1,15 +1,13 @@
 import pandas as pd
 from jellyfish import jaro_winkler_similarity
-from sklearn.decomposition import PCA
+from sklearn.decomposition import TruncatedSVD
 from sklearn.metrics.pairwise import cosine_similarity
 from tqdm import tqdm
 
 
-def reduce_dimension(matrix_texts: list, desired_dimension: int) -> list:
-    pca = PCA(n_components=desired_dimension)
-    pca.fit(matrix_texts)
-
-    reduced_embeddings = [pca.fit_transform(text) for text in matrix_texts]
+def reduce_dimension(matrix_texts: list, dim_tokens: int) -> list:
+    pca = TruncatedSVD(n_components=dim_tokens)
+    reduced_embeddings = pca.fit_transform(matrix_texts)
 
     return reduced_embeddings
 

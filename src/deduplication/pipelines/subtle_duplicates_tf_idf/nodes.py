@@ -3,11 +3,13 @@ This is a boilerplate pipeline 'subtle_duplicates_tf_idf'
 generated using Kedro 0.18.6
 """
 
-from deduplication.extras.utils import (
-    find_subtle_duplicates_from_tokens
-)
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
+
+from deduplication.extras.utils import (
+    find_subtle_duplicates_from_tokens,
+    reduce_dimension,
+)
 
 
 def tokenize_tf_idf(
@@ -36,6 +38,7 @@ def identify_subtle_duplicates(
     date_col: str,
     id_col: str,
     max_df_tokenizer: float,
+    dim_tokens: int,
     threshold_similarity: float,
     threshold_semantic: float,
     threshold_partial: float,
@@ -46,9 +49,15 @@ def identify_subtle_duplicates(
         data[concatenated_col_name],
         max_df_tokenizer=max_df_tokenizer
     )
+
+    reduced_embeddings = reduce_dimension(
+        tokenized_texts,
+        dim_tokens=dim_tokens
+    )
+
     duplicates = find_subtle_duplicates_from_tokens(
         data,
-        tokenized_texts=tokenized_texts,
+        tokenized_texts=reduced_embeddings,
         str_cols=str_cols,
         cols_to_be_similar=cols_to_be_similar,
         description_col=description_col,

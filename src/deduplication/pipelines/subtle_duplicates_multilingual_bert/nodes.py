@@ -9,7 +9,10 @@ from torch.utils.data import DataLoader, Dataset
 from tqdm import tqdm
 from transformers import BertModel, BertTokenizer, logging
 
-from deduplication.extras.utils import find_subtle_duplicates_from_tokens
+from deduplication.extras.utils import (
+    find_subtle_duplicates_from_tokens,
+    reduce_dimension,
+)
 
 logging.set_verbosity_error()
 
@@ -69,18 +72,26 @@ def identify_subtle_duplicates(
     description_col: str,
     date_col: str,
     id_col: str,
+    dim_tokens: int,
     threshold_similarity: float,
     threshold_semantic: float,
     threshold_partial: float,
     batch_size: int,
     chunk_size: int,
 ) -> pd.DataFrame:
+
     tokenized_texts = tokenize_multilingual_bert(
         data[concatenated_col_name], batch_size=batch_size
     )
+
+    reduced_embeddings = reduce_dimension(
+        tokenized_texts,
+        dim_tokens=dim_tokens
+    )
+
     duplicates = find_subtle_duplicates_from_tokens(
         data,
-        tokenized_texts=tokenized_texts,
+        tokenized_texts=reduced_embeddings,
         str_cols=str_cols,
         cols_to_be_similar=cols_to_be_similar,
         description_col=description_col,
