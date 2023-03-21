@@ -1,22 +1,27 @@
-from jellyfish import jaro_winkler_similarity
 import pandas as pd
+from jellyfish import jaro_winkler_similarity
+from sklearn.decomposition import PCA
 from sklearn.metrics.pairwise import cosine_similarity
 from tqdm import tqdm
 
 
-def compute_chunk_cosine_similarity(
-    tokenized_texts,
-    start: int,
-    end: int
-):
+def reduce_dimension(matrix_texts: list, desired_dimension: int) -> list:
+    pca = PCA(n_components=desired_dimension)
+    pca.fit(matrix_texts)
+
+    reduced_embeddings = [pca.fit_transform(text) for text in matrix_texts]
+
+    return reduced_embeddings
+
+
+def compute_chunk_cosine_similarity(tokenized_texts, start: int, end: int):
     try:
         end = min(end, tokenized_texts.shape[0])
     except AttributeError:
         end = min(end, len(tokenized_texts))
     cosine_similarity_matrix = cosine_similarity(
-        X=tokenized_texts[start:end],
-        Y=tokenized_texts[start:]
-        )
+        X=tokenized_texts[start:end], Y=tokenized_texts[start:]
+    )
     return cosine_similarity_matrix
 
 
@@ -29,34 +34,28 @@ def differentiate_duplicates(
     description_col: str,
     date_col: str,
     threshold_similarity: dict,
-    threshold_partial: float
+    threshold_partial: float,
 ) -> str:
-
     for col in cols_to_be_similar:
         if row_1[col] != "" and row_2[col] != "":
-            if jaro_winkler_similarity(
-                row_1[col],
-                row_2[col]
-            ) < threshold_similarity[col]:
+            if (
+                jaro_winkler_similarity(row_1[col], row_2[col])
+                < threshold_similarity[col]
+            ):
                 return "NON"  # Desired columns are too different
 
     if row_1[date_col] != row_2[date_col]:
         return "TEMPORAL"  # Dates are different
 
     for col in str_cols:
-        if (row_1[col] == "" or row_2[col] == "") and (
-            row_1[col] != row_2[col]
-        ):
+        if (row_1[col] == "" or row_2[col] == "") and (row_1[col] != row_2[col]):
             return "PARTIAL"  # A field is missing in only one of the ads
 
-    if abs(
-        len(row_1[description_col]) -
-        len(row_2[description_col])
-        ) / (1 + min(
-            len(row_1[description_col]),
-            len(row_2[description_col]))
-            ) > threshold_partial:
-
+    if (
+        abs(len(row_1[description_col]) - len(row_2[description_col]))
+        / (1 + min(len(row_1[description_col]), len(row_2[description_col])))
+        > threshold_partial
+    ):
         return "PARTIAL"  # Description lengths are too different
 
     return current_type  # Nothing to change
@@ -73,9 +72,8 @@ def find_subtle_duplicates_from_tokens(
     threshold_similarity: dict,
     threshold_semantic: float,
     threshold_partial: float,
-    chunk_size: int
+    chunk_size: int,
 ) -> pd.DataFrame:
-
     duplicates = []
 
     try:
@@ -87,41 +85,39 @@ def find_subtle_duplicates_from_tokens(
     n_chunks = len(chunks)
 
     for chunk_start in tqdm(chunks):
-
         similarity_matrix_chunk = compute_chunk_cosine_similarity(
-            tokenized_texts,
-            start=chunk_start,
-            end=chunk_start+chunk_size
+            tokenized_texts, start=chunk_start, end=chunk_start + chunk_size
         )
         compteur_init = len(duplicates)
 
         for i in tqdm(range(chunk_size)):
-            for j in range(i+1, n_ads-chunk_start):
+            for j in range(i + 1, n_ads - chunk_start):
                 if similarity_matrix_chunk[i][j] > threshold_semantic:
-
                     duplicates_type = differentiate_duplicates(
-                        data.loc[chunk_start+i],
-                        data.loc[chunk_start+j],
+                        data.loc[chunk_start + i],
+                        data.loc[chunk_start + j],
                         current_type="SEMANTIC",
                         str_cols=str_cols,
                         cols_to_be_similar=cols_to_be_similar,
                         description_col=description_col,
                         date_col=date_col,
                         threshold_similarity=threshold_similarity,
-                        threshold_partial=threshold_partial
+                        threshold_partial=threshold_partial,
                     )
 
                     if duplicates_type != "NON":
                         duplicates.append(
-                            {'id1': data.loc[chunk_start+i, id_col],
-                             'id2': data.loc[chunk_start+j, id_col],
-                             'type': duplicates_type}
-                            )
+                            {
+                                "id1": data.loc[chunk_start + i, id_col],
+                                "id2": data.loc[chunk_start + j, id_col],
+                                "type": duplicates_type,
+                            }
+                        )
 
         compteur_end = len(duplicates)
         print(
-            f'{compteur_end-compteur_init} duplicates \
-               found in chunck n°{int(chunk_start/chunk_size+1)} / {n_chunks}'
-            )
+            f"{compteur_end-compteur_init} duplicates \
+               found in chunck n°{int(chunk_start/chunk_size+1)} / {n_chunks}"
+        )
 
     return duplicates

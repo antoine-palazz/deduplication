@@ -3,14 +3,13 @@ This is a boilerplate pipeline 'subtle_duplicates_tf_idf'
 generated using Kedro 0.18.6
 """
 
-from deduplication.extras.utils import (
-    find_subtle_duplicates_from_tokens
-)
 import pandas as pd
 import torch
 from torch.utils.data import DataLoader, Dataset
 from tqdm import tqdm
-from transformers import BertTokenizer, BertModel, logging
+from transformers import BertModel, BertTokenizer, logging
+
+from deduplication.extras.utils import find_subtle_duplicates_from_tokens
 
 logging.set_verbosity_error()
 
@@ -18,11 +17,9 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"The device for multilingual BERT is {device}")
 
 tokenizer_multilingual_bert = BertTokenizer.from_pretrained(
-    'bert-base-multilingual-uncased'
+    "bert-base-multilingual-uncased"
 )
-model_multilingual_bert = BertModel.from_pretrained(
-    'bert-base-multilingual-uncased'
-    )
+model_multilingual_bert = BertModel.from_pretrained("bert-base-multilingual-uncased")
 model_multilingual_bert.to(device)
 
 
@@ -38,23 +35,16 @@ class TextDataset(Dataset):
         input_ids = tokenizer_multilingual_bert.encode(
             text,
             add_special_tokens=True,
-            padding='max_length',
+            padding="max_length",
             truncation=True,
-            is_split_into_words=True
+            is_split_into_words=True,
         )
         return torch.tensor(input_ids)
 
 
-def tokenize_multilingual_bert(
-    texts: pd.Series,
-    batch_size: int
-) -> list:
-
+def tokenize_multilingual_bert(texts: pd.Series, batch_size: int) -> list:
     dataset = TextDataset(texts)
-    dataloader = DataLoader(
-        dataset,
-        batch_size=batch_size
-    )
+    dataloader = DataLoader(dataset, batch_size=batch_size)
 
     matrix_bert_texts = []
     with torch.no_grad():
@@ -62,7 +52,7 @@ def tokenize_multilingual_bert(
             batch = batch.to(device)
             outputs = model_multilingual_bert(batch)
             last_hidden_state = outputs.last_hidden_state
-            matrix_bert_texts.append(
+            matrix_bert_texts.extend(
                 last_hidden_state[:, 0, :].detach().cpu().numpy().tolist()
             )
 
@@ -81,12 +71,10 @@ def identify_subtle_duplicates(
     threshold_semantic: float,
     threshold_partial: float,
     batch_size: int,
-    chunk_size: int
+    chunk_size: int,
 ) -> pd.DataFrame:
-
     tokenized_texts = tokenize_multilingual_bert(
-        data[concatenated_col_name],
-        batch_size=batch_size
+        data[concatenated_col_name], batch_size=batch_size
     )
     duplicates = find_subtle_duplicates_from_tokens(
         data,
@@ -99,17 +87,13 @@ def identify_subtle_duplicates(
         threshold_similarity=threshold_similarity,
         threshold_semantic=threshold_semantic,
         threshold_partial=threshold_partial,
-        chunk_size=chunk_size
+        chunk_size=chunk_size,
     )
 
-    df_duplicates = pd.DataFrame(
-        duplicates
-    ).drop_duplicates(
-    ).sort_values(
-        by=['id1', 'id2'],
-        ignore_index=True
+    df_duplicates = (
+        pd.DataFrame(duplicates)
+        .drop_duplicates()
+        .sort_values(by=["id1", "id2"], ignore_index=True)
     )
-    print(
-        f'{len(df_duplicates)} subtle duplicates found with multilingual bert'
-    )
+    print(f"{len(df_duplicates)} subtle duplicates found with multilingual bert")
     return df_duplicates
