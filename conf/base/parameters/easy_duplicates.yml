@@ -23,7 +23,6 @@ list_cols_to_match_semantic:
         # ['title', 'description'],
         ['title', 'beginning_description'],  # Is it safe?
         ['title', 'end_description'],  # Is it safe?
-        ['company_name', 'location', 'retrieval_date']  # Is it safe?
     ]
 
 list_cols_to_match_semantic_multilingual:

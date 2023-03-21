@@ -11,17 +11,19 @@ concatenated_col_name: 'concatenated_offer'
 beginning_prefix: 'beginning_'
 end_prefix: 'end_'
 
-cols_to_be_similar: ['title', 'location']
+cols_to_be_similar: ['title', 'company_name', 'location']
 
 batch_size: 64
 chunk_size: 5000
 
 threshold_similarity:
   title: 0.8
+  company_name: 0.5
   location: 0.7
 threshold_similarity_multilingual:
   title: 0.2  # What is optimal?
-  location: 0.7  # What is optimal?
+  company_name: 0.5
+  location: 0.7
 
 threshold_partial: 0.15
 threshold_partial_multilingual: 0.50
