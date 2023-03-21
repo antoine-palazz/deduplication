@@ -73,16 +73,16 @@ submission_2_KF:
     description:
         "TF-IDF with threshold at 0.8 & new FULL"
     full:
-        nb_duplicates:
+        nb_duplicates: 63353
         f1_score: 0.99  # Top performer
     semantic:
-        nb_duplicates:
+        nb_duplicates: 4726
         f1_score: 0.02
     temporal:
-        nb_duplicates:
+        nb_duplicates: 354808
         f1_score: 0.75
     partial:
-        nb_duplicates:
+        nb_duplicates: 21916
         f1_score: 0.09
     global:
         f1_score: 0.57  # Top performer
