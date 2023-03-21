@@ -6,17 +6,20 @@
 wi_dataset:
   type: deduplication.extras.datasets.broken_csv_dataset.BrokenCSVDataSet
   filepath: data/01_raw/wi_dataset.csv
+  layer: raw
 
 
 preprocessed_dataset:
   type: pandas.ParquetDataSet
   filepath: data/02_intermediate/preprocessed_dataset.pq
+  layer: intermediate
   save_args:
       index: False
 
 extensively_preprocessed_dataset:
   type: pandas.ParquetDataSet
   filepath: data/03_primary/extensively_preprocessed_dataset.pq
+  layer: primary
   save_args:
       index: False
 
@@ -24,24 +27,28 @@ extensively_preprocessed_dataset:
 preprocessed_full_offers:
   type: pandas.ParquetDataSet
   filepath: data/04_feature/preprocessed_full_offers.pq
+  layer: feature
   save_args:
       index: False
 
 preprocessed_quasi_complete_offers:
   type: pandas.ParquetDataSet
   filepath: data/04_feature/preprocessed_quasi_complete_offers.pq
+  layer: feature
   save_args:
       index: False
 
 extensively_preprocessed_described_offers:
   type: pandas.ParquetDataSet
   filepath: data/04_feature/extensively_preprocessed_described_offers.pq
+  layer: feature
   save_args:
       index: False
 
 extensively_preprocessed_located_offers:
   type: pandas.ParquetDataSet
   filepath: data/04_feature/extensively_preprocessed_located_offers.pq
+  layer: feature
   save_args:
       index: False
 
@@ -49,24 +56,28 @@ extensively_preprocessed_located_offers:
 gross_full_duplicates:
   type: pandas.ParquetDataSet
   filepath: data/05_model_input/gross_full_duplicates.pq
+  layer: model_input
   save_args:
       index: False
 
 gross_partial_duplicates:
   type: pandas.ParquetDataSet
   filepath: data/05_model_input/gross_partial_duplicates.pq
+  layer: model_input
   save_args:
       index: False
 
 gross_semantic_duplicates:
   type: pandas.ParquetDataSet
   filepath: data/05_model_input/gross_semantic_duplicates.pq
+  layer: model_input
   save_args:
       index: False
 
 gross_semantic_multilingual_duplicates:
   type: pandas.ParquetDataSet
   filepath: data/05_model_input/gross_semantic_multilingual_duplicates.pq
+  layer: model_input
   save_args:
       index: False
 
@@ -74,24 +85,28 @@ gross_semantic_multilingual_duplicates:
 easy_duplicates:
   type: pandas.CSVDataSet
   filepath: data/06_models/easy_duplicates.csv
+  layer: models
   save_args:
       index: False
 
 subtle_duplicates_tf_idf:
   type: pandas.ParquetDataSet
   filepath: data/06_models/subtle_duplicates_tf_idf.pq
+  layer: models
   save_args:
       index: False
 
 subtle_duplicates_multilingual_bert:
   type: pandas.ParquetDataSet
   filepath: data/06_models/subtle_duplicates_multilingual_bert.pq
+  layer: models
   save_args:
       index: False
 
 subtle_duplicates_xlm_roberta:
   type: pandas.ParquetDataSet
   filepath: data/06_models/subtle_duplicates_xlm_roberta.pq
+  layer: models
   save_args:
       index: False
 
@@ -99,6 +114,7 @@ subtle_duplicates_xlm_roberta:
 all_duplicates_tf_idf:
   type: pandas.CSVDataSet
   filepath: data/07_model_output/all_duplicates_tf_idf.csv
+  layer: model_output
   save_args:
       index: False
       header: False
@@ -109,6 +125,7 @@ all_duplicates_tf_idf:
 all_duplicates_multilingual_bert:
   type: pandas.CSVDataSet
   filepath: data/07_model_output/all_duplicates_multilingual_bert.csv
+  layer: model_output
   save_args:
       index: False
       header: False
@@ -119,6 +136,7 @@ all_duplicates_multilingual_bert:
 all_duplicates_xlm_roberta:
   type: pandas.CSVDataSet
   filepath: data/07_model_output/all_duplicates_xlm_roberta.csv
+  layer: model_output
   save_args:
       index: False
       header: False
@@ -130,24 +148,28 @@ all_duplicates_xlm_roberta:
 easy_duplicates_description:
   type: pandas.CSVDataSet
   filepath: data/08_reporting/easy_duplicates_description.csv
+  layer: reporting
   save_args:
       index: False
 
 all_duplicates_tf_idf_description:
   type: pandas.CSVDataSet
   filepath: data/08_reporting/all_duplicates_tf_idf_description.csv
+  layer: reporting
   save_args:
       index: False
 
 all_duplicates_multilingual_bert_description:
   type: pandas.CSVDataSet
   filepath: data/08_reporting/all_duplicates_multilingual_bert_description.csv
+  layer: reporting
   save_args:
       index: False
 
 all_duplicates_xlm_roberta_description:
   type: pandas.CSVDataSet
   filepath: data/08_reporting/all_duplicates_xlm_roberta_description.csv
+  layer: reporting
   save_args:
       index: False
 
@@ -155,6 +177,7 @@ all_duplicates_xlm_roberta_description:
 best_duplicates:
   type: pandas.CSVDataSet
   filepath: data/07_model_output/best_duplicates.csv
+  layer: model_output
   save_args:
       index: False
       header: False
@@ -165,5 +188,6 @@ best_duplicates:
 best_duplicates_description:
   type: pandas.CSVDataSet
   filepath: data/08_reporting/best_duplicates_description.csv
+  layer: reporting
   save_args:
       index: False
