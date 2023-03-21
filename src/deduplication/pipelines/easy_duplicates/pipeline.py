@@ -12,7 +12,7 @@ def create_pipeline(**kwargs) -> Pipeline:
         [
             node(
                 func=identify_exact_duplicates,
-                inputs=["preprocessed_complete_offers",
+                inputs=["preprocessed_full_offers",
                         "params:list_cols_to_match_full",
                         "params:cols_to_mismatch_full",
                         "params:type_full",
