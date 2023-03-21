@@ -24,7 +24,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:threshold_similarity",
                         "params:threshold_partial"],
                 outputs="gross_full_duplicates",
-                name="identify_gross_full_duplicates_node",
+                name="identify_gross_full_duplicates_node"
             ),
             node(
                 func=identify_exact_duplicates,
@@ -40,7 +40,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:threshold_similarity",
                         "params:threshold_partial"],
                 outputs="gross_partial_duplicates",
-                name="identify_gross_partial_duplicates_node",
+                name="identify_gross_partial_duplicates_node"
             ),
             node(
                 func=identify_exact_duplicates,
@@ -56,7 +56,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:threshold_similarity",
                         "params:threshold_partial"],
                 outputs="gross_semantic_duplicates",
-                name="identify_gross_semantic_duplicates_node",
+                name="identify_gross_semantic_duplicates_node"
             ),
             node(
                 func=identify_exact_duplicates,
@@ -72,7 +72,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:threshold_similarity_multilingual",
                         "params:threshold_partial_multilingual"],
                 outputs="gross_semantic_multilingual_duplicates",
-                name="identify_gross_semantic_multilingual_duplicates_node",
+                name="identify_gross_semantic_multilingual_duplicates_node"
             )
         ],
         tags=[
