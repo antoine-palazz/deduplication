@@ -19,7 +19,9 @@ print(f"The device for multilingual BERT is {device}")
 tokenizer_multilingual_bert = BertTokenizer.from_pretrained(
     "bert-base-multilingual-uncased"
 )
-model_multilingual_bert = BertModel.from_pretrained("bert-base-multilingual-uncased")
+model_multilingual_bert = BertModel.from_pretrained(
+    "bert-base-multilingual-uncased"
+)
 model_multilingual_bert.to(device)
 
 
@@ -95,5 +97,7 @@ def identify_subtle_duplicates(
         .drop_duplicates()
         .sort_values(by=["id1", "id2"], ignore_index=True)
     )
-    print(f"{len(df_duplicates)} subtle duplicates found with multilingual bert")
+    print(
+        f"{len(df_duplicates)} subtle duplicates found with multilingual bert"
+    )
     return df_duplicates

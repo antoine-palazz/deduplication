@@ -48,7 +48,10 @@ def differentiate_duplicates(
         return "TEMPORAL"  # Dates are different
 
     for col in str_cols:
-        if (row_1[col] == "" or row_2[col] == "") and (row_1[col] != row_2[col]):
+        if (
+            row_1[col] == "" or row_2[col] == "") and (
+            row_1[col] != row_2[col]
+        ):
             return "PARTIAL"  # A field is missing in only one of the ads
 
     if (

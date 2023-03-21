@@ -93,5 +93,7 @@ def identify_subtle_duplicates(
         .drop_duplicates()
         .sort_values(by=["id1", "id2"], ignore_index=True)
     )
-    print(f"{len(df_duplicates)} subtle duplicates were found with xlm roberta")
+    print(
+        f"{len(df_duplicates)} subtle duplicates were found with xlm roberta"
+    )
     return df_duplicates
