@@ -21,8 +21,8 @@ list_cols_to_match_partial:
 list_cols_to_match_semantic:
     [
         # ['title', 'filtered_description'],
-        ['title', 'beginning_description'],  # Is it safe?
-        ['title', 'end_description'],  # Is it safe?
+        ['title', 'beginning_filtered_description'],  # Is it safe?
+        ['title', 'end_filtered_description'],  # Is it safe?
     ]
 
 list_cols_to_match_semantic_multilingual:
