@@ -31,10 +31,13 @@ list_cols_to_match_semantic_multilingual:
     ]
 
 
-cols_to_mismatch_full: []
-cols_to_mismatch_partial: []
-cols_to_mismatch_semantic: []
-cols_to_mismatch_semantic_multilingual: ['language']
+list_cols_to_mismatch_full: []
+list_cols_to_mismatch_partial: []
+list_cols_to_mismatch_semantic: []
+list_cols_to_mismatch_semantic_multilingual: [
+    ['language'],
+    ['country_id'],
+]
 
 
 type_full: "FULL"
