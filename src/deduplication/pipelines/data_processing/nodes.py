@@ -283,8 +283,8 @@ def preprocess_data_extensive(
     description_col: str,
     filtered_description_col: str,
     language_col: str,
-    cols_to_concatenate: list,
-    concatenated_col_name: str,
+    cols_to_concatenate: dict,
+    concatenated_col_names: dict,
     languages_list: list,
     beginning_prefix: str,
     end_prefix: str,
@@ -343,8 +343,14 @@ def preprocess_data_extensive(
 
     preprocessed_data = create_concatenated_column(
         preprocessed_data,
-        cols_to_concatenate=cols_to_concatenate,
-        concatenated_col_name=concatenated_col_name
+        cols_to_concatenate=cols_to_concatenate['normal'],
+        concatenated_col_name=concatenated_col_names['normal']
+    )
+
+    preprocessed_data = create_concatenated_column(
+        preprocessed_data,
+        cols_to_concatenate=cols_to_concatenate['filtered'],
+        concatenated_col_name=concatenated_col_names['filtered']
     )
 
     return preprocessed_data

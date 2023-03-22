@@ -4,10 +4,11 @@ generated using Kedro 0.18.6
 """
 
 from kedro.pipeline import Pipeline, node, pipeline
+
 from .nodes import (
-    preprocess_data_basic,
     filter_out_incomplete_offers,
-    preprocess_data_extensive
+    preprocess_data_basic,
+    preprocess_data_extensive,
 )
 
 
@@ -43,9 +44,10 @@ def create_pipeline(**kwargs) -> Pipeline:
                 inputs=["preprocessed_dataset",
                         "params:str_cols",
                         "params:description_col",
+                        "params:filtered_description_col",
                         "params:language_col",
                         "params:cols_to_concatenate",
-                        "params:concatenated_col_name",
+                        "params:concatenated_col_names",
                         "params:languages_list",
                         "params:beginning_prefix",
                         "params:end_prefix",

@@ -20,7 +20,7 @@ list_cols_to_match_partial:
 
 list_cols_to_match_semantic:
     [
-        # ['title', 'description'],
+        # ['title', 'filtered_description'],
         ['title', 'beginning_description'],  # Is it safe?
         ['title', 'end_description'],  # Is it safe?
     ]

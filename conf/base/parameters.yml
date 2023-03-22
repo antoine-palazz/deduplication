@@ -5,11 +5,17 @@ description_col: 'description'
 date_col: 'retrieval_date'
 
 language_col: 'language'
+filtered_description_col: 'filtered_description'
 
-concatenated_col_name: 'concatenated_offer'
+concatenated_col_names:
+    normal: 'concatenated_offer'
+    filtered: 'concatenated_filtered_offer'
 
 beginning_prefix: 'beginning_'
 end_prefix: 'end_'
+
+normal_description_type: 'normal'
+filtered_description_type: 'filtered'
 
 cols_to_be_similar: ['title', 'company_name', 'location']
 
@@ -25,7 +31,7 @@ threshold_similarity_multilingual:
   company_name: 0.8
   location: 0.8
 
-threshold_partial: 0.15
-threshold_partial_multilingual: 0.45
+threshold_partial: 0.2
+threshold_partial_multilingual: 0.5
 
 dim_tokens: 128

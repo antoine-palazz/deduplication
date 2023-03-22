@@ -14,10 +14,11 @@ def create_pipeline(**kwargs) -> Pipeline:
             node(
                 func=identify_subtle_duplicates,
                 inputs=["extensively_preprocessed_dataset",
-                        "params:concatenated_col_name",
+                        "params:concatenated_col_names",
                         "params:str_cols",
                         "params:cols_to_be_similar",
-                        "params:description_col",
+                        "params:filtered_description_type",
+                        "params:filtered_description_col",
                         "params:date_col",
                         "params:id_col",
                         "params:max_df_tokenizer",

@@ -3,10 +3,10 @@ This is a boilerplate pipeline 'union_all_duplicates'
 generated using Kedro 0.18.6
 """
 
+import pandas as pd
 from kedro.config import ConfigLoader
 from kedro.framework.project import settings
 from kedro.io import DataCatalog
-import pandas as pd
 
 
 def aggregate_duplicates_list(
@@ -31,7 +31,7 @@ def aggregate_easy_duplicates(
     gross_partial_duplicates: pd.DataFrame,
     gross_semantic_duplicates: pd.DataFrame,
     gross_semantic_multilingual_duplicates: pd.DataFrame,
-    cols_to_concatenate: list,
+    cols_to_concatenate: dict,
     id_col: str
 ) -> pd.DataFrame:
 
@@ -91,10 +91,10 @@ def aggregate_easy_duplicates(
     #         if (
     #             preprocessed_data[
     #                 preprocessed_data[id_col] == id1
-    #             ].iloc[0][cols_to_concatenate] ==
+    #             ].iloc[0][cols_to_concatenate['normal']] ==
     #             preprocessed_data[
     #                 preprocessed_data[id_col] == id2
-    #             ].iloc[0][cols_to_concatenate]
+    #             ].iloc[0][cols_to_concatenate['normal']]
     #            ).all():
 
     #             easy_duplicates.loc[idx_pair, 'type'] = 'FULL'

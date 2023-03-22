@@ -38,7 +38,7 @@ class TextDataset(Dataset):
             add_special_tokens=True,
             padding="max_length",
             truncation=True,
-            is_split_into_words=True,
+            is_split_into_words=True
         )
         return torch.tensor(input_ids)
 
@@ -62,9 +62,10 @@ def tokenize_xlm_roberta(texts: pd.Series, batch_size: int = 64) -> list:
 
 def identify_subtle_duplicates(
     data: pd.DataFrame,
-    concatenated_col_name: str,
+    concatenated_col_names: dict,
     str_cols: list,
     cols_to_be_similar: list,
+    description_type: str,
     description_col: str,
     date_col: str,
     id_col: str,
@@ -77,7 +78,8 @@ def identify_subtle_duplicates(
 ) -> pd.DataFrame:
 
     tokenized_texts = tokenize_xlm_roberta(
-        data[concatenated_col_name], batch_size=batch_size
+        data[concatenated_col_names[description_type]],
+        batch_size=batch_size
     )
 
     reduced_embeddings = reduce_dimension(
