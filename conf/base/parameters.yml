@@ -18,11 +18,11 @@ chunk_size: 5000
 
 threshold_similarity:
   title: 0.8
-  company_name: 0.6
+  company_name: 0.8
   location: 0.8
 threshold_similarity_multilingual:
-  title: 0.4  # What is optimal?
-  company_name: 0.6
+  title: 0.5  # What is optimal?
+  company_name: 0.8
   location: 0.8
 
 threshold_partial: 0.15

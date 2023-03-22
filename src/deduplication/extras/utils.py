@@ -1,8 +1,21 @@
+import itertools
+import sys
+import uuid
+from multiprocessing import Pool, cpu_count
+
 import pandas as pd
 from jellyfish import jaro_winkler_similarity
 from sklearn.decomposition import TruncatedSVD
 from sklearn.metrics.pairwise import cosine_similarity
 from tqdm import tqdm
+
+
+def globalize(func):
+    def result(*args, **kwargs):
+        return func(*args, **kwargs)
+    result.__name__ = result.__qualname__ = uuid.uuid4().hex
+    setattr(sys.modules[result.__module__], result.__name__, result)
+    return result
 
 
 def reduce_dimension(matrix_texts: list, dim_tokens: int) -> list:
@@ -75,6 +88,7 @@ def find_subtle_duplicates_from_tokens(
     threshold_partial: float,
     chunk_size: int,
 ) -> pd.DataFrame:
+
     duplicates = []
 
     try:
@@ -86,12 +100,13 @@ def find_subtle_duplicates_from_tokens(
     n_chunks = len(chunks)
 
     for chunk_start in tqdm(chunks):
+
         similarity_matrix_chunk = compute_chunk_cosine_similarity(
             tokenized_texts, start=chunk_start, end=chunk_start + chunk_size
         )
-        compteur_init = len(duplicates)
 
-        for i in tqdm(range(chunk_size)):
+        def find_dups_in_chunk(i):
+            duplicates_chunk_i = []
             for j in range(i + 1, n_ads - chunk_start):
                 if similarity_matrix_chunk[i][j] > threshold_semantic:
                     duplicates_type = differentiate_duplicates(
@@ -107,7 +122,7 @@ def find_subtle_duplicates_from_tokens(
                     )
 
                     if duplicates_type != "NON":
-                        duplicates.append(
+                        duplicates_chunk_i.append(
                             {
                                 "id1": data.loc[chunk_start + i, id_col],
                                 "id2": data.loc[chunk_start + j, id_col],
@@ -115,10 +130,20 @@ def find_subtle_duplicates_from_tokens(
                             }
                         )
 
-        compteur_end = len(duplicates)
+            return duplicates_chunk_i
+
+        find_dups_in_chunk_for_pickle = globalize(find_dups_in_chunk)
+        with Pool(int(cpu_count()/3)) as pool:
+            list_duplicates_chunk = pool.map(find_dups_in_chunk_for_pickle,
+                                             range(chunk_size)
+                                             )
+        duplicates_chunk = list(
+            itertools.chain.from_iterable(list_duplicates_chunk)
+        )
         print(
-            f"{compteur_end-compteur_init} duplicates \
+            f"{len(duplicates_chunk)} duplicates \
                found in chunck n°{int(chunk_start/chunk_size+1)} / {n_chunks}"
         )
+        duplicates.extend(duplicates_chunk)
 
     return duplicates

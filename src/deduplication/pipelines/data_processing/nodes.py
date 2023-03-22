@@ -3,18 +3,19 @@ This is a boilerplate pipeline 'data_processing'
 generated using Kedro 0.18.6
 """
 
-from ftlangdetect import detect
-from functools import partial
 import html
+import re
+import warnings
+from functools import partial
 from multiprocessing import Pool, cpu_count
-from nltk.corpus import stopwords
-from nltk.stem import WordNetLemmatizer
+
 import nltk
 import pandas as pd
-import re
+from ftlangdetect import detect
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
 from tqdm import tqdm
 from unidecode import unidecode
-import warnings
 
 nltk.download('punkt')
 nltk.download('stopwords')
@@ -280,6 +281,7 @@ def preprocess_data_extensive(
     pre_preprocessed_data: pd.DataFrame,
     str_cols: list,
     description_col: str,
+    filtered_description_col: str,
     language_col: str,
     cols_to_concatenate: list,
     concatenated_col_name: str,
@@ -304,27 +306,36 @@ def preprocess_data_extensive(
         remove_special_characters
     )
 
-    preprocessed_data[str_cols] = preprocessed_data[str_cols].progress_apply(
-        partial(
-            remove_stopwords,
-            stopwords_list=stopwords_list
-        )
+    # preprocessed_data[str_cols] = preprocessed_data[str_cols].progress_apply(
+    #     partial(
+    #         remove_stopwords,
+    #         stopwords_list=stopwords_list
+    #     )
+    # )
+
+    preprocessed_data[filtered_description_col] = remove_stopwords(
+        preprocessed_data[description_col],
+        stopwords_list=stopwords_list
     )
 
     # preprocessed_data[str_cols] = preprocessed_data[str_cols].progress_apply(
     #     lemmatize_texts
     # )
 
+    preprocessed_data[filtered_description_col] = lemmatize_texts(
+        preprocessed_data[filtered_description_col]
+    )
+
     preprocessed_data = filter_out_too_frequent_words(
         preprocessed_data,
-        description_col=description_col,
+        description_col=filtered_description_col,
         language_col=language_col,
         proportion_words_to_filter_out=proportion_words_to_filter_out
     )
 
     preprocessed_data = create_extra_cols_from_text_cols(
         preprocessed_data,
-        cols_to_duplicate=[description_col],
+        cols_to_duplicate=[filtered_description_col],
         beginning_prefix=beginning_prefix,
         end_prefix=end_prefix,
         threshold_short_text=threshold_short_text
