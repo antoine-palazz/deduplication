@@ -13,7 +13,7 @@ def create_pipeline(**kwargs) -> Pipeline:
         [
             node(
                 func=identify_subtle_duplicates,
-                inputs=["extensively_preprocessed_dataset",
+                inputs=["extensively_preprocessed_international_offers",
                         "params:concatenated_col_names",
                         "params:str_cols",
                         "params:cols_to_be_similar",

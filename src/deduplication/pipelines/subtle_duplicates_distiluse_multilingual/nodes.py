@@ -3,6 +3,7 @@ This is a boilerplate pipeline 'subtle_duplicates_distiluse_multilingual'
 generated using Kedro 0.18.7
 """
 
+from functools import partial
 from multiprocessing import Pool, cpu_count
 
 import pandas as pd
@@ -22,7 +23,9 @@ model_distiluse_multilingual = SentenceTransformer(
 
 def encode_texts(texts: pd.Series) -> list:
     embedded_texts = texts.progress_apply(
-        model_distiluse_multilingual.encode
+        partial(model_distiluse_multilingual.encode,
+                show_progress_bar=True
+                )
     )
     return embedded_texts
 

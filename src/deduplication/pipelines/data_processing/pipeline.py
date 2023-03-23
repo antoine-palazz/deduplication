@@ -6,6 +6,7 @@ generated using Kedro 0.18.6
 from kedro.pipeline import Pipeline, node, pipeline
 
 from .nodes import (
+    filter_international_companies,
     filter_out_incomplete_offers,
     preprocess_data_basic,
     preprocess_data_extensive,
@@ -72,6 +73,14 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:nb_allowed_nans_semantic_multilingual"],
                 outputs="extensively_preprocessed_located_offers",
                 name="filter_located_offers_for_semantic_multilingual_node"
+            ),
+            node(
+                func=filter_international_companies,
+                inputs=["extensively_preprocessed_dataset",
+                        "params:cols_to_be_diversified",
+                        "params:company_col"],
+                outputs="extensively_preprocessed_international_offers",
+                name="filter_international_offers_node"
             )
         ],
         tags=[

@@ -95,6 +95,7 @@ def filter_out_incomplete_offers(
         inplace=True
     )
 
+    print(f'Length of the filtered table: {len(filtered_data_on_cols)}')
     return filtered_data_on_cols
 
 
@@ -360,3 +361,25 @@ def preprocess_data_extensive(
     )
 
     return preprocessed_data
+
+
+def filter_international_companies(
+    preprocessed_data: pd.DataFrame,
+    cols_to_be_diversified: list,
+    company_col: str
+) -> pd.DataFrame:
+
+    # Count unique values in each of the columns of interest for each company
+    unique_counts = preprocessed_data.groupby(
+        [company_col]
+    )[cols_to_be_diversified].nunique()
+
+    # Filter out companies with only one unique value in each of them
+    international_offers = preprocessed_data[
+        preprocessed_data[company_col].isin(
+            unique_counts[(unique_counts > 1).any(axis=1)].index
+        )
+    ]
+
+    print(f'Length of the filtered table: {len(international_offers)}')
+    return international_offers

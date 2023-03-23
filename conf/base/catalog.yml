@@ -52,6 +52,13 @@ extensively_preprocessed_located_offers:
   save_args:
       index: False
 
+extensively_preprocessed_international_offers:
+  type: pandas.ParquetDataSet
+  filepath: data/04_feature/extensively_preprocessed_international_offers.pq
+  layer: feature
+  save_args:
+      index: False
+
 
 gross_full_duplicates:
   type: pandas.ParquetDataSet

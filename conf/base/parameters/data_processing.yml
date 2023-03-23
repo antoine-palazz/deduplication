@@ -9,6 +9,9 @@ str_cols:
 cols_to_concatenate:
     normal: ['title', 'company_name', 'location', 'country_id', 'description']
     filtered: ['title', 'company_name', 'location', 'country_id', 'filtered_description']
+cols_to_be_diversified:
+    ['language', 'country_id']
+
 
 required_cols_full:
     []
