@@ -26,6 +26,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:threshold_similarity_multilingual",
                         "params:threshold_semantic_distiluse_multilingual",
                         "params:threshold_partial_multilingual",
+                        "params:batch_size"
                         "params:chunk_size"
                         ],
                 outputs="subtle_duplicates_distiluse_multilingual",

@@ -7,6 +7,7 @@ from functools import partial
 from multiprocessing import Pool, cpu_count
 
 import pandas as pd
+import torch
 from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
 
@@ -14,19 +15,27 @@ from deduplication.extras.utils import (  # reduce_dimension
     find_subtle_duplicates_from_tokens,
 )
 
-tqdm.pandas()
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print(f"The device for distiluse multilingual is {device}")
 
 model_distiluse_multilingual = SentenceTransformer(
     'distiluse-base-multilingual-cased-v2'
 )
 
 
-def encode_texts(texts: pd.Series) -> list:
+def encode_texts(
+    texts: pd.Series,
+    batch_size: int
+) -> list:
+
     embedded_texts = texts.progress_apply(
         partial(model_distiluse_multilingual.encode,
-                show_progress_bar=True
+                show_progress_bar=True,
+                batch_size=batch_size,
+                device=device
                 )
     )
+
     return embedded_texts
 
 
@@ -54,11 +63,13 @@ def identify_subtle_duplicates(
     threshold_similarity: float,
     threshold_semantic: float,
     threshold_partial: float,
+    batch_size: int,
     chunk_size: int
 ) -> pd.DataFrame:
 
     embedded_texts = encode_texts(
-        data[concatenated_col_names[description_type]]
+        data[concatenated_col_names[description_type]],
+        batch_size=batch_size
     )
 
     # embedded_texts = reduce_dimension(
