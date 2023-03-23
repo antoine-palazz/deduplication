@@ -13,13 +13,22 @@ from deduplication.extras.utils import (  # reduce_dimension
     find_subtle_duplicates_from_tokens,
 )
 
+tqdm.pandas()
+
 model_distiluse_multilingual = SentenceTransformer(
     'distiluse-base-multilingual-cased-v2'
 )
 
 
 def encode_texts(texts: pd.Series) -> list:
-    with Pool(int(cpu_count()/5)) as pool:
+    embedded_texts = texts.progress_apply(
+        model_distiluse_multilingual.encode
+    )
+    return embedded_texts
+
+
+def encode_texts_multiprocessing(texts: pd.Series) -> list:
+    with Pool(int(cpu_count()/3)) as pool:
         embedded_texts = list(pool.map(
             model_distiluse_multilingual.encode,
             tqdm(texts)
