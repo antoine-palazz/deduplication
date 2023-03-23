@@ -280,9 +280,13 @@ def create_concatenated_column(
     for col in tqdm(cols_to_concatenate[1:]):
         data_with_new_cols[concatenated_col_name] += ' ' + data[col]
 
-    data_with_new_cols[concatenated_col_name].replace(
-        r' +', ' ', regex=True, inplace=True
-    ).str.strip(inplace=True)
+    data_with_new_cols[
+        concatenated_col_name
+    ] = data_with_new_cols[
+        concatenated_col_name
+    ].replace(
+        r' +', ' ', regex=True
+    ).str.strip()
 
     return data_with_new_cols
 
