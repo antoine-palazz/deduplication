@@ -3,7 +3,7 @@ This is a boilerplate pipeline 'subtle_duplicates_xlm_roberta'
 generated using Kedro 0.18.6
 """
 
-# import nltk
+import nltk
 import pandas as pd
 import torch
 from torch.utils.data import DataLoader, Dataset
@@ -29,16 +29,16 @@ class TextDataset(Dataset):
     def __init__(self, texts):
         self.texts = texts
 
-        # corpus = " ".join(texts)
-        # tokens = nltk.word_tokenize(corpus)
-        # vocab_size = len(set(tokens))
-        # print(f'The vocab size for XLM Roberta is {vocab_size}')
+        corpus = " ".join(texts)
+        tokens = nltk.word_tokenize(corpus)
+        vocab_size = len(set(tokens))
+        print(f'The vocab size for XLM Roberta is {vocab_size}')
 
-        # self.tokenizer = tokenizer_xlm_roberta.train_new_from_iterator(
-        #     split(texts, 100),
-        #     vocab_size=vocab_size
-        # )
-        # print('XLM Roberta tokenizer is re-trained')
+        self.tokenizer = tokenizer_xlm_roberta.train_new_from_iterator(
+            split(texts, 100),
+            vocab_size=vocab_size
+        )
+        print('XLM Roberta tokenizer is re-trained')
 
     def __len__(self):
         return len(self.texts)
@@ -67,8 +67,9 @@ def tokenize_xlm_roberta(texts: pd.Series, batch_size: int) -> list:
     with torch.no_grad():
         for batch in tqdm(dataloader):
             batch = batch.to(device)
-            outputs = model_xlm_roberta(batch)
-            last_hidden_state = outputs.last_hidden_state
+            outputs = model_xlm_roberta(batch,
+                                        output_hidden_states=True)
+            last_hidden_state = outputs.hidden_states[-1]
             matrix_roberta_texts.extend(
                 last_hidden_state[:, 0, :].detach().cpu().numpy().tolist()
             )
