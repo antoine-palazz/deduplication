@@ -56,6 +56,8 @@ def differentiate_duplicates(
             ):
                 return "NON"  # Desired columns are too different
 
+    # What should come first? Temporal or partial?
+
     count_partial = 0
     for col in str_cols:
         if (

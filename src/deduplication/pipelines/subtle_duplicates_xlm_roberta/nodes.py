@@ -43,7 +43,7 @@ class TextDataset(Dataset):
         return torch.tensor(input_ids)
 
 
-def tokenize_xlm_roberta(texts: pd.Series, batch_size: int = 64) -> list:
+def tokenize_xlm_roberta(texts: pd.Series, batch_size) -> list:
     dataset = TextDataset(texts)
     dataloader = DataLoader(dataset, batch_size=batch_size)
 
