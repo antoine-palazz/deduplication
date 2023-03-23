@@ -30,6 +30,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                 tags=[
                     'easy',
                     'tf_idf',
+                    'distiluse_multilingual',
                     'multilingual_bert',
                     'xlm_roberta',
                     'final_models'
@@ -43,6 +44,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                 tags=[
                     'easy',
                     'tf_idf',
+                    'distiluse_multilingual',
                     'multilingual_bert',
                     'xlm_roberta',
                     'final_models'
@@ -69,6 +71,22 @@ def create_pipeline(**kwargs) -> Pipeline:
                     'tf_idf',
                     'final_models'
                      ]
+            ),
+
+            node(
+                func=aggregate_all_duplicates_one_model,
+                inputs=["easy_duplicates",
+                        "subtle_duplicates_distiluse_multilingual"],
+                outputs="all_duplicates_distiluse_multilingual",
+                name="aggregate_all_duplicates_distiluse_multilingual_node",
+                tags=['distiluse_multilingual', 'final_models']
+            ),
+            node(
+                func=describe_duplicates,
+                inputs=["all_duplicates_distiluse_multilingual"],
+                outputs="all_duplicates_distiluse_multilingual_description",
+                name="describe_duplicates_distiluse_multilingual_node",
+                tags=['distiluse_multilingual', 'final_models']
             ),
 
             node(
@@ -107,7 +125,9 @@ def create_pipeline(**kwargs) -> Pipeline:
                 func=aggregate_all_duplicates_several_models,
                 inputs={
                     "easy": "easy_duplicates",
-                    "tf_idf": "subtle_duplicates_tf_idf"
+                    "tf_idf": "subtle_duplicates_tf_idf",
+                    "distiluse_multilingual":
+                        "subtle_duplicates_distiluse_multilingual"
                     },
                 outputs="best_duplicates",
                 name="aggregate_all_duplicates_from_best_models_node",

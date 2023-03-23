@@ -96,6 +96,13 @@ subtle_duplicates_tf_idf:
   save_args:
       index: False
 
+subtle_duplicates_distiluse_multilingual:
+  type: pandas.ParquetDataSet
+  filepath: data/06_models/subtle_duplicates_distiluse_multilingual.pq
+  layer: models
+  save_args:
+      index: False
+
 subtle_duplicates_multilingual_bert:
   type: pandas.ParquetDataSet
   filepath: data/06_models/subtle_duplicates_multilingual_bert.pq
@@ -114,6 +121,17 @@ subtle_duplicates_xlm_roberta:
 all_duplicates_tf_idf:
   type: pandas.CSVDataSet
   filepath: data/07_model_output/all_duplicates_tf_idf.csv
+  layer: model_output
+  save_args:
+      index: False
+      header: False
+  load_args:
+      names:
+          ['id1', 'id2', 'type']
+
+all_duplicates_distiluse_multilingual:
+  type: pandas.CSVDataSet
+  filepath: data/07_model_output/all_duplicates_distiluse_multilingual.csv
   layer: model_output
   save_args:
       index: False
@@ -155,6 +173,13 @@ easy_duplicates_description:
 all_duplicates_tf_idf_description:
   type: pandas.CSVDataSet
   filepath: data/08_reporting/all_duplicates_tf_idf_description.csv
+  layer: reporting
+  save_args:
+      index: False
+
+all_duplicates_distiluse_multilingual_description:
+  type: pandas.CSVDataSet
+  filepath: data/08_reporting/all_duplicates_distiluse_multilingual_description.csv
   layer: reporting
   save_args:
       index: False

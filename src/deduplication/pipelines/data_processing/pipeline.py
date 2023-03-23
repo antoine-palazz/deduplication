@@ -77,6 +77,7 @@ def create_pipeline(**kwargs) -> Pipeline:
         tags=[
             'easy',
             'tf_idf',
+            'distiluse_multilingual',
             'multilingual_bert',
             'xlm_roberta',
             'final_models'

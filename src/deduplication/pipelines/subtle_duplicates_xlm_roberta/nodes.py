@@ -15,9 +15,9 @@ from deduplication.extras.utils import (
     reduce_dimension,
 )
 
-torch.cuda.empty_cache()
-torch.backends.cudnn.deterministic = True
-torch.backends.cudnn.benchmark = False
+# torch.cuda.empty_cache()
+# torch.backends.cudnn.deterministic = True
+# torch.backends.cudnn.benchmark = False
 
 logging.set_verbosity_error()
 
