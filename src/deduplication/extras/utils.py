@@ -56,24 +56,30 @@ def differentiate_duplicates(
             ):
                 return "NON"  # Desired columns are too different
 
-    if row_1[date_col] != row_2[date_col]:
-        return "TEMPORAL"  # Dates are different
-
+    count_partial = 0
     for col in str_cols:
         if (
             row_1[col] == "" or row_2[col] == "") and (
             row_1[col] != row_2[col]
         ):
-            return "PARTIAL"  # A field is missing in only one of the ads
+            count_partial += 1
+    if count_partial == 1:
+        return "PARTIAL"  # One field is missing in only one of the ads
 
-    if (
-        abs(len(row_1[description_col]) - len(row_2[description_col]))
-        / (1 + min(len(row_1[description_col]), len(row_2[description_col])))
-        > threshold_partial
-    ):
-        return "PARTIAL"  # Description lengths are too different
+    # if (
+    #     abs(len(row_1[description_col]) - len(row_2[description_col]))
+    #     / (1 + min(len(row_1[description_col]), len(row_2[description_col])))
+    #     > threshold_partial
+    # ):
+    #     return "PARTIAL"  # Description lengths are too different
 
-    return current_type  # Nothing to change
+    if row_1[date_col] != row_2[date_col]:
+        return "TEMPORAL"  # Dates are different
+
+    if current_type != 'FULL':
+        return 'SEMANTIC'  # Can only be semantic by that point
+
+    return 'FULL'
 
 
 def find_subtle_duplicates_from_tokens(
