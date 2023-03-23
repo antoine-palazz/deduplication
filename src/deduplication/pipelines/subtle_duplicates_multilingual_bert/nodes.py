@@ -1,5 +1,5 @@
 """
-This is a boilerplate pipeline 'subtle_duplicates_tf_idf'
+This is a boilerplate pipeline 'subtle_duplicates_multilingual_bert'
 generated using Kedro 0.18.6
 """
 
@@ -42,7 +42,7 @@ class TextDataset(Dataset):
             add_special_tokens=True,
             padding="max_length",
             truncation=True,
-            is_split_into_words=True
+            is_split_into_words=False
         )
         return torch.tensor(input_ids)
 
