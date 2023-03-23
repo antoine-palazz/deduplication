@@ -1,8 +1,9 @@
 """
-This is a boilerplate pipeline 'subtle_duplicates_tf_idf'
+This is a boilerplate pipeline 'subtle_duplicates_xlm_roberta'
 generated using Kedro 0.18.6
 """
 
+# import nltk
 import pandas as pd
 import torch
 from torch.utils.data import DataLoader, Dataset
@@ -28,6 +29,17 @@ class TextDataset(Dataset):
     def __init__(self, texts):
         self.texts = texts
 
+        # corpus = " ".join(texts)
+        # tokens = nltk.word_tokenize(corpus)
+        # vocab_size = len(set(tokens))
+        # print(f'The vocab size for XLM Roberta is {vocab_size}')
+
+        # self.tokenizer = tokenizer_xlm_roberta.train_new_from_iterator(
+        #     split(texts, 100),
+        #     vocab_size=vocab_size
+        # )
+        # print('XLM Roberta tokenizer is re-trained')
+
     def __len__(self):
         return len(self.texts)
 
@@ -37,13 +49,17 @@ class TextDataset(Dataset):
             text,
             add_special_tokens=True,
             padding="max_length",
-            truncation=True,
-            is_split_into_words=True
+            truncation=True
         )
         return torch.tensor(input_ids)
 
 
-def tokenize_xlm_roberta(texts: pd.Series, batch_size) -> list:
+def split(a, n):
+    k, m = divmod(len(a), n)
+    return (a[i*k+min(i, m):(i+1)*k+min(i+1, m)] for i in range(n))
+
+
+def tokenize_xlm_roberta(texts: pd.Series, batch_size: int) -> list:
     dataset = TextDataset(texts)
     dataloader = DataLoader(dataset, batch_size=batch_size)
 

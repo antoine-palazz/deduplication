@@ -41,8 +41,7 @@ class TextDataset(Dataset):
             text,
             add_special_tokens=True,
             padding="max_length",
-            truncation=True,
-            is_split_into_words=False
+            truncation=True
         )
         return torch.tensor(input_ids)
 
