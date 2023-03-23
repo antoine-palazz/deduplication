@@ -59,7 +59,7 @@ def differentiate_duplicates(
 
     if row_1[language_col] == row_2[language_col]:
         if (
-            jaro_winkler_similarity(row_1[col], row_2[col])
+            jaro_winkler_similarity(row_1['title'], row_2['title'])
             < threshold_similarity['title_monolingual']
            ):
             return "NON"  # If same language, higher threshold for title
