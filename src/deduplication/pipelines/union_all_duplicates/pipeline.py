@@ -4,11 +4,12 @@ generated using Kedro 0.18.6
 """
 
 from kedro.pipeline import Pipeline, node, pipeline
+
 from .nodes import (
-    aggregate_easy_duplicates,
     aggregate_all_duplicates_one_model,
     aggregate_all_duplicates_several_models,
-    describe_duplicates
+    aggregate_easy_duplicates,
+    describe_duplicates,
 )
 
 
@@ -106,7 +107,8 @@ def create_pipeline(**kwargs) -> Pipeline:
                 func=aggregate_all_duplicates_several_models,
                 inputs=["easy_duplicates",
                         "params:final_duplicates_str_list",
-                        "params:project_path"],
+                        "params:project_path",
+                        "subtle_duplicates_tf_idf"],
                 outputs="best_duplicates",
                 name="aggregate_all_duplicates_from_best_models_node",
                 tags=['final_models']

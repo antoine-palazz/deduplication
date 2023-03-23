@@ -18,8 +18,7 @@ def aggregate_duplicates_list(
     ).drop_duplicates(
         subset=['id1', 'id2']
     ).sort_values(
-        by=['id1', 'id2'],
-        ignore_index=True
+        by=['id1', 'id2']
     ).reset_index(drop=True)
 
     return all_duplicates
@@ -148,7 +147,8 @@ def aggregate_all_duplicates_one_model(
 def aggregate_all_duplicates_several_models(
     easy_duplicates: pd.DataFrame,
     duplicates_str_list: list,
-    project_path: str
+    project_path: str,
+    **kwargs
 ) -> pd.DataFrame:
 
     conf_path = str(project_path + settings.CONF_SOURCE)

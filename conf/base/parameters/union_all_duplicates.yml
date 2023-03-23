@@ -8,7 +8,7 @@
 
 final_duplicates_str_list:
     [
-    'subtle_duplicates_tf_idf'  # Important to put before multilingual
+    'subtle_duplicates_tf_idf'
     # 'subtle_duplicates_multilingual_bert',
     # 'subtle_duplicates_xlm_roberta'
     ]

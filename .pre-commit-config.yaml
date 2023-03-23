@@ -7,6 +7,6 @@ repos:
         args: ["--profile", "black"]
 
   - repo: https://github.com/pycqa/flake8
-    rev: '6.0.0'  # pick a git hash / tag to point to
+    rev: '6.0.0'
     hooks:
       - id: flake8

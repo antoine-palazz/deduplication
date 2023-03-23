@@ -57,6 +57,7 @@ def normalize_strings(
 def preprocess_data_basic(
     data: pd.DataFrame,
     str_cols: list,
+    id_col: str
 ) -> pd.DataFrame:
 
     preprocessed_data = remove_nans(data)
@@ -69,7 +70,7 @@ def preprocess_data_basic(
         normalize_strings
     )
 
-    return preprocessed_data.sort_values(by='id')
+    return preprocessed_data.sort_values(by=id_col)
 
 
 def filter_out_incomplete_offers(
@@ -89,6 +90,11 @@ def filter_out_incomplete_offers(
         ).all(axis=1)
     ]
 
+    filtered_data_on_cols.reset_index(
+        drop=True,
+        inplace=True
+    )
+
     return filtered_data_on_cols
 
 
@@ -97,7 +103,7 @@ def remove_special_characters(
 ) -> pd.DataFrame:
 
     clean_texts = texts.str.replace(
-        r'\W', ' ', regex=True
+        r'[\W\d]+', ' ', regex=True
     ).replace(
         r' +', ' ', regex=True
     ).apply(unidecode).str.strip()
@@ -234,7 +240,7 @@ def filter_out_too_frequent_words(
     return well_described_data
 
 
-def find_language_from_text(  # Add minimal score?
+def find_language_from_text(
     text: str
 ) -> str:
     text = detect(text)['lang']
@@ -274,6 +280,10 @@ def create_concatenated_column(
     for col in tqdm(cols_to_concatenate[1:]):
         data_with_new_cols[concatenated_col_name] += ' ' + data[col]
 
+    data_with_new_cols[concatenated_col_name].replace(
+        r' +', ' ', regex=True, inplace=True
+    ).str.strip(inplace=True)
+
     return data_with_new_cols
 
 
@@ -306,21 +316,10 @@ def preprocess_data_extensive(
         remove_special_characters
     )
 
-    # preprocessed_data[str_cols] = preprocessed_data[str_cols].progress_apply(
-    #     partial(
-    #         remove_stopwords,
-    #         stopwords_list=stopwords_list
-    #     )
-    # )
-
     preprocessed_data[filtered_description_col] = remove_stopwords(
         preprocessed_data[description_col],
         stopwords_list=stopwords_list
     )
-
-    # preprocessed_data[str_cols] = preprocessed_data[str_cols].progress_apply(
-    #     lemmatize_texts
-    # )
 
     preprocessed_data[filtered_description_col] = lemmatize_texts(
         preprocessed_data[filtered_description_col]
@@ -335,7 +334,10 @@ def preprocess_data_extensive(
 
     preprocessed_data = create_extra_cols_from_text_cols(
         preprocessed_data,
-        cols_to_duplicate=[filtered_description_col],
+        cols_to_duplicate=[
+            description_col,
+            filtered_description_col
+            ],
         beginning_prefix=beginning_prefix,
         end_prefix=end_prefix,
         threshold_short_text=threshold_short_text

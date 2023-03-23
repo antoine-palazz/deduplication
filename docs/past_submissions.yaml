@@ -1,3 +1,20 @@
+submission_5_AP:
+    description:
+        "TF-IDF - Multilingual semantic"
+    full:
+        nb_duplicates: 63364
+        f1_score: 0.99  # Top performer
+    semantic:
+        nb_duplicates: 81121
+        f1_score: 0.46
+    temporal:
+        nb_duplicates: 453931
+        f1_score: 0.70
+    partial:
+        nb_duplicates: 28861
+        f1_score: 0.08
+    macro_f1: 0.65  # Top performer
+
 submission_4_AP:
     description:
         "Easy duplicates - New rules"
@@ -17,7 +34,7 @@ submission_4_AP:
 
 submission_3_AP:
     description:
-        "TF-IDF with threshold at 0.95 / Partial before Temporal"
+        "TF-IDF with threshold at 0.95"
     full:
         nb_duplicates: 278593
         f1_score: 0.29
@@ -41,7 +58,7 @@ submission_2_AP:
         f1_score: 0.30
     semantic:
         nb_duplicates: 197038
-        f1_score: 0.06  # Top performer
+        f1_score: 0.06
     temporal:
         nb_duplicates: 1892174
         f1_score: 0.01
@@ -83,9 +100,9 @@ submission_2_KF:
         f1_score: 0.75
     partial:
         nb_duplicates: 21916
-        f1_score: 0.09
+        f1_score: 0.09  # Top performer
     global:
-        f1_score: 0.57  # Top performer
+        f1_score: 0.57
 
 submission_1_KF:
     description:

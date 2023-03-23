@@ -18,7 +18,8 @@ def create_pipeline(**kwargs) -> Pipeline:
             node(
                 func=preprocess_data_basic,
                 inputs=["wi_dataset",
-                        "params:str_cols"],
+                        "params:str_cols",
+                        "params:id_col"],
                 outputs="preprocessed_dataset",
                 name="basic_preprocessing_data_node"
             ),

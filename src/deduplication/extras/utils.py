@@ -47,6 +47,7 @@ def differentiate_duplicates(
     threshold_similarity: dict,
     threshold_partial: float,
 ) -> str:
+
     for col in cols_to_be_similar:
         if row_1[col] != "" and row_2[col] != "":
             if (
@@ -102,7 +103,9 @@ def find_subtle_duplicates_from_tokens(
     for chunk_start in tqdm(chunks):
 
         similarity_matrix_chunk = compute_chunk_cosine_similarity(
-            tokenized_texts, start=chunk_start, end=chunk_start + chunk_size
+            tokenized_texts,
+            start=chunk_start,
+            end=chunk_start+chunk_size
         )
 
         def find_dups_in_chunk(i):

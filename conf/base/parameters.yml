@@ -27,11 +27,11 @@ threshold_similarity:
   company_name: 0.8
   location: 0.8
 threshold_similarity_multilingual:
-  title: 0.5  # What is optimal?
+  title: 0.6  # What is optimal?
   company_name: 0.8
   location: 0.8
 
-threshold_partial: 0.2
-threshold_partial_multilingual: 0.5
+threshold_partial: 0.25  # What is optimal?
+threshold_partial_multilingual: 0.5  # What is optimal?
 
 dim_tokens: 128
