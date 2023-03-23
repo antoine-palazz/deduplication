@@ -21,7 +21,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:description_col",
                         "params:date_col",
                         "params:id_col",
-                        "params: language_col",
+                        "params:language_col",
                         "params:dim_tokens",
                         "params:threshold_similarity_multilingual",
                         "params:threshold_semantic_distiluse_multilingual",

@@ -19,7 +19,7 @@ model_distiluse_multilingual = SentenceTransformer(
 
 
 def encode_texts(texts: pd.Series) -> list:
-    with Pool(int(cpu_count()/3)) as pool:
+    with Pool(int(cpu_count()/5)) as pool:
         embedded_texts = list(pool.map(
             model_distiluse_multilingual.encode,
             tqdm(texts)
