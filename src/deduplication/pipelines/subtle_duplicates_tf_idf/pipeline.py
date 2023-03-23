@@ -21,6 +21,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:filtered_description_col",
                         "params:date_col",
                         "params:id_col",
+                        "params: language_col",
                         "params:max_df_tokenizer",
                         "params:dim_tokens",
                         "params:threshold_similarity",

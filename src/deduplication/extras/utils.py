@@ -44,6 +44,7 @@ def differentiate_duplicates(
     cols_to_be_similar: list,
     description_col: str,
     date_col: str,
+    language_col: str,
     threshold_similarity: dict,
     threshold_partial: float,
 ) -> str:
@@ -55,6 +56,13 @@ def differentiate_duplicates(
                 < threshold_similarity[col]
             ):
                 return "NON"  # Desired columns are too different
+
+    if row_1[language_col] == row_2[language_col]:
+        if (
+            jaro_winkler_similarity(row_1[col], row_2[col])
+            < threshold_similarity['title_monolingual']
+           ):
+            return "NON"  # If same language, higher threshold for title
 
     # What should come first? Temporal or partial?
 
@@ -92,6 +100,7 @@ def find_subtle_duplicates_from_tokens(
     description_col: str,
     date_col: str,
     id_col: str,
+    language_col: str,
     threshold_similarity: dict,
     threshold_semantic: float,
     threshold_partial: float,
@@ -128,6 +137,7 @@ def find_subtle_duplicates_from_tokens(
                         cols_to_be_similar=cols_to_be_similar,
                         description_col=description_col,
                         date_col=date_col,
+                        language_col=language_col,
                         threshold_similarity=threshold_similarity,
                         threshold_partial=threshold_partial,
                     )

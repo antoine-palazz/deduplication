@@ -19,6 +19,7 @@ def identify_exact_duplicates(
     description_col: str,
     date_col: str,
     id_col: str,
+    language_col: str,
     threshold_similarity: float,
     threshold_partial: float
 ) -> pd.DataFrame:
@@ -65,6 +66,7 @@ def identify_exact_duplicates(
                             cols_to_be_similar=cols_to_be_similar,
                             description_col=description_col,
                             date_col=date_col,
+                            language_col=language_col,
                             threshold_similarity=threshold_similarity,
                             threshold_partial=threshold_partial
                         )

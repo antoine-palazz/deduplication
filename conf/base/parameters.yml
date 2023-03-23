@@ -2,6 +2,7 @@ project_path: '/home/onyxia/work/deduplication/'
 
 id_col: 'id'
 description_col: 'description'
+country_col: 'country_id'
 date_col: 'retrieval_date'
 
 language_col: 'language'
@@ -24,10 +25,12 @@ chunk_size: 5000
 
 threshold_similarity:
   title: 0.75
+  title_monolingual: 0.75
   company_name: 0.75
   location: 0.75
 threshold_similarity_multilingual:
   title: 0.5  # What is optimal?
+  title_monolingual: 0.75
   company_name: 0.75
   location: 0.75
 
