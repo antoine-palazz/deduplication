@@ -15,6 +15,10 @@ from deduplication.extras.utils import (
     reduce_dimension,
 )
 
+torch.cuda.empty_cache()
+torch.backends.cudnn.deterministic = True
+torch.backends.cudnn.benchmark = False
+
 logging.set_verbosity_error()
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -35,7 +39,7 @@ class TextDataset(Dataset):
         print(f'The vocab size for XLM Roberta is {vocab_size}')
 
         self.tokenizer = tokenizer_xlm_roberta.train_new_from_iterator(
-            split(texts, 100),
+            split(texts, 64),
             vocab_size=vocab_size
         )
         print('XLM Roberta tokenizer is re-trained')

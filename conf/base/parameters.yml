@@ -19,7 +19,7 @@ filtered_description_type: 'filtered'
 
 cols_to_be_similar: ['title', 'company_name', 'location']
 
-batch_size: 128
+batch_size: 8
 chunk_size: 5000
 
 threshold_similarity:
