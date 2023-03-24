@@ -47,6 +47,7 @@ def create_pipeline(**kwargs) -> Pipeline:
         ],
         tags=[
             'distiluse_multilingual',
-            'final_models'
+            'final_models',
+            'final_models_long_part'
             ]
     )

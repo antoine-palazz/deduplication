@@ -13,8 +13,8 @@ from deduplication.extras.utils import reduce_dimension
 
 logging.set_verbosity_error()
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-print(f"The device for multilingual BERT is {device}")
+# device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# print(f"The device for multilingual BERT is {device}")
 
 tokenizer_multilingual_bert = BertTokenizer.from_pretrained(
     "bert-base-multilingual-uncased"
@@ -22,7 +22,7 @@ tokenizer_multilingual_bert = BertTokenizer.from_pretrained(
 model_multilingual_bert = BertModel.from_pretrained(
     "bert-base-multilingual-uncased"
 )
-model_multilingual_bert.to(device)
+# model_multilingual_bert.to(device)
 
 
 class TextDataset(Dataset):
@@ -59,7 +59,7 @@ def tokenize_texts(
     matrix_bert_texts = []
     with torch.no_grad():
         for batch in tqdm(dataloader):
-            batch = batch.to(device)
+            # batch = batch.to(device)
             outputs = model_multilingual_bert(batch)
             last_hidden_state = outputs.last_hidden_state
             matrix_bert_texts.extend(

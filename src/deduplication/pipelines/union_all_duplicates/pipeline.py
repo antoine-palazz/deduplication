@@ -79,14 +79,22 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "subtle_duplicates_distiluse_multilingual"],
                 outputs="all_duplicates_distiluse_multilingual",
                 name="aggregate_all_duplicates_distiluse_multilingual_node",
-                tags=['distiluse_multilingual', 'final_models']
+                tags=[
+                    'distiluse_multilingual',
+                    'final_models',
+                    'final_models_long_part'
+                ]
             ),
             node(
                 func=describe_duplicates,
                 inputs=["all_duplicates_distiluse_multilingual"],
                 outputs="all_duplicates_distiluse_multilingual_description",
                 name="describe_duplicates_distiluse_multilingual_node",
-                tags=['distiluse_multilingual', 'final_models']
+                tags=[
+                    'distiluse_multilingual',
+                    'final_models',
+                    'final_models_long_part'
+                ]
             ),
 
             node(
@@ -131,14 +139,14 @@ def create_pipeline(**kwargs) -> Pipeline:
                     },
                 outputs="best_duplicates",
                 name="aggregate_all_duplicates_from_best_models_node",
-                tags=['final_models']
+                tags=['final_models', 'final_models_long_part']
             ),
             node(
                 func=describe_duplicates,
                 inputs=["best_duplicates"],
                 outputs="best_duplicates_description",
                 name="describe_best_duplicates_node",
-                tags=['final_models']
+                tags=['final_models', 'final_models_long_part']
             )
         ]
     )

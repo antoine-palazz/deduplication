@@ -18,12 +18,12 @@ from deduplication.extras.utils import reduce_dimension
 
 logging.set_verbosity_error()
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-print(f"The device for XLM Roberta is {device}")
+# device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# print(f"The device for XLM Roberta is {device}")
 
 tokenizer_xlm_roberta = AutoTokenizer.from_pretrained("xlm-roberta-base")
 model_xlm_roberta = AutoModelForMaskedLM.from_pretrained("xlm-roberta-base")
-model_xlm_roberta.to(device)
+# model_xlm_roberta.to(device)
 
 
 class TextDataset(Dataset):
@@ -74,7 +74,7 @@ def tokenize_texts(
     matrix_roberta_texts = []
     with torch.no_grad():
         for batch in tqdm(dataloader):
-            batch = batch.to(device)
+            # batch = batch.to(device)
             outputs = model_xlm_roberta(batch,
                                         output_hidden_states=True)
             last_hidden_state = outputs.hidden_states[-1]
