@@ -31,14 +31,14 @@ def tokenize_texts(
     batch_size: int
 ) -> list:
 
-    embedded_texts = data[
+    embedded_texts = list(data[
         concatenated_col_names[description_type]
     ].progress_apply(
         partial(model_distiluse_multilingual.encode,
                 batch_size=batch_size,
                 device=device
                 )
-    )
+    ))
 
     embedded_texts = reduce_dimension(
         embedded_texts,
