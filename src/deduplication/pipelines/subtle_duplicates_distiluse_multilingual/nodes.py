@@ -4,7 +4,6 @@ generated using Kedro 0.18.7
 """
 
 from functools import partial
-from multiprocessing import Pool, cpu_count
 
 import pandas as pd
 import torch
@@ -14,6 +13,8 @@ from tqdm import tqdm
 from deduplication.extras.utils import (  # reduce_dimension
     find_subtle_duplicates_from_tokens,
 )
+
+tqdm.pandas()
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"The device for distiluse multilingual is {device}")
@@ -35,16 +36,6 @@ def encode_texts(
                 device=device
                 )
     )
-
-    return embedded_texts
-
-
-def encode_texts_multiprocessing(texts: pd.Series) -> list:
-    with Pool(int(cpu_count()/3)) as pool:
-        embedded_texts = list(pool.map(
-            model_distiluse_multilingual.encode,
-            tqdm(texts)
-        ))
 
     return embedded_texts
 
