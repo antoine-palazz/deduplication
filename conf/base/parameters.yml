@@ -21,23 +21,23 @@ end_prefix: 'end_'
 normal_description_type: 'normal'
 filtered_description_type: 'filtered'
 
-cols_to_be_similar: ['title', 'company_name', 'location']
-
 batch_size: 8
 chunk_size: 5000
 
 threshold_similarity:
-  title: 0.8
-  title_monolingual: 0.8
-  company_name: 0.8
-  location: 0.8
-threshold_similarity_multilingual:
-  title: 0.6  # What is optimal?
-  title_monolingual: 0.8
-  company_name: 0.75
-  location: 0.75
+  monolingual:
+    title: 0.8
+    description: 0.8
+    company_name: 0.8
+    location: 0.8
+  multilingual:
+    title: 0.6
+    description: 0.1
+    company_name: 0.8
+    location: 0.8
 
-threshold_partial: 0.25  # What is optimal?
-threshold_partial_multilingual: 0.5  # What is optimal?
+threshold_partial:
+  monolingual: 0.05
+  multilingual: 0.10
 
 dim_tokens: 100

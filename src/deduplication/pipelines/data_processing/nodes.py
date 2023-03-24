@@ -54,10 +54,19 @@ def normalize_strings(
     return clean_texts
 
 
+def find_language_from_text(
+    text: str
+) -> str:
+    text = detect(text)['lang']
+    return text
+
+
 def preprocess_data_basic(
     data: pd.DataFrame,
     str_cols: list,
-    id_col: str
+    description_col: str,
+    id_col: str,
+    language_col: str
 ) -> pd.DataFrame:
 
     preprocessed_data = remove_nans(data)
@@ -69,6 +78,10 @@ def preprocess_data_basic(
     preprocessed_data[str_cols] = preprocessed_data[str_cols].progress_apply(
         normalize_strings
     )
+
+    preprocessed_data[language_col] = preprocessed_data[
+        description_col
+    ].progress_apply(find_language_from_text)
 
     return preprocessed_data.sort_values(by=id_col)
 
@@ -241,13 +254,6 @@ def filter_out_too_frequent_words(
     return well_described_data
 
 
-def find_language_from_text(
-    text: str
-) -> str:
-    text = detect(text)['lang']
-    return text
-
-
 def create_extra_cols_from_text_cols(
     data: pd.DataFrame,
     cols_to_duplicate: list,
@@ -312,10 +318,6 @@ def preprocess_data_extensive(
         languages_list,
         without_accents=True
     )
-
-    preprocessed_data[language_col] = preprocessed_data[
-        description_col
-    ].progress_apply(find_language_from_text)
 
     preprocessed_data[str_cols] = preprocessed_data[str_cols].progress_apply(
         remove_special_characters

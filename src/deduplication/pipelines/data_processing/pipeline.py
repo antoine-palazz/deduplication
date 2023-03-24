@@ -20,7 +20,9 @@ def create_pipeline(**kwargs) -> Pipeline:
                 func=preprocess_data_basic,
                 inputs=["wi_dataset",
                         "params:str_cols",
-                        "params:id_col"],
+                        "params:description_col",
+                        "params:id_col",
+                        "params:language_col"],
                 outputs="preprocessed_dataset",
                 name="basic_preprocessing_data_node"
             ),
@@ -72,7 +74,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:required_cols_semantic_multilingual",
                         "params:nb_allowed_nans_semantic_multilingual"],
                 outputs="extensively_preprocessed_located_offers",
-                name="filter_located_offers_for_semantic_multilingual_node"
+                name="filter_detailed_offers_for_semantic_multilingual_node"
             ),
             node(
                 func=filter_international_companies,

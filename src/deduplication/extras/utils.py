@@ -41,69 +41,72 @@ def differentiate_duplicates(
     row_2,
     current_type: str,
     str_cols: list,
-    cols_to_be_similar: list,
-    title_col: str,
     description_col: str,
     date_col: str,
     language_col: str,
     threshold_similarity: dict,
-    threshold_partial: float,
+    threshold_partial: dict,
 ) -> str:
 
-    for col in cols_to_be_similar:
+    if row_1[language_col] == row_2[language_col]:
+        lingual = "monolingual"
+    else:
+        lingual = "multilingual"
+
+    for col in str_cols[:-1]:
         if row_1[col] != "" and row_2[col] != "":
             if (
                 jaro_winkler_similarity(row_1[col], row_2[col])
-                < threshold_similarity[col]
+                < threshold_similarity[lingual][col]
             ):
-                return "NON"  # Desired columns are too different
+                return "NON"  # A field differs too much between the offers
 
-    if row_1[language_col] == row_2[language_col]:
+    if row_1[description_col] != "" and row_2[description_col] != "":
         if (
-            jaro_winkler_similarity(row_1[title_col], row_2[title_col])
-            < threshold_similarity['title_monolingual']
-           ):
-            return "NON"  # If same language, higher threshold for title
+            abs(len(row_1[description_col]) - len(row_2[description_col]))
+            / min(len(row_1[description_col]), len(row_2[description_col]))
+           ) > threshold_partial[lingual]:
+
+            current_type = "PARTIAL"  # Description lengths very different
+
+        elif (
+                jaro_winkler_similarity(
+                    row_1[description_col], row_2[description_col]
+                )
+                < threshold_similarity[lingual][description_col]
+             ):
+
+            return "NON"  # Descriptions of similar lengths and too different
+
+    # Who comes first? Temporal or partial?
 
     if row_1[date_col] != row_2[date_col]:
         return "TEMPORAL"  # Dates are different
 
     count_partial = 0
     for col in str_cols:
-        if (
-            row_1[col] == "" or row_2[col] == "") and (
-            row_1[col] != row_2[col]
-        ):
+        if (row_1[col] == "") != (row_2[col] == ""):
             count_partial += 1
     if count_partial == 1:
-        return "PARTIAL"  # One field is missing in only one of the ads
-
-    # if (
-    #     abs(len(row_1[description_col]) - len(row_2[description_col]))
-    #     / (1 + min(len(row_1[description_col]), len(row_2[description_col])))
-    #     > threshold_partial
-    # ):
-    #     return "PARTIAL"  # Description lengths are too different
+        return "PARTIAL"  # One field is missing in one of the ads
 
     if current_type != 'FULL':
         return 'SEMANTIC'  # Can only be semantic by that point
 
-    return 'FULL'
+    return 'FULL'  # Full if everything equal
 
 
 def find_subtle_duplicates_from_tokens(
     data: pd.DataFrame,
     tokenized_texts: list,
     str_cols: list,
-    cols_to_be_similar: list,
-    title_col: str,
     description_col: str,
     date_col: str,
     id_col: str,
     language_col: str,
     threshold_similarity: dict,
     threshold_semantic: float,
-    threshold_partial: float,
+    threshold_partial: dict,
     chunk_size: int
 ) -> list:
 
@@ -130,8 +133,6 @@ def find_subtle_duplicates_from_tokens(
                         data.loc[chunk_start + j],
                         current_type="SEMANTIC",
                         str_cols=str_cols,
-                        cols_to_be_similar=cols_to_be_similar,
-                        title_col=title_col,
                         description_col=description_col,
                         date_col=date_col,
                         language_col=language_col,
