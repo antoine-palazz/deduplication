@@ -9,9 +9,11 @@ import pandas as pd
 import torch
 from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
+from transformers import logging
 
 from deduplication.extras.utils import reduce_dimension
 
+logging.set_verbosity_error()
 tqdm.pandas()
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
