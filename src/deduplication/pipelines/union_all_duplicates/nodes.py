@@ -94,7 +94,7 @@ def aggregate_all_duplicates_several_models(
     **kwargs
 ) -> pd.DataFrame:
 
-    easy_duplicates = kwargs.items()['easy']
+    easy_duplicates = kwargs['easy']
 
     all_duplicates = aggregate_duplicates_list(
         [easy_duplicates] +
