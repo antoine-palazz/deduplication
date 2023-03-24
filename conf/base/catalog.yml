@@ -61,32 +61,24 @@ extensively_preprocessed_international_offers:
 
 
 tokens_tf_idf:
-  type: pandas.ParquetDataSet
-  filepath: data/04_feature/tokens_tf_idf.pq
+  type: pickle.PickleDataSet
+  filepath: data/04_feature/tokens_tf_idf.pickle
   layer: feature
-  save_args:
-      index: False
 
 tokens_distiluse_multilingual:
-  type: pandas.ParquetDataSet
-  filepath: data/04_feature/tokens_distiluse_multilingual.pq
+  type: pickle.PickleDataSet
+  filepath: data/04_feature/tokens_distiluse_multilingual.pickle
   layer: feature
-  save_args:
-      index: False
 
 tokens_multilingual_bert:
-  type: pandas.ParquetDataSet
-  filepath: data/04_feature/tokens_multilingual_bert.pq
+  type: pickle.PickleDataSet
+  filepath: data/04_feature/tokens_multilingual_bert.pickle
   layer: feature
-  save_args:
-      index: False
 
 tokens_xlm_roberta:
-  type: pandas.ParquetDataSet
-  filepath: data/04_feature/tokens_xlm_roberta.pq
+  type: pickle.PickleDataSet
+  filepath: data/04_feature/tokens_xlm_roberta.pickle
   layer: feature
-  save_args:
-      index: False
 
 
 gross_full_duplicates:
