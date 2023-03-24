@@ -35,7 +35,6 @@ def tokenize_texts(
         concatenated_col_names[description_type]
     ].progress_apply(
         partial(model_distiluse_multilingual.encode,
-                show_progress_bar=True,
                 batch_size=batch_size,
                 device=device
                 )
