@@ -10,10 +10,7 @@ from torch.utils.data import DataLoader, Dataset
 from tqdm import tqdm
 from transformers import AutoModelForMaskedLM, AutoTokenizer, logging
 
-from deduplication.extras.utils import (
-    find_subtle_duplicates_from_tokens,
-    reduce_dimension,
-)
+from deduplication.extras.utils import reduce_dimension
 
 # torch.cuda.empty_cache()
 # torch.backends.cudnn.deterministic = True
@@ -63,8 +60,15 @@ def split(a, n):
     return (a[i*k+min(i, m):(i+1)*k+min(i+1, m)] for i in range(n))
 
 
-def tokenize_xlm_roberta(texts: pd.Series, batch_size: int) -> list:
-    dataset = TextDataset(texts)
+def tokenize_texts(
+    data: pd.DataFrame,
+    concatenated_col_names: dict,
+    description_type: str,
+    dim_tokens: int,
+    batch_size: int
+) -> list:
+
+    dataset = TextDataset(data[concatenated_col_names[description_type]])
     dataloader = DataLoader(dataset, batch_size=batch_size)
 
     matrix_roberta_texts = []
@@ -78,58 +82,9 @@ def tokenize_xlm_roberta(texts: pd.Series, batch_size: int) -> list:
                 last_hidden_state[:, 0, :].detach().cpu().numpy().tolist()
             )
 
-    return matrix_roberta_texts
-
-
-def identify_subtle_duplicates(
-    data: pd.DataFrame,
-    concatenated_col_names: dict,
-    str_cols: list,
-    cols_to_be_similar: list,
-    description_type: str,
-    description_col: str,
-    date_col: str,
-    id_col: str,
-    language_col: str,
-    dim_tokens: int,
-    threshold_similarity: float,
-    threshold_semantic: float,
-    threshold_partial: float,
-    batch_size: int,
-    chunk_size: int,
-) -> pd.DataFrame:
-
-    tokenized_texts = tokenize_xlm_roberta(
-        data[concatenated_col_names[description_type]],
-        batch_size=batch_size
-    )
-
-    reduced_embeddings = reduce_dimension(
-        tokenized_texts,
+    matrix_roberta_texts = reduce_dimension(
+        matrix_roberta_texts,
         dim_tokens=dim_tokens
     )
 
-    duplicates = find_subtle_duplicates_from_tokens(
-        data,
-        tokenized_texts=reduced_embeddings,
-        str_cols=str_cols,
-        cols_to_be_similar=cols_to_be_similar,
-        description_col=description_col,
-        date_col=date_col,
-        id_col=id_col,
-        language_col=language_col,
-        threshold_similarity=threshold_similarity,
-        threshold_semantic=threshold_semantic,
-        threshold_partial=threshold_partial,
-        chunk_size=chunk_size,
-    )
-
-    df_duplicates = (
-        pd.DataFrame(duplicates)
-        .drop_duplicates()
-        .sort_values(by=["id1", "id2"], ignore_index=True)
-    )
-    print(
-        f"{len(df_duplicates)} subtle duplicates were found with xlm roberta"
-    )
-    return df_duplicates
+    return matrix_roberta_texts

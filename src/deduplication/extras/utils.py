@@ -42,6 +42,7 @@ def differentiate_duplicates(
     current_type: str,
     str_cols: list,
     cols_to_be_similar: list,
+    title_col: str,
     description_col: str,
     date_col: str,
     language_col: str,
@@ -59,7 +60,7 @@ def differentiate_duplicates(
 
     if row_1[language_col] == row_2[language_col]:
         if (
-            jaro_winkler_similarity(row_1['title'], row_2['title'])
+            jaro_winkler_similarity(row_1[title_col], row_2[title_col])
             < threshold_similarity['title_monolingual']
            ):
             return "NON"  # If same language, higher threshold for title
@@ -94,9 +95,10 @@ def differentiate_duplicates(
 
 def find_subtle_duplicates_from_tokens(
     data: pd.DataFrame,
-    tokenized_texts,
+    tokenized_texts: list,
     str_cols: list,
     cols_to_be_similar: list,
+    title_col: str,
     description_col: str,
     date_col: str,
     id_col: str,
@@ -104,16 +106,12 @@ def find_subtle_duplicates_from_tokens(
     threshold_similarity: dict,
     threshold_semantic: float,
     threshold_partial: float,
-    chunk_size: int,
-) -> pd.DataFrame:
+    chunk_size: int
+) -> list:
 
     duplicates = []
 
-    try:
-        n_ads = tokenized_texts.shape[0]
-    except AttributeError:
-        n_ads = len(tokenized_texts)
-
+    n_ads = len(data)
     chunks = range(0, n_ads, chunk_size)
     n_chunks = len(chunks)
 
@@ -135,6 +133,7 @@ def find_subtle_duplicates_from_tokens(
                         current_type="SEMANTIC",
                         str_cols=str_cols,
                         cols_to_be_similar=cols_to_be_similar,
+                        title_col=title_col,
                         description_col=description_col,
                         date_col=date_col,
                         language_col=language_col,
@@ -167,4 +166,12 @@ def find_subtle_duplicates_from_tokens(
         )
         duplicates.extend(duplicates_chunk)
 
-    return duplicates
+    df_duplicates = (
+        pd.DataFrame(duplicates)
+        .drop_duplicates()
+        .sort_values(by=["id1", "id2"], ignore_index=True)
+    )
+    print(
+        f"{len(df_duplicates)} gross subtle duplicates found"
+    )
+    return df_duplicates

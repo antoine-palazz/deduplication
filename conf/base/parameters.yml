@@ -1,8 +1,10 @@
 project_path: '/home/onyxia/work/deduplication/'
 
 id_col: 'id'
+title_col: 'title'
 description_col: 'description'
 company_col: 'company_name'
+location_col: 'location'
 country_col: 'country_id'
 date_col: 'retrieval_date'
 

@@ -295,10 +295,10 @@ def create_concatenated_column(
 def preprocess_data_extensive(
     pre_preprocessed_data: pd.DataFrame,
     str_cols: list,
+    cols_to_concatenate: dict,
     description_col: str,
     filtered_description_col: str,
     language_col: str,
-    cols_to_concatenate: dict,
     concatenated_col_names: dict,
     languages_list: list,
     beginning_prefix: str,
@@ -379,7 +379,7 @@ def filter_international_companies(
         preprocessed_data[company_col].isin(
             unique_counts[(unique_counts > 1).any(axis=1)].index
         )
-    ]
+    ].reset_index(drop=True)
 
     print(f'Length of the filtered table: {len(international_offers)}')
     return international_offers

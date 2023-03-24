@@ -9,10 +9,7 @@ from torch.utils.data import DataLoader, Dataset
 from tqdm import tqdm
 from transformers import BertModel, BertTokenizer, logging
 
-from deduplication.extras.utils import (
-    find_subtle_duplicates_from_tokens,
-    reduce_dimension,
-)
+from deduplication.extras.utils import reduce_dimension
 
 logging.set_verbosity_error()
 
@@ -46,8 +43,17 @@ class TextDataset(Dataset):
         return torch.tensor(input_ids)
 
 
-def tokenize_multilingual_bert(texts: pd.Series, batch_size: int) -> list:
-    dataset = TextDataset(texts)
+def tokenize_texts(
+    data: pd.DataFrame,
+    concatenated_col_names: dict,
+    description_type: str,
+    dim_tokens: int,
+    batch_size: int
+) -> list:
+
+    dataset = TextDataset(
+        data[concatenated_col_names[description_type]]
+    )
     dataloader = DataLoader(dataset, batch_size=batch_size)
 
     matrix_bert_texts = []
@@ -60,58 +66,9 @@ def tokenize_multilingual_bert(texts: pd.Series, batch_size: int) -> list:
                 last_hidden_state[:, 0, :].detach().cpu().numpy().tolist()
             )
 
-    return matrix_bert_texts
-
-
-def identify_subtle_duplicates(
-    data: pd.DataFrame,
-    concatenated_col_names: dict,
-    str_cols: list,
-    cols_to_be_similar: list,
-    description_type: str,
-    description_col: str,
-    date_col: str,
-    id_col: str,
-    language_col: str,
-    dim_tokens: int,
-    threshold_similarity: float,
-    threshold_semantic: float,
-    threshold_partial: float,
-    batch_size: int,
-    chunk_size: int,
-) -> pd.DataFrame:
-
-    tokenized_texts = tokenize_multilingual_bert(
-        data[concatenated_col_names[description_type]],
-        batch_size=batch_size
-    )
-
-    reduced_embeddings = reduce_dimension(
-        tokenized_texts,
+    matrix_bert_texts = reduce_dimension(
+        matrix_bert_texts,
         dim_tokens=dim_tokens
     )
 
-    duplicates = find_subtle_duplicates_from_tokens(
-        data,
-        tokenized_texts=reduced_embeddings,
-        str_cols=str_cols,
-        cols_to_be_similar=cols_to_be_similar,
-        description_col=description_col,
-        date_col=date_col,
-        id_col=id_col,
-        language_col=language_col,
-        threshold_similarity=threshold_similarity,
-        threshold_semantic=threshold_semantic,
-        threshold_partial=threshold_partial,
-        chunk_size=chunk_size,
-    )
-
-    df_duplicates = (
-        pd.DataFrame(duplicates)
-        .drop_duplicates()
-        .sort_values(by=["id1", "id2"], ignore_index=True)
-    )
-    print(
-        f"{len(df_duplicates)} subtle duplicates found with multilingual bert"
-    )
-    return df_duplicates
+    return matrix_bert_texts

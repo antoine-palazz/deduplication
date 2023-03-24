@@ -16,6 +16,7 @@ preprocessed_dataset:
   save_args:
       index: False
 
+
 extensively_preprocessed_dataset:
   type: pandas.ParquetDataSet
   filepath: data/03_primary/extensively_preprocessed_dataset.pq
@@ -23,38 +24,66 @@ extensively_preprocessed_dataset:
   save_args:
       index: False
 
-
 preprocessed_full_offers:
   type: pandas.ParquetDataSet
-  filepath: data/04_feature/preprocessed_full_offers.pq
-  layer: feature
+  filepath: data/03_primary/preprocessed_full_offers.pq
+  layer: primary
   save_args:
       index: False
 
 preprocessed_quasi_complete_offers:
   type: pandas.ParquetDataSet
-  filepath: data/04_feature/preprocessed_quasi_complete_offers.pq
-  layer: feature
+  filepath: data/03_primary/preprocessed_quasi_complete_offers.pq
+  layer: primary
   save_args:
       index: False
 
 extensively_preprocessed_described_offers:
   type: pandas.ParquetDataSet
-  filepath: data/04_feature/extensively_preprocessed_described_offers.pq
-  layer: feature
+  filepath: data/03_primary/extensively_preprocessed_described_offers.pq
+  layer: primary
   save_args:
       index: False
 
 extensively_preprocessed_located_offers:
   type: pandas.ParquetDataSet
-  filepath: data/04_feature/extensively_preprocessed_located_offers.pq
-  layer: feature
+  filepath: data/03_primary/extensively_preprocessed_located_offers.pq
+  layer: primary
   save_args:
       index: False
 
 extensively_preprocessed_international_offers:
   type: pandas.ParquetDataSet
-  filepath: data/04_feature/extensively_preprocessed_international_offers.pq
+  filepath: data/03_primary/extensively_preprocessed_international_offers.pq
+  layer: primary
+  save_args:
+      index: False
+
+
+tokens_tf_idf:
+  type: pandas.ParquetDataSet
+  filepath: data/04_feature/tokens_tf_idf.pq
+  layer: feature
+  save_args:
+      index: False
+
+tokens_distiluse_multilingual:
+  type: pandas.ParquetDataSet
+  filepath: data/04_feature/tokens_distiluse_multilingual.pq
+  layer: feature
+  save_args:
+      index: False
+
+tokens_multilingual_bert:
+  type: pandas.ParquetDataSet
+  filepath: data/04_feature/tokens_multilingual_bert.pq
+  layer: feature
+  save_args:
+      index: False
+
+tokens_xlm_roberta:
+  type: pandas.ParquetDataSet
+  filepath: data/04_feature/tokens_xlm_roberta.pq
   layer: feature
   save_args:
       index: False
