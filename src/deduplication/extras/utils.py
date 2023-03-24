@@ -65,7 +65,8 @@ def differentiate_duplicates(
            ):
             return "NON"  # If same language, higher threshold for title
 
-    # What should come first? Temporal or partial?
+    if row_1[date_col] != row_2[date_col]:
+        return "TEMPORAL"  # Dates are different
 
     count_partial = 0
     for col in str_cols:
@@ -83,9 +84,6 @@ def differentiate_duplicates(
     #     > threshold_partial
     # ):
     #     return "PARTIAL"  # Description lengths are too different
-
-    if row_1[date_col] != row_2[date_col]:
-        return "TEMPORAL"  # Dates are different
 
     if current_type != 'FULL':
         return 'SEMANTIC'  # Can only be semantic by that point
