@@ -1,3 +1,20 @@
+submission_6_AP:
+    description:
+        "TF-IDF 0.995 - Distiluse multilingual 0.99"
+    full:
+        nb_duplicates: 63364
+        f1_score: 0.99  # Top performer
+    semantic:
+        nb_duplicates: 81190
+        f1_score: 0.47  # Top performer
+    temporal:
+        nb_duplicates: 386913
+        f1_score: 0.73
+    partial:
+        nb_duplicates: 2805
+        f1_score: 0.00
+    macro_f1: 0.64
+
 submission_5_AP:
     description:
         "TF-IDF - Multilingual semantic"
@@ -103,21 +120,3 @@ submission_2_KF:
         f1_score: 0.09  # Top performer
     global:
         f1_score: 0.57
-
-submission_1_KF:
-    description:
-        "BERT with threshold at 0.996"
-    full:
-        nb_duplicates: 357477
-        f1_score: 0.30
-    semantic:
-        nb_duplicates: 24274
-        f1_score: 0.03
-    temporal:
-        nb_duplicates: 173093
-        f1_score: 0.01
-    partial:
-        nb_duplicates: 73721
-        f1_score: 0.00
-    global:
-        f1_score: 0.27
