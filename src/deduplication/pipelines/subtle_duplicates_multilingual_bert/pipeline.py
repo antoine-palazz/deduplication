@@ -15,7 +15,7 @@ def create_pipeline(**kwargs) -> Pipeline:
         [
             node(
                 func=tokenize_texts,
-                inputs=["extensively_preprocessed_international_offers",
+                inputs=["well_preprocessed_and_described_international_offers",
                         "params:concatenated_col_names",
                         "params:normal_description_type",
                         "params:dim_tokens",
@@ -27,16 +27,16 @@ def create_pipeline(**kwargs) -> Pipeline:
 
             node(
                 func=find_subtle_duplicates_from_tokens,
-                inputs=["extensively_preprocessed_international_offers",
+                inputs=["well_preprocessed_and_described_international_offers",
                         "tokens_multilingual_bert",
                         "params:str_cols",
                         "params:description_col",
                         "params:date_col",
                         "params:id_col",
                         "params:language_col",
-                        "params:threshold_similarity_multilingual",
+                        "params:threshold_similarity",
                         "params:threshold_semantic_multilingual_bert",
-                        "params:threshold_partial_multilingual",
+                        "params:threshold_partial",
                         "params:chunk_size"
                         ],
                 outputs="subtle_duplicates_multilingual_bert",

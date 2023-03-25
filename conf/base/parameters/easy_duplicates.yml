@@ -12,21 +12,21 @@ list_cols_to_match_full:
 list_cols_to_match_partial:
     [
         ['title', 'company_name', 'location', 'description'],
-        ['title', 'company_name', 'location', country_id],
-        ['title', 'company_name', 'description', country_id],
-        ['title', 'location', 'description', country_id],
-        ['company_name', 'location', 'description', country_id]
+        ['title', 'company_name', 'location', 'country_id'],
+        ['title', 'company_name', 'description', 'country_id'],
+        ['title', 'location', 'description', 'country_id'],
+        ['company_name', 'location', 'description', 'country_id']
     ]
 
 list_cols_to_match_semantic:
     [
-        ['title', 'beginning_filtered_description'],
-        ['title', 'end_filtered_description']
+        ['title', 'beginning_filtered_description', 'country_id'],
+        ['title', 'end_filtered_description', 'country_id']
     ]
 
 list_cols_to_match_semantic_multilingual:
     [
-        ['company_name', 'retrieval_date']
+        ['company_name', 'location', 'retrieval_date', 'country_id']
     ]
 
 
@@ -34,8 +34,7 @@ list_cols_to_mismatch_full: [[]]
 list_cols_to_mismatch_partial: [[]]
 list_cols_to_mismatch_semantic: [[]]
 list_cols_to_mismatch_semantic_multilingual: [
-    ['language'],
-    ['country_id']
+    ['language']
 ]
 
 

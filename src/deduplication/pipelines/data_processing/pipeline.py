@@ -8,6 +8,7 @@ from kedro.pipeline import Pipeline, node, pipeline
 from .nodes import (
     filter_international_companies,
     filter_out_incomplete_offers,
+    filter_out_poorly_described_offers,
     preprocess_data_basic,
     preprocess_data_extensive,
 )
@@ -79,10 +80,18 @@ def create_pipeline(**kwargs) -> Pipeline:
             node(
                 func=filter_international_companies,
                 inputs=["extensively_preprocessed_dataset",
-                        "params:cols_to_be_diversified",
+                        "params:cols_to_be_diversified_for_companies",
                         "params:company_col"],
                 outputs="extensively_preprocessed_international_offers",
                 name="filter_international_offers_node"
+            ),
+            node(
+                func=filter_out_poorly_described_offers,
+                inputs=["extensively_preprocessed_international_offers",
+                        "params:cols_not_to_be_diversified_for_descriptions",
+                        "params:description_col"],
+                outputs="well_preprocessed_and_described_international_offers",
+                name="filter_out_poorly_described_offers_node"
             )
         ],
         tags=[

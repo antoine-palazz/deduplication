@@ -59,6 +59,13 @@ extensively_preprocessed_international_offers:
   save_args:
       index: False
 
+well_preprocessed_and_described_international_offers:
+  type: pandas.ParquetDataSet
+  filepath: data/03_primary/well_preprocessed_and_described_international_offers.pq
+  layer: primary
+  save_args:
+      index: False
+
 
 tokens_tf_idf:
   type: pickle.PickleDataSet

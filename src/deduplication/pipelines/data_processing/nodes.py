@@ -382,5 +382,37 @@ def filter_international_companies(
         )
     ].reset_index(drop=True)
 
-    print(f'Length of the filtered table: {len(international_offers)}')
+    print(
+        f'Nb of offers by international companies: {len(international_offers)}'
+    )
     return international_offers
+
+
+def filter_out_poorly_described_offers(
+    preprocessed_data: pd.DataFrame,
+    cols_not_to_be_diversified: list,
+    description_col: str
+) -> pd.DataFrame:
+
+    data_with_one_col_not_to_be_diversified = create_concatenated_column(
+        preprocessed_data,
+        cols_to_concatenate=cols_not_to_be_diversified,
+        concatenated_col_name="col_not_to_be_diversified"
+    )
+
+    # Count unique values for tuple of cols of interest for each description
+    unique_counts = data_with_one_col_not_to_be_diversified.groupby(
+        [description_col]
+    )[["col_not_to_be_diversified"]].nunique()
+
+    # Filter out companies with several unique values in any of them
+    well_described_offers = preprocessed_data[
+        preprocessed_data[description_col].isin(
+            unique_counts[(unique_counts == 1).any(axis=1)].index
+        )
+    ].reset_index(drop=True)
+
+    print(
+        f'Nb of not poorly described offers: {len(well_described_offers)}'
+    )
+    return well_described_offers
