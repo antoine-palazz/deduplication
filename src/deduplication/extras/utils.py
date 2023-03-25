@@ -90,10 +90,7 @@ def differentiate_duplicates(
     if count_partial == 1:
         return "PARTIAL"  # One field is missing in one of the ads
 
-    if current_type != 'FULL':
-        return 'SEMANTIC'  # Can only be semantic by that point
-
-    return 'FULL'  # Full if everything equal
+    return current_type  # No more tests, we go with the current assumption
 
 
 def find_subtle_duplicates_from_tokens(

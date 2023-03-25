@@ -22,13 +22,10 @@ def aggregate_duplicates_list(
 
 
 def aggregate_easy_duplicates(
-    preprocessed_data: pd.DataFrame,
     gross_full_duplicates: pd.DataFrame,
     gross_partial_duplicates: pd.DataFrame,
     gross_semantic_duplicates: pd.DataFrame,
-    gross_semantic_multilingual_duplicates: pd.DataFrame,
-    cols_to_concatenate: dict,
-    id_col: str
+    gross_semantic_multilingual_duplicates: pd.DataFrame
 ) -> pd.DataFrame:
 
     easy_duplicates = aggregate_duplicates_list(

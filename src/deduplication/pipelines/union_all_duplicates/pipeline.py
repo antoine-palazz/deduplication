@@ -18,13 +18,10 @@ def create_pipeline(**kwargs) -> Pipeline:
         [
             node(
                 func=aggregate_easy_duplicates,
-                inputs=["preprocessed_dataset",
-                        "gross_full_duplicates",
+                inputs=["gross_full_duplicates",
                         "gross_partial_duplicates",
                         "gross_semantic_duplicates",
-                        "gross_semantic_multilingual_duplicates",
-                        "params:cols_to_concatenate",
-                        "params:id_col"],
+                        "gross_semantic_multilingual_duplicates"],
                 outputs="easy_duplicates",
                 name="aggregate_easy_duplicates_node",
                 tags=[

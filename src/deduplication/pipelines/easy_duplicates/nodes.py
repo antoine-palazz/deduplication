@@ -15,14 +15,12 @@ def identify_exact_duplicates(
     list_cols_to_mismatch: list,
     default_type: str,
     str_cols: list,
-    cols_to_be_similar: list,
-    title_col: str,
     description_col: str,
     date_col: str,
     id_col: str,
     language_col: str,
-    threshold_similarity: float,
-    threshold_partial: float
+    threshold_similarity: dict,
+    threshold_partial: dict
 ) -> pd.DataFrame:
 
     n_ads = len(data)
@@ -64,8 +62,6 @@ def identify_exact_duplicates(
                             data_for_duplicates.loc[j],
                             current_type=default_type,
                             str_cols=str_cols,
-                            cols_to_be_similar=cols_to_be_similar,
-                            title_col=title_col,
                             description_col=description_col,
                             date_col=date_col,
                             language_col=language_col,

@@ -30,8 +30,6 @@ def create_pipeline(**kwargs) -> Pipeline:
                 inputs=["extensively_preprocessed_international_offers",
                         "tokens_xlm_roberta",
                         "params:str_cols",
-                        "params:cols_to_be_similar",
-                        "params:title_col",
                         "params:description_col",
                         "params:date_col",
                         "params:id_col",
