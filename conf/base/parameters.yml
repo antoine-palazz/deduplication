@@ -31,10 +31,10 @@ threshold_similarity:
     company_name: 0.8
     location: 0.8
   multilingual:
-    title: 0.6
-    description: 0.2
+    title: 0.5
+    description: 0.1
     company_name: 0.8
-    location: 0.8
+    location: 0.75
 
 threshold_partial:
   monolingual: 0.05
