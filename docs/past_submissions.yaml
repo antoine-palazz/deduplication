@@ -1,3 +1,20 @@
+submission_7_AP:
+    description:
+        "TF-IDF 0.99 - Distiluse multilingual 0.95 - Partials for longer descriptions"
+    full:
+        nb_duplicates: 63353
+        f1_score: 0.99  # Top performer
+    semantic:
+        nb_duplicates: 71652
+        f1_score: 0.42
+    temporal:
+        nb_duplicates: 472756
+        f1_score: 0.72
+    partial:
+        nb_duplicates: 52973
+        f1_score: 0.06
+    macro_f1: 0.64
+
 submission_6_AP:
     description:
         "TF-IDF 0.995 - Distiluse multilingual 0.99"
