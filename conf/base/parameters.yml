@@ -27,12 +27,14 @@ chunk_size: 5000
 threshold_similarity:
   monolingual:
     title: 0.8
-    description: 0.8
+    description: 0.75
+    filtered_description: 0.8
     company_name: 0.8
     location: 0.8
   multilingual:
     title: 0.5
     description: 0.1
+    filtered_description: 0.15
     company_name: 0.8
     location: 0.75
 
