@@ -35,7 +35,11 @@ def remove_html(
 
     texts_without_html = texts.apply(
         lambda x: re.sub('<[^<]+?>', " ", html.unescape(x))
-    )
+    ).str.replace(
+        r'\r|\n', ' ', regex=True
+    ).replace(
+        r' +', ' ', regex=True
+    ).str.strip()
 
     return texts_without_html
 
@@ -44,12 +48,7 @@ def normalize_strings(
     texts: pd.Series
 ) -> pd.Series:
 
-    clean_texts = texts.str.replace(
-        r'\r|\n', ' ', regex=True
-    ).replace(
-        r' +', ' ', regex=True
-    ).str.lower(
-    ).str.strip()
+    clean_texts = texts.str.lower()
 
     return clean_texts
 
