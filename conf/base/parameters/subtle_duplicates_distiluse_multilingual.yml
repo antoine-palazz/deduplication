@@ -4,4 +4,4 @@
 # Documentation for this file format can be found in "Parameters"
 # Link: https://docs.kedro.org/en/0.18.7/kedro_project_setup/configuration.html#parameters
 
-threshold_semantic_distiluse_multilingual: 0.95  # What is optimal?
+threshold_semantic_distiluse_multilingual: 0.9  # What is optimal?
