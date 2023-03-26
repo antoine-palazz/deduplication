@@ -1,3 +1,20 @@
+submission_8_AP:
+    description:
+        "TF-IDF 0.99 - Distiluse multilingual 0.9 - New partials"
+    full:
+        nb_duplicates: 63353
+        f1_score: 0.99  # Top performer
+    semantic:
+        nb_duplicates: 125811
+        f1_score: 0.65  # Top performer
+    temporal:
+        nb_duplicates: 499015
+        f1_score: 0.75
+    partial:
+        nb_duplicates: 22421
+        f1_score: 0.13  # Top performer
+    macro_f1: 0.71  # Top performer
+
 submission_7_AP:
     description:
         "TF-IDF 0.99 - Distiluse multilingual 0.95 - Partials for longer descriptions"
@@ -23,7 +40,7 @@ submission_6_AP:
         f1_score: 0.99  # Top performer
     semantic:
         nb_duplicates: 81190
-        f1_score: 0.47  # Top performer
+        f1_score: 0.47
     temporal:
         nb_duplicates: 386913
         f1_score: 0.73
@@ -47,7 +64,7 @@ submission_5_AP:
     partial:
         nb_duplicates: 28861
         f1_score: 0.08
-    macro_f1: 0.65  # Top performer
+    macro_f1: 0.65
 
 submission_4_AP:
     description:
@@ -60,10 +77,10 @@ submission_4_AP:
         f1_score: 0.01
     temporal:
         nb_duplicates: 343176
-        f1_score: 0.76  # Top performer
+        f1_score: 0.76
     partial:
         nb_duplicates: 21619
-        f1_score: 0.09  # Top performer
+        f1_score: 0.09
     macro_f1: 0.55
 
 submission_3_AP:
@@ -118,22 +135,3 @@ submission_1_AP:
         nb_duplicates: 5782
         f1_score: 0.03
     macro_f1: 0.27
-
-
-submission_2_KF:
-    description:
-        "TF-IDF with threshold at 0.8 & new FULL"
-    full:
-        nb_duplicates: 63353
-        f1_score: 0.99  # Top performer
-    semantic:
-        nb_duplicates: 4726
-        f1_score: 0.02
-    temporal:
-        nb_duplicates: 354808
-        f1_score: 0.75
-    partial:
-        nb_duplicates: 21916
-        f1_score: 0.09  # Top performer
-    global:
-        f1_score: 0.57

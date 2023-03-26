@@ -48,14 +48,19 @@ def differentiate_duplicates(
     threshold_partial: dict,
 ) -> str:
 
+    if (
+        row_1['country_id'] != row_2['country_id']
+    ):
+        return "NON"  # To remove?
+
     if (row_1.drop("id") == row_2.drop("id")).all():
-        return 'FULL'  # To filter if current_type == FULL ?
+        return "FULL"  # Obvious
 
     if (
         row_1.drop(["id", date_col]) ==
         row_2.drop(["id", date_col])
     ).all():
-        return 'TEMPORAL'  # To filter if current_type == FULL ?
+        return "TEMPORAL"  # Obvious
 
     if row_1[language_col] == row_2[language_col]:
         lingual = "monolingual"
@@ -90,10 +95,10 @@ def differentiate_duplicates(
 
     one_more_complete = 0
     two_more_complete = 0
-    incomplete_pair = False
+    incomplete_pair = 0
     for col in str_cols:
         if (row_1[col] == "") and (row_2[col] == ""):
-            incomplete_pair = True
+            incomplete_pair += 1
         elif (row_1[col] == "") != (row_2[col] == ""):
             if row_2[col] == "":
                 one_more_complete += 1
@@ -126,11 +131,11 @@ def differentiate_duplicates(
         ):
             return "NON"   # More than 1 different field
 
-    elif incomplete_pair:
-        current_type = "PARTIAL"
+    elif incomplete_pair == 1:
+        current_type = "PARTIAL"  # One field compensated by the description
 
-    if current_type == "PARTIAL":
-        return "PARTIAL"
+    elif incomplete_pair >= 2:
+        current_type = "NON"  # Too many fields to be compensated
 
     if row_1[date_col] != row_2[date_col]:
         return "TEMPORAL"  # Dates are different
