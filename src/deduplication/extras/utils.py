@@ -51,6 +51,12 @@ def differentiate_duplicates(
     if row_1.drop("id", axis=1) == row_2.drop("id", axis=1):
         return 'FULL'  # Obvious
 
+    if (
+        row_1.drop(["id", "retrieval_date"], axis=1) ==
+        row_2.drop(["id", "retrieval_date"], axis=1)
+    ):
+        return 'TEMPORAL'  # Obvious
+
     if row_1[language_col] == row_2[language_col]:
         lingual = "monolingual"
     else:
