@@ -22,7 +22,7 @@ list_cols_to_match_semantic:
 
 list_cols_to_match_semantic_multilingual:
     [
-        ['company_name', 'retrieval_date']
+        ['company_name', 'location', 'retrieval_date']
     ]
 
 
