@@ -88,8 +88,7 @@ def preprocess_data_basic(
 def filter_out_incomplete_offers(
     data: pd.DataFrame,
     required_cols: list,
-    nb_allowed_nans: int,
-
+    nb_allowed_nans: int
 ) -> pd.DataFrame:
 
     filtered_data_on_nans = data[

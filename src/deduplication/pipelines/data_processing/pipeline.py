@@ -32,16 +32,8 @@ def create_pipeline(**kwargs) -> Pipeline:
                 inputs=["preprocessed_dataset",
                         "params:required_cols_full",
                         "params:nb_allowed_nans_full"],
-                outputs="preprocessed_full_offers",
+                outputs="preprocessed_offers_for_full",
                 name="filter_offers_for_full_node"
-            ),
-            node(
-                func=filter_out_incomplete_offers,
-                inputs=["preprocessed_dataset",
-                        "params:required_cols_partial",
-                        "params:nb_allowed_nans_partial"],
-                outputs="preprocessed_quasi_complete_offers",
-                name="filter_complete_offers_for_partial_node"
             ),
 
             node(
@@ -63,10 +55,20 @@ def create_pipeline(**kwargs) -> Pipeline:
             ),
             node(
                 func=filter_out_incomplete_offers,
+                inputs=["preprocessed_dataset",
+                        "params:required_cols_partial",
+                        "params:nb_allowed_nans_partial"],
+                outputs="extensively_preprocessed_detailed_offers_for_partial",
+                name="filter_detailed_offers_for_partial_node"
+            ),
+            node(
+                func=filter_out_incomplete_offers,
                 inputs=["extensively_preprocessed_dataset",
                         "params:required_cols_semantic",
                         "params:nb_allowed_nans_semantic"],
-                outputs="extensively_preprocessed_described_offers",
+                outputs=(
+                    "extensively_preprocessed_described_offers_for_semantic"
+                ),
                 name="filter_described_offers_for_semantic_node"
             ),
             node(
@@ -74,9 +76,12 @@ def create_pipeline(**kwargs) -> Pipeline:
                 inputs=["extensively_preprocessed_dataset",
                         "params:required_cols_semantic_multilingual",
                         "params:nb_allowed_nans_semantic_multilingual"],
-                outputs="extensively_preprocessed_located_offers",
+                outputs=(
+                    "extensively_preprocessed_detailed_offers_for_semantic"
+                ),
                 name="filter_detailed_offers_for_semantic_multilingual_node"
             ),
+
             node(
                 func=filter_international_companies,
                 inputs=["extensively_preprocessed_dataset",

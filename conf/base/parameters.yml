@@ -8,6 +8,9 @@ location_col: 'location'
 country_col: 'country_id'
 date_col: 'retrieval_date'
 
+str_cols:
+    ['title', 'company_name', 'location', 'description']
+
 language_col: 'language'
 filtered_description_col: 'filtered_description'
 
@@ -36,7 +39,7 @@ threshold_similarity:
     description: 0.1
     filtered_description: 0.15
     company_name: 0.8
-    location: 0.75
+    location: 0.8
 
 threshold_partial:
   monolingual: 0.05

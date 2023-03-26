@@ -48,12 +48,15 @@ def differentiate_duplicates(
     threshold_partial: dict,
 ) -> str:
 
+    if row_1.drop("id", axis=1) == row_2.drop("id", axis=1):
+        return 'FULL'  # Obvious
+
     if row_1[language_col] == row_2[language_col]:
         lingual = "monolingual"
     else:
         lingual = "multilingual"
 
-    for col in str_cols[:-1]:
+    for col in str_cols[:-1]:  # All str cols but description
         if row_1[col] != "" and row_2[col] != "":
             if (
                 jaro_winkler_similarity(row_1[col], row_2[col])
@@ -61,34 +64,50 @@ def differentiate_duplicates(
             ):
                 return "NON"  # A field differs too much between the offers
 
-    if row_1[description_col] != "" and row_2[description_col] != "":
+    one_more_complete = 0
+    two_more_complete = 0
+    for col in str_cols:
+        if (row_1[col] == "") != (row_2[col] == ""):
+            if row_2[col] == "":
+                one_more_complete += 1
+            if row_1[col] == "":
+                two_more_complete += 1
+
+    description_lengths_difference = (
+        (len(row_1[description_col]) - len(row_2[description_col]))
+        / min(len(row_1[description_col]), len(row_2[description_col]))
+    )
+    description_lengths_differ = (abs(description_lengths_difference)
+                                  > threshold_partial[lingual])
+
+    if not description_lengths_differ:
         if (
-            abs(len(row_1[description_col]) - len(row_2[description_col]))
-            / min(len(row_1[description_col]), len(row_2[description_col]))
-           ) > threshold_partial[lingual]:
+            jaro_winkler_similarity(
+                row_1[description_col], row_2[description_col]
+            ) < threshold_similarity[lingual][description_col]
+        ):
+            return "NON"  # Descriptions of similar lengths but too different
+        if one_more_complete + two_more_complete == 1:
+            current_type = "PARTIAL"  # Or return PARTIAL?
+        if one_more_complete + two_more_complete >= 2:
+            return "NON"   # More than 1 different field
 
-            current_type = "PARTIAL"  # Description lengths very different
-
+    elif one_more_complete + two_more_complete >= 1:
+        if one_more_complete > 0 and two_more_complete > 0:
+            current_type = "PARTIAL"  # Or return PARTIAL?
         elif (
-                jaro_winkler_similarity(
-                    row_1[description_col], row_2[description_col]
-                )
-                < threshold_similarity[lingual][description_col]
-             ):
-
-            return "NON"  # Descriptions of similar lengths and too different
-
-    # Who comes first? Temporal or partial?
+            (one_more_complete == 1 and description_lengths_difference > 0) or
+            (two_more_complete == 1 and description_lengths_difference < 0)
+        ):
+            return "PARTIAL"  # Or return PARTIAL?
+        elif (
+            (one_more_complete == 2 and description_lengths_difference > 0) or
+            (two_more_complete == 2 and description_lengths_difference < 0)
+        ):
+            return "NON"   # More than 1 different field
 
     if row_1[date_col] != row_2[date_col]:
         return "TEMPORAL"  # Dates are different
-
-    count_partial = 0
-    for col in str_cols:
-        if (row_1[col] == "") != (row_2[col] == ""):
-            count_partial += 1
-    if count_partial == 1:
-        return "PARTIAL"  # One field is missing in one of the ads
 
     return current_type  # No more tests, we go with the current assumption
 

@@ -13,7 +13,7 @@ def create_pipeline(**kwargs) -> Pipeline:
         [
             node(
                 func=identify_exact_duplicates,
-                inputs=["preprocessed_full_offers",
+                inputs=["preprocessed_offers_for_full",
                         "params:list_cols_to_match_full",
                         "params:list_cols_to_mismatch_full",
                         "params:type_full",
@@ -29,7 +29,7 @@ def create_pipeline(**kwargs) -> Pipeline:
             ),
             node(
                 func=identify_exact_duplicates,
-                inputs=["preprocessed_quasi_complete_offers",
+                inputs=["extensively_preprocessed_detailed_offers_for_partial",
                         "params:list_cols_to_match_partial",
                         "params:list_cols_to_mismatch_partial",
                         "params:type_semantic",
@@ -45,33 +45,37 @@ def create_pipeline(**kwargs) -> Pipeline:
             ),
             node(
                 func=identify_exact_duplicates,
-                inputs=["extensively_preprocessed_described_offers",
-                        "params:list_cols_to_match_semantic",
-                        "params:list_cols_to_mismatch_semantic",
-                        "params:type_semantic",
-                        "params:str_cols",
-                        "params:filtered_description_col",
-                        "params:date_col",
-                        "params:id_col",
-                        "params:language_col",
-                        "params:threshold_similarity",
-                        "params:threshold_partial"],
+                inputs=[
+                    "extensively_preprocessed_described_offers_for_semantic",
+                    "params:list_cols_to_match_semantic",
+                    "params:list_cols_to_mismatch_semantic",
+                    "params:type_semantic",
+                    "params:str_cols",
+                    "params:filtered_description_col",
+                    "params:date_col",
+                    "params:id_col",
+                    "params:language_col",
+                    "params:threshold_similarity",
+                    "params:threshold_partial"
+                ],
                 outputs="gross_semantic_duplicates",
                 name="identify_gross_semantic_duplicates_node"
             ),
             node(
                 func=identify_exact_duplicates,
-                inputs=["extensively_preprocessed_located_offers",
-                        "params:list_cols_to_match_semantic_multilingual",
-                        "params:list_cols_to_mismatch_semantic_multilingual",
-                        "params:type_semantic",
-                        "params:str_cols",
-                        "params:filtered_description_col",
-                        "params:date_col",
-                        "params:id_col",
-                        "params:language_col",
-                        "params:threshold_similarity",
-                        "params:threshold_partial"],
+                inputs=[
+                    "extensively_preprocessed_detailed_offers_for_semantic",
+                    "params:list_cols_to_match_semantic_multilingual",
+                    "params:list_cols_to_mismatch_semantic_multilingual",
+                    "params:type_semantic",
+                    "params:str_cols",
+                    "params:filtered_description_col",
+                    "params:date_col",
+                    "params:id_col",
+                    "params:language_col",
+                    "params:threshold_similarity",
+                    "params:threshold_partial"
+                ],
                 outputs="gross_semantic_multilingual_duplicates",
                 name="identify_gross_semantic_multilingual_duplicates_node"
             )

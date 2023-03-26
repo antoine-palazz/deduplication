@@ -4,8 +4,6 @@
 # Documentation for this file format can be found in "Parameters"
 # Link: https://kedro.readthedocs.io/en/0.18.6/kedro_project_setup/configuration.html#parameters
 
-str_cols:
-    ['title', 'company_name', 'location', 'description']
 cols_to_concatenate:
     normal: ['title', 'company_name', 'location', 'country_id', 'description']
     filtered: ['title', 'company_name', 'location', 'country_id', 'filtered_description']
@@ -13,16 +11,16 @@ cols_to_concatenate:
 required_cols_full:
     []
 required_cols_partial:
-    []
+    ['title', 'company_name', 'location']
 required_cols_semantic:
-    ['description']
+    ['title', 'description']
 required_cols_semantic_multilingual:
-    ['title', 'location', 'company_name']
+    ['title', 'company_name', 'location']
 
 nb_allowed_nans_full: 2
-nb_allowed_nans_partial: 2  # Should it be 1?
+nb_allowed_nans_partial: 1
 nb_allowed_nans_semantic: 2
-nb_allowed_nans_semantic_multilingual: 2
+nb_allowed_nans_semantic_multilingual: 1
 
 proportion_words_to_filter_out: 0.001
 threshold_short_text: 600
