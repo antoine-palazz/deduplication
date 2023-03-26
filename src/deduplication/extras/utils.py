@@ -52,8 +52,8 @@ def differentiate_duplicates(
         return 'FULL'  # To filter if current_type == FULL ?
 
     if (
-        row_1.drop(["id", "retrieval_date"]) ==
-        row_2.drop(["id", "retrieval_date"])
+        row_1.drop(["id", date_col]) ==
+        row_2.drop(["id", date_col])
     ).all():
         return 'TEMPORAL'  # To filter if current_type == FULL ?
 
@@ -85,6 +85,9 @@ def differentiate_duplicates(
         ]:
             return "NON"  # Difference of length between descriptions too big
 
+    dates_difference = abs((row_1[date_col] - row_2[date_col]).days)
+    dates_differ = dates_difference > threshold_similarity["date"]
+
     one_more_complete = 0
     two_more_complete = 0
     incomplete_pair = False
@@ -101,7 +104,7 @@ def differentiate_duplicates(
         if (
             jaro_winkler_similarity(
                 row_1[description_col], row_2[description_col]
-            ) < threshold_similarity[lingual][description_col]
+            ) < threshold_similarity[lingual][dates_differ][description_col]
         ):
             return "NON"  # Descriptions of similar lengths but too different
         if one_more_complete + two_more_complete == 1:

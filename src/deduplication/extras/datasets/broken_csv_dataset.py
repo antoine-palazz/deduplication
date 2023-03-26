@@ -1,7 +1,8 @@
 import csv
-from kedro.io import AbstractDataSet
+
 import numpy as np
 import pandas as pd
+from kedro.io import AbstractDataSet
 
 
 class BrokenCSVDataSet(AbstractDataSet[pd.DataFrame, pd.DataFrame]):
@@ -27,6 +28,8 @@ class BrokenCSVDataSet(AbstractDataSet[pd.DataFrame, pd.DataFrame]):
                              quotechar='"',
                              quoting=csv.QUOTE_ALL,
                              lineterminator='\n')
+            df = df.convert_dtypes()
+            df['retrieval_date'] = pd.to_datetime(df['retrieval_date'])
         print(f'{len(df)} rows in the dataset')
         return df
 
