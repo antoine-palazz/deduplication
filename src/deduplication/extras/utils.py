@@ -126,6 +126,9 @@ def differentiate_duplicates(
     elif incomplete_pair:
         current_type = "PARTIAL"
 
+    # if current_type == "PARTIAL":
+    #     return "PARTIAL"
+
     if row_1[date_col] != row_2[date_col]:
         return "TEMPORAL"  # Dates are different
 
