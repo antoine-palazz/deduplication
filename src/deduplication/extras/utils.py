@@ -69,8 +69,15 @@ def differentiate_duplicates(
 
     for col in str_cols[:-1]:  # All str cols but description
         if row_1[col] != "" and row_2[col] != "":
+            min_len_field = int(1.1 * min(len(row_1[col]), len(row_2[col])))
             if (
                 jaro_winkler_similarity(row_1[col], row_2[col])
+                < threshold_similarity[lingual][col]
+            ) and (
+                jaro_winkler_similarity(
+                    row_1[col][:min_len_field],
+                    row_2[col][:min_len_field]
+                )
                 < threshold_similarity[lingual][col]
             ):
                 return "NON"  # A field differs too much between the offers
