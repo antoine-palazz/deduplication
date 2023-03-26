@@ -49,13 +49,13 @@ def differentiate_duplicates(
 ) -> str:
 
     if (row_1.drop("id") == row_2.drop("id")).all():
-        return 'FULL'  # Obvious
+        return 'FULL'  # To filter if current_type == FULL ?
 
     if (
         row_1.drop(["id", "retrieval_date"]) ==
         row_2.drop(["id", "retrieval_date"])
     ).all():
-        return 'TEMPORAL'  # Obvious
+        return 'TEMPORAL'  # To filter if current_type == FULL ?
 
     if row_1[language_col] == row_2[language_col]:
         lingual = "monolingual"
@@ -87,8 +87,11 @@ def differentiate_duplicates(
 
     one_more_complete = 0
     two_more_complete = 0
+    incomplete_pair = False
     for col in str_cols:
-        if (row_1[col] == "") != (row_2[col] == ""):
+        if (row_1[col] == "") and (row_2[col] == ""):
+            incomplete_pair = True
+        elif (row_1[col] == "") != (row_2[col] == ""):
             if row_2[col] == "":
                 one_more_complete += 1
             if row_1[col] == "":
@@ -113,12 +116,15 @@ def differentiate_duplicates(
             (one_more_complete == 1 and description_lengths_difference > 0) or
             (two_more_complete == 1 and description_lengths_difference < 0)
         ):
-            return "PARTIAL"  # Or return PARTIAL?
+            current_type = "PARTIAL"  # Or return PARTIAL?
         elif (
             (one_more_complete >= 2 and description_lengths_difference > 0) or
             (two_more_complete >= 2 and description_lengths_difference < 0)
         ):
             return "NON"   # More than 1 different field
+
+    elif incomplete_pair:
+        current_type = "PARTIAL"
 
     if row_1[date_col] != row_2[date_col]:
         return "TEMPORAL"  # Dates are different
