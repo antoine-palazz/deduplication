@@ -44,5 +44,7 @@ threshold_similarity:
 threshold_partial:
   monolingual: 0.05
   multilingual: 0.10
+  too_much_monolingual: 0.50
+  too_much_multilingual: 1.00
 
 dim_tokens: 100

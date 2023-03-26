@@ -70,6 +70,21 @@ def differentiate_duplicates(
             ):
                 return "NON"  # A field differs too much between the offers
 
+    description_lengths_difference = (
+        (len(row_1[description_col]) - len(row_2[description_col]))
+        / (1 + min(len(row_1[description_col]), len(row_2[description_col])))
+    )
+    description_lengths_differ = (abs(description_lengths_difference)
+                                  > threshold_partial[lingual])
+
+    if ((row_1[description_col] != "")
+        and (row_2[description_col] != "")
+            and description_lengths_differ):
+        if abs(description_lengths_difference) > threshold_partial[
+            "too_much_" + lingual
+        ]:
+            return "NON"  # Difference of length between descriptions too big
+
     one_more_complete = 0
     two_more_complete = 0
     for col in str_cols:
@@ -78,13 +93,6 @@ def differentiate_duplicates(
                 one_more_complete += 1
             if row_1[col] == "":
                 two_more_complete += 1
-
-    description_lengths_difference = (
-        (len(row_1[description_col]) - len(row_2[description_col]))
-        / min(len(row_1[description_col]), len(row_2[description_col]))
-    )
-    description_lengths_differ = (abs(description_lengths_difference)
-                                  > threshold_partial[lingual])
 
     if not description_lengths_differ:
         if (
@@ -107,8 +115,8 @@ def differentiate_duplicates(
         ):
             return "PARTIAL"  # Or return PARTIAL?
         elif (
-            (one_more_complete == 2 and description_lengths_difference > 0) or
-            (two_more_complete == 2 and description_lengths_difference < 0)
+            (one_more_complete >= 2 and description_lengths_difference > 0) or
+            (two_more_complete >= 2 and description_lengths_difference < 0)
         ):
             return "NON"   # More than 1 different field
 

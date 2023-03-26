@@ -393,6 +393,10 @@ def filter_out_poorly_described_offers(
     description_col: str
 ) -> pd.DataFrame:
 
+    preprocessed_data = preprocessed_data[
+        preprocessed_data[description_col] != ""
+    ].reset_index(drop=True)
+
     data_with_one_col_not_to_be_diversified = create_concatenated_column(
         preprocessed_data,
         cols_to_concatenate=cols_not_to_be_diversified,
