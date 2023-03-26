@@ -48,12 +48,12 @@ def differentiate_duplicates(
     threshold_partial: dict,
 ) -> str:
 
-    if row_1.drop("id", axis=1) == row_2.drop("id", axis=1):
+    if row_1.drop("id") == row_2.drop("id"):
         return 'FULL'  # Obvious
 
     if (
-        row_1.drop(["id", "retrieval_date"], axis=1) ==
-        row_2.drop(["id", "retrieval_date"], axis=1)
+        row_1.drop(["id", "retrieval_date"]) ==
+        row_2.drop(["id", "retrieval_date"])
     ):
         return 'TEMPORAL'  # Obvious
 
