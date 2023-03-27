@@ -7,7 +7,7 @@
 list_cols_to_match:
     FULL:
         [
-            ['title', 'company_name', 'location', 'description']
+            ['title', 'company_name', 'location', 'description', 'country_id']
         ]
     PARTIAL:
         [

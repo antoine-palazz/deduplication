@@ -130,11 +130,17 @@ def is_partial(
     if lengths_differ == "too_long":
         return (True, "NON")  # Description too long
 
-    if lengths_differ == "same_size" and (
+    # if lengths_differ == "same_size" and (
+    #     jaro_winkler_similarity(row_1["filtered_description"],
+    #                             row_2["filtered_description"]) <
+    #     thresholds_similarity[lingual][dates_differ]["filtered_description"]
+    # ):
+    if (
         jaro_winkler_similarity(row_1["filtered_description"],
                                 row_2["filtered_description"]) <
         thresholds_similarity[lingual][dates_differ]["filtered_description"]
     ):
+
         return (True, "NON")  # Descriptions of similar len but too different
 
     type_to_return = "Unknown"
@@ -167,10 +173,11 @@ def is_partial(
         return (False, "Unknown")
 
     else:
-        type_to_return = "PARTIAL"
+        # type_to_return = "PARTIAL"
+        return (False, "Unknown")
 
     if type_to_return == "PARTIAL":
-        if row_1["retrieval_date"] != row_2["retrieval_date"]:  # To change to TEMPORAL?
+        if row_1["retrieval_date"] == row_2["retrieval_date"]:  # To change to TEMPORAL?
             return (True, "NON")  # PARTIAL + TEMPORAL = NON
         return (True, "PARTIAL")
 
