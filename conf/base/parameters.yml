@@ -61,7 +61,7 @@ thresholds_similarity:
 
 threshold_date: 100
 
-thresholds_description_length:
+thresholds_desc_len:
     absolute:
         monolingual:
             PARTIAL: 100

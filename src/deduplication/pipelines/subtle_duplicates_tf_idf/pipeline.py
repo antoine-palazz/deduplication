@@ -28,11 +28,11 @@ def create_pipeline(**kwargs) -> Pipeline:
                 inputs=["extensively_preprocessed_dataset",
                         "tokens_tf_idf",
                         "params:str_cols",
-                        "params:threshold_semantic",
+                        "params:threshold_semantic_tf_idf",
                         "params:threshold_date",
                         "params:thresholds_similarity",
                         "params:thresholds_desc_len",
-                        "params:chunk_size"
+                        "params:hyperparameters"
                         ],
                 outputs="subtle_duplicates_tf_idf",
                 name="identify_subtle_duplicates_tf_idf_node"

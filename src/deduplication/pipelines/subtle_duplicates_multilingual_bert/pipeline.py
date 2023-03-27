@@ -27,11 +27,11 @@ def create_pipeline(**kwargs) -> Pipeline:
                 inputs=["well_preprocessed_and_described_international_offers",
                         "tokens_multilingual_bert",
                         "params:str_cols",
-                        "params:threshold_semantic",
+                        "params:threshold_semantic_multilingual_bert",
                         "params:threshold_date",
                         "params:thresholds_similarity",
                         "params:thresholds_desc_len",
-                        "params:chunk_size"
+                        "params:hyperparameters"
                         ],
                 outputs="subtle_duplicates_multilingual_bert",
                 name="identify_subtle_duplicates_multilingual_bert_node"

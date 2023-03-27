@@ -27,11 +27,11 @@ def create_pipeline(**kwargs) -> Pipeline:
                 inputs=["well_preprocessed_and_described_international_offers",
                         "tokens_distiluse_multilingual",
                         "params:str_cols",
-                        "params:threshold_semantic",
+                        "params:threshold_semantic_distiluse_multilingual",
                         "params:threshold_date",
                         "params:thresholds_similarity",
                         "params:thresholds_desc_len",
-                        "params:chunk_size"
+                        "params:hyperparameters"
                         ],
                 outputs="subtle_duplicates_distiluse_multilingual",
                 name="identify_subtle_duplicates_distiluse_multilingual_node"

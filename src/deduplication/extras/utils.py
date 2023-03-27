@@ -271,21 +271,20 @@ def find_subtle_duplicates_from_tokens(
     threshold_date: int,
     thresholds_similarity: dict,
     thresholds_desc_len: dict,
-    chunk_size: int
+    hyperparameters: dict
 ) -> list:
 
     duplicates = []
 
     n_ads = len(data)
-    chunks = range(0, n_ads, chunk_size)
-    n_chunks = len(chunks)
+    chunks = range(0, n_ads, hyperparameters["chunk_size"])
 
     for chunk_start in tqdm(chunks):
 
         similarity_matrix_chunk = compute_chunk_cosine_similarity(
             tokenized_texts,
             start=chunk_start,
-            end=chunk_start+chunk_size
+            end=chunk_start+hyperparameters["chunk_size"]
         )
 
         def find_dups_in_chunk(i):
@@ -316,14 +315,14 @@ def find_subtle_duplicates_from_tokens(
         find_dups_in_chunk_for_pickle = globalize(find_dups_in_chunk)
         with Pool(int(cpu_count()/3)) as pool:
             list_duplicates_chunk = pool.map(find_dups_in_chunk_for_pickle,
-                                             range(chunk_size)
+                                             range(hyperparameters["chunk_size"])
                                              )
         duplicates_chunk = list(
             itertools.chain.from_iterable(list_duplicates_chunk)
         )
         print(
             f"{len(duplicates_chunk)} duplicates \
-               found in chunck n°{int(chunk_start/chunk_size+1)} / {n_chunks}"
+               found in chunck n°{int(chunk_start/hyperparameters['chunk_size']+1)}"
         )
         duplicates.extend(duplicates_chunk)
 

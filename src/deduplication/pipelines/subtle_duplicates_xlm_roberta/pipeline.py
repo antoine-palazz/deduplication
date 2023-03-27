@@ -27,11 +27,11 @@ def create_pipeline(**kwargs) -> Pipeline:
                 inputs=["well_preprocessed_and_described_international_offers",
                         "tokens_xlm_roberta",
                         "params:str_cols",
-                        "params:threshold_semantic",
+                        "params:threshold_semantic_xlm_roberta",
                         "params:threshold_date",
                         "params:thresholds_similarity",
                         "params:thresholds_desc_len",
-                        "params:chunk_size"
+                        "params:hyperparameters"
                         ],
                 outputs="subtle_duplicates_xlm_roberta",
                 name="identify_subtle_duplicates_xlm_roberta_node"
