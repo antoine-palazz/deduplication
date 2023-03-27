@@ -23,9 +23,6 @@ str_cols:
     filtered: ['title', 'company_name', 'location', 'filtered_description']
     no_description: ['title', 'company_name', 'location']
 
-normal_description_col: 'description'
-filtered_description_col: 'filtered_description'
-
 hyperparameters:
     batch_size: 8
     dim_tokens: 100

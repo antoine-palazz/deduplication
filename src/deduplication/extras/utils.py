@@ -170,7 +170,7 @@ def is_partial(
         type_to_return = "PARTIAL"
 
     if type_to_return == "PARTIAL":
-        if row_1["date"] != row_2["date"]:
+        if row_1["date"] != row_2["date"]:  # To change into TEMPORAL?
             return (True, "NON")  # PARTIAL + TEMPORAL = NON
         return (True, "PARTIAL")
 
@@ -209,8 +209,8 @@ def differentiate_duplicates(
         lingual=lingual,
         dates_differ=dates_differ,
         str_cols=str_cols,
-        thresholds_similarity=thresholds_similarity,
-        threshold_date=threshold_date
+        threshold_date=threshold_date,
+        thresholds_similarity=thresholds_similarity
     )
     if isnon:
         return type_to_return
