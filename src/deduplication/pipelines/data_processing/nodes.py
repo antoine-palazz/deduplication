@@ -36,7 +36,9 @@ def remove_html(
     texts_without_html = texts.apply(
         lambda x: re.sub('<[^<]+?>', " ", html.unescape(x))
     ).str.replace(
-        r'\r|\n|*', ' ', regex=True
+        r'\r|\n', ' ', regex=True
+    ).str.replace(
+        '*', ' '
     ).replace(
         r' +', ' ', regex=True
     ).str.strip()
@@ -313,7 +315,9 @@ def preprocess_data_extensive(
         without_accents=True
     )
 
-    preprocessed_data[str_cols] = preprocessed_data[str_cols].progress_apply(
+    preprocessed_data[str_cols["normal"]] = preprocessed_data[
+        str_cols["normal"]
+    ].progress_apply(
         remove_special_characters
     )
 
@@ -343,13 +347,13 @@ def preprocess_data_extensive(
 
     preprocessed_data = create_concatenated_column(
         preprocessed_data,
-        cols_to_concatenate=cols_to_concatenate['normal'],
+        list_cols_to_concatenate=cols_to_concatenate['normal'],
         concatenated_col_name="concatenated_text"
     )
 
     preprocessed_data = create_concatenated_column(
         preprocessed_data,
-        cols_to_concatenate=cols_to_concatenate['filtered'],
+        list_cols_to_concatenate=cols_to_concatenate['filtered'],
         concatenated_col_name="concatenated_filtered_text"
     )
 
@@ -390,7 +394,7 @@ def filter_out_poorly_described_offers(
 
     data_with_one_col_not_to_be_diversified = create_concatenated_column(
         preprocessed_data,
-        cols_to_concatenate=cols_not_to_be_diversified,
+        list_cols_to_concatenate=cols_not_to_be_diversified,
         concatenated_col_name="col_not_to_be_diversified"
     )
 

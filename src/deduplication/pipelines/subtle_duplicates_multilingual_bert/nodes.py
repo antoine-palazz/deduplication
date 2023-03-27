@@ -48,9 +48,7 @@ def tokenize_texts(
     hyperparameters: dict
 ) -> list:
 
-    dataset = TextDataset(
-        "concatenated_text"
-    )
+    dataset = TextDataset(data["concatenated_text"])
     dataloader = DataLoader(dataset, batch_size=hyperparameters["batch_size"])
 
     matrix_bert_texts = []
@@ -65,7 +63,10 @@ def tokenize_texts(
 
     matrix_bert_texts = reduce_dimension(
         matrix_bert_texts,
-        dim_tokens=hyperparameters["dim_tokens"]
+        hyperparameters=hyperparameters
     )
 
+    print(
+        f"Tokens matrix: {len(matrix_bert_texts)} x {len(matrix_bert_texts[0])}"
+    )
     return matrix_bert_texts

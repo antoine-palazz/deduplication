@@ -46,7 +46,7 @@ class TextDataset(Dataset):
 
     def __getitem__(self, index):
         text = self.texts[index]
-        input_ids = tokenizer_xlm_roberta.encode(
+        input_ids = self.tokenizer.encode(
             text,
             add_special_tokens=True,
             padding="max_length",
@@ -81,7 +81,10 @@ def tokenize_texts(
 
     matrix_roberta_texts = reduce_dimension(
         matrix_roberta_texts,
-        dim_tokens=hyperparameters["dim_tokens"]
+        hyperparameters=hyperparameters
     )
 
+    print(
+        f"Tokens matrix: {len(matrix_roberta_texts)} x {len(matrix_roberta_texts[0])}"
+    )
     return matrix_roberta_texts

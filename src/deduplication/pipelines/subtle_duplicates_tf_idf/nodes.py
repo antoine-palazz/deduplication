@@ -25,7 +25,7 @@ def tokenize_texts(
 
     tokenized_texts = reduce_dimension(
         tokenized_texts,
-        dim_tokens=hyperparameters["dim_tokens"]
+        hyperparameters=hyperparameters
     )
 
     print(

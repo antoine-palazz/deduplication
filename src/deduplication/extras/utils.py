@@ -63,11 +63,11 @@ def is_full(
 
     isfull = (
         (current_type == "FULL") and
-        ((row_1.drop(["id", "date"]) ==
-          row_2.drop(["id", "date"])).all())
+        ((row_1.drop(["id", "retrieval_date"]) ==
+          row_2.drop(["id", "retrieval_date"])).all())
     )
     if isfull:
-        if row_1["date"] == row_2["date"]:
+        if row_1["retrieval_date"] == row_2["retrieval_date"]:
             return (True, "FULL")
         return (True, "TEMPORAL")
 
@@ -110,7 +110,7 @@ def is_partial(
     lingual: str,
     dates_differ: str,
     str_cols: dict,
-    threshold_similarity: dict,
+    thresholds_similarity: dict,
     thresholds_desc_len: dict
 ) -> tuple[bool, str]:
 
@@ -133,7 +133,7 @@ def is_partial(
     if lengths_differ == "same_size" and (
         jaro_winkler_similarity(row_1["filtered_description"],
                                 row_2["filtered_description"]) <
-        threshold_similarity[lingual][dates_differ]["filtered_description"]
+        thresholds_similarity[lingual][dates_differ]["filtered_description"]
     ):
         return (True, "NON")  # Descriptions of similar len but too different
 
@@ -170,7 +170,7 @@ def is_partial(
         type_to_return = "PARTIAL"
 
     if type_to_return == "PARTIAL":
-        if row_1["date"] != row_2["date"]:  # To change into TEMPORAL?
+        if row_1["retrieval_date"] != row_2["retrieval_date"]:  # To change to TEMPORAL?
             return (True, "NON")  # PARTIAL + TEMPORAL = NON
         return (True, "PARTIAL")
 
@@ -181,7 +181,7 @@ def differentiate_duplicates(
     row_1,
     row_2,
     current_type: str,
-    str_cols: list,
+    str_cols: dict,
     threshold_date: int,
     thresholds_similarity: dict,
     thresholds_desc_len: dict
@@ -197,8 +197,8 @@ def differentiate_duplicates(
     )
     dates_differ = (
         "far_dates" if do_dates_differ_much(
-            row_1["date"],
-            row_2["date"],
+            row_1["retrieval_date"],
+            row_2["retrieval_date"],
             threshold_date=threshold_date
         ) else "close_dates"
     )
@@ -227,7 +227,7 @@ def differentiate_duplicates(
     if ispartial:
         return type_to_return
 
-    if row_1["date"] != row_2["date"]:
+    if row_1["retrieval_date"] != row_2["retrieval_date"]:
         return "TEMPORAL"  # Dates are different
 
     return current_type  # No more tests, we go with the current assumption
@@ -266,7 +266,7 @@ def compute_chunk_cosine_similarity(
 def find_subtle_duplicates_from_tokens(
     data: pd.DataFrame,
     tokenized_texts: list,
-    str_cols: list,
+    str_cols: dict,
     threshold_semantic: float,
     threshold_date: int,
     thresholds_similarity: dict,

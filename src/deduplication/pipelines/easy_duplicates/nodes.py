@@ -14,7 +14,7 @@ def identify_exact_duplicates(
     list_cols_to_match: dict,
     list_cols_to_mismatch: dict,
     default_type: str,
-    str_cols: list,
+    str_cols: dict,
     threshold_date: int,
     thresholds_similarity: dict,
     thresholds_desc_len: dict

@@ -41,7 +41,7 @@ def tokenize_texts(
 
     embedded_texts = reduce_dimension(
         embedded_texts,
-        dim_tokens=hyperparameters["dim_tokens"]
+        hyperparameters=hyperparameters
     )
 
     return embedded_texts
