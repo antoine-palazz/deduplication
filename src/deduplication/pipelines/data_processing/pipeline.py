@@ -20,18 +20,16 @@ def create_pipeline(**kwargs) -> Pipeline:
             node(
                 func=preprocess_data_basic,
                 inputs=["wi_dataset",
-                        "params:str_cols",
-                        "params:description_col",
-                        "params:id_col",
-                        "params:language_col"],
+                        "params:str_cols"],
                 outputs="preprocessed_dataset",
                 name="basic_preprocessing_data_node"
             ),
             node(
                 func=filter_out_incomplete_offers,
                 inputs=["preprocessed_dataset",
-                        "params:required_cols_full",
-                        "params:nb_allowed_nans_full"],
+                        "FULL",
+                        "params:required_cols_for_filtering",
+                        "params:nb_allowed_nans_for_filtering"],
                 outputs="preprocessed_offers_for_full",
                 name="filter_offers_for_full_node"
             ),
@@ -41,13 +39,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                 inputs=["preprocessed_dataset",
                         "params:str_cols",
                         "params:cols_to_concatenate",
-                        "params:description_col",
-                        "params:filtered_description_col",
-                        "params:language_col",
-                        "params:concatenated_col_names",
                         "params:languages_list",
-                        "params:beginning_prefix",
-                        "params:end_prefix",
                         "params:proportion_words_to_filter_out",
                         "params:threshold_short_text"],
                 outputs="extensively_preprocessed_dataset",
@@ -56,16 +48,18 @@ def create_pipeline(**kwargs) -> Pipeline:
             node(
                 func=filter_out_incomplete_offers,
                 inputs=["preprocessed_dataset",
-                        "params:required_cols_partial",
-                        "params:nb_allowed_nans_partial"],
+                        "PARTIAL",
+                        "params:required_cols_for_filtering",
+                        "params:nb_allowed_nans_for_filtering"],
                 outputs="extensively_preprocessed_detailed_offers_for_partial",
                 name="filter_detailed_offers_for_partial_node"
             ),
             node(
                 func=filter_out_incomplete_offers,
-                inputs=["extensively_preprocessed_dataset",
-                        "params:required_cols_semantic",
-                        "params:nb_allowed_nans_semantic"],
+                inputs=["preprocessed_dataset",
+                        "SEMANTIC",
+                        "params:required_cols_for_filtering",
+                        "params:nb_allowed_nans_for_filtering"],
                 outputs=(
                     "extensively_preprocessed_described_offers_for_semantic"
                 ),
@@ -73,9 +67,10 @@ def create_pipeline(**kwargs) -> Pipeline:
             ),
             node(
                 func=filter_out_incomplete_offers,
-                inputs=["extensively_preprocessed_dataset",
-                        "params:required_cols_semantic_multilingual",
-                        "params:nb_allowed_nans_semantic_multilingual"],
+                inputs=["preprocessed_dataset",
+                        "SEMANTIC_MULTILINGUAL",
+                        "params:required_cols_for_filtering",
+                        "params:nb_allowed_nans_for_filtering"],
                 outputs=(
                     "extensively_preprocessed_detailed_offers_for_semantic"
                 ),
@@ -85,16 +80,14 @@ def create_pipeline(**kwargs) -> Pipeline:
             node(
                 func=filter_international_companies,
                 inputs=["extensively_preprocessed_dataset",
-                        "params:cols_to_be_diversified_for_companies",
-                        "params:company_col"],
+                        "params:cols_to_be_diversified_for_companies"],
                 outputs="extensively_preprocessed_international_offers",
                 name="filter_international_offers_node"
             ),
             node(
                 func=filter_out_poorly_described_offers,
                 inputs=["extensively_preprocessed_international_offers",
-                        "params:cols_not_to_be_diversified_for_descriptions",
-                        "params:description_col"],
+                        "params:cols_not_to_be_diversified_for_descriptions"],
                 outputs="well_preprocessed_and_described_international_offers",
                 name="filter_out_poorly_described_offers_node"
             )

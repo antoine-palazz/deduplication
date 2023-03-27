@@ -45,16 +45,13 @@ class TextDataset(Dataset):
 
 def tokenize_texts(
     data: pd.DataFrame,
-    concatenated_col_names: dict,
-    description_type: str,
-    dim_tokens: int,
-    batch_size: int
+    hyperparameters: dict
 ) -> list:
 
     dataset = TextDataset(
-        data[concatenated_col_names[description_type]]
+        "concatenated_text"
     )
-    dataloader = DataLoader(dataset, batch_size=batch_size)
+    dataloader = DataLoader(dataset, batch_size=hyperparameters["batch_size"])
 
     matrix_bert_texts = []
     with torch.no_grad():
@@ -68,7 +65,7 @@ def tokenize_texts(
 
     matrix_bert_texts = reduce_dimension(
         matrix_bert_texts,
-        dim_tokens=dim_tokens
+        dim_tokens=hyperparameters["dim_tokens"]
     )
 
     return matrix_bert_texts

@@ -36,7 +36,7 @@ def remove_html(
     texts_without_html = texts.apply(
         lambda x: re.sub('<[^<]+?>', " ", html.unescape(x))
     ).str.replace(
-        r'\r|\n', ' ', regex=True
+        r'\r|\n|*', ' ', regex=True
     ).replace(
         r' +', ' ', regex=True
     ).str.strip()
@@ -62,42 +62,47 @@ def find_language_from_text(
 
 def preprocess_data_basic(
     data: pd.DataFrame,
-    str_cols: list,
-    description_col: str,
-    id_col: str,
-    language_col: str
+    str_cols: dict
 ) -> pd.DataFrame:
 
     preprocessed_data = remove_nans(data)
 
-    preprocessed_data[str_cols] = preprocessed_data[str_cols].progress_apply(
+    preprocessed_data[str_cols["normal"]] = preprocessed_data[
+        str_cols["normal"]
+    ].progress_apply(
         remove_html
     )
 
-    preprocessed_data[str_cols] = preprocessed_data[str_cols].progress_apply(
+    preprocessed_data[str_cols["normal"]] = preprocessed_data[
+        str_cols["normal"]
+    ].progress_apply(
         normalize_strings
     )
 
-    preprocessed_data[language_col] = preprocessed_data[
-        description_col
+    preprocessed_data["language"] = preprocessed_data[
+        "description"
     ].progress_apply(find_language_from_text)
 
-    return preprocessed_data.sort_values(by=id_col)
+    return preprocessed_data.sort_values(by="id")
 
 
 def filter_out_incomplete_offers(
     data: pd.DataFrame,
-    required_cols: list,
-    nb_allowed_nans: int
+    type_easy: str,
+    required_cols_for_filtering: dict,
+    nb_allowed_nans_for_filtering: dict,
 ) -> pd.DataFrame:
 
     filtered_data_on_nans = data[
-        data.apply(lambda x: x == "").sum(axis=1) <= nb_allowed_nans
+        (data.apply(lambda x: x == "").sum(axis=1) <=
+         nb_allowed_nans_for_filtering[type_easy])
     ]
 
     filtered_data_on_cols = filtered_data_on_nans[
         (
-            filtered_data_on_nans[required_cols].apply(lambda x: x != "")
+            filtered_data_on_nans[
+                required_cols_for_filtering[type_easy]
+            ].apply(lambda x: x != "")
         ).all(axis=1)
     ]
 
@@ -225,16 +230,15 @@ def filter_out_words_in_one_language(
 def filter_out_too_frequent_words(
     data: pd.DataFrame,
     description_col: str,
-    language_col: str,
     proportion_words_to_filter_out: float
 ) -> pd.DataFrame:
 
-    languages_list = set(data[language_col])
+    languages_list = set(data["language"])
     well_described_data = data.copy()
 
     for language in tqdm(languages_list):
 
-        data_lang = data[data[language_col] == language]
+        data_lang = data[data["language"] == language]
         data_lang_idxs = data_lang.index
 
         filtered_descriptions_lang = filter_out_words_in_one_language(
@@ -255,8 +259,6 @@ def filter_out_too_frequent_words(
 def create_extra_cols_from_text_cols(
     data: pd.DataFrame,
     cols_to_duplicate: list,
-    beginning_prefix: str,
-    end_prefix: str,
     threshold_short_text: int
 ) -> pd.DataFrame:
 
@@ -264,10 +266,10 @@ def create_extra_cols_from_text_cols(
 
     for col in cols_to_duplicate:
 
-        data_with_new_cols[beginning_prefix+col] = data_with_new_cols[
+        data_with_new_cols["beginning_"+col] = data_with_new_cols[
             col
         ].apply(lambda x: x[:threshold_short_text])
-        data_with_new_cols[end_prefix+col] = data_with_new_cols[
+        data_with_new_cols["end_"+col] = data_with_new_cols[
             col
         ].apply(lambda x: x[-threshold_short_text:])
 
@@ -276,13 +278,13 @@ def create_extra_cols_from_text_cols(
 
 def create_concatenated_column(
     data: pd.DataFrame,
-    cols_to_concatenate: list,
+    list_cols_to_concatenate: list,
     concatenated_col_name: str
 ) -> pd.DataFrame:
 
     data_with_new_cols = data.copy()
-    data_with_new_cols[concatenated_col_name] = data[cols_to_concatenate[0]]
-    for col in tqdm(cols_to_concatenate[1:]):
+    data_with_new_cols[concatenated_col_name] = data[list_cols_to_concatenate[0]]
+    for col in tqdm(list_cols_to_concatenate[1:]):
         data_with_new_cols[concatenated_col_name] += ' ' + data[col]
 
     data_with_new_cols[
@@ -298,15 +300,9 @@ def create_concatenated_column(
 
 def preprocess_data_extensive(
     pre_preprocessed_data: pd.DataFrame,
-    str_cols: list,
+    str_cols: dict,
     cols_to_concatenate: dict,
-    description_col: str,
-    filtered_description_col: str,
-    language_col: str,
-    concatenated_col_names: dict,
     languages_list: list,
-    beginning_prefix: str,
-    end_prefix: str,
     proportion_words_to_filter_out: float,
     threshold_short_text: int
 ) -> pd.DataFrame:
@@ -321,43 +317,40 @@ def preprocess_data_extensive(
         remove_special_characters
     )
 
-    preprocessed_data[filtered_description_col] = remove_stopwords(
-        preprocessed_data[description_col],
+    preprocessed_data["filtered_description"] = remove_stopwords(
+        preprocessed_data["description"],
         stopwords_list=stopwords_list
     )
 
-    preprocessed_data[filtered_description_col] = lemmatize_texts(
-        preprocessed_data[filtered_description_col]
+    preprocessed_data["filtered_description"] = lemmatize_texts(
+        preprocessed_data["filtered_description"]
     )
 
     preprocessed_data = filter_out_too_frequent_words(
         preprocessed_data,
-        description_col=filtered_description_col,
-        language_col=language_col,
+        description_col="filtered_description",
         proportion_words_to_filter_out=proportion_words_to_filter_out
     )
 
     preprocessed_data = create_extra_cols_from_text_cols(
         preprocessed_data,
         cols_to_duplicate=[
-            description_col,
-            filtered_description_col
+            "description",
+            "filtered_description"
             ],
-        beginning_prefix=beginning_prefix,
-        end_prefix=end_prefix,
         threshold_short_text=threshold_short_text
     )
 
     preprocessed_data = create_concatenated_column(
         preprocessed_data,
         cols_to_concatenate=cols_to_concatenate['normal'],
-        concatenated_col_name=concatenated_col_names['normal']
+        concatenated_col_name="concatenated_text"
     )
 
     preprocessed_data = create_concatenated_column(
         preprocessed_data,
         cols_to_concatenate=cols_to_concatenate['filtered'],
-        concatenated_col_name=concatenated_col_names['filtered']
+        concatenated_col_name="concatenated_filtered_text"
     )
 
     return preprocessed_data
@@ -365,18 +358,17 @@ def preprocess_data_extensive(
 
 def filter_international_companies(
     preprocessed_data: pd.DataFrame,
-    cols_to_be_diversified: list,
-    company_col: str
+    cols_to_be_diversified: list
 ) -> pd.DataFrame:
 
     # Count unique values in each of the columns of interest for each company
     unique_counts = preprocessed_data.groupby(
-        [company_col]
+        ["company_name"]
     )[cols_to_be_diversified].nunique()
 
     # Filter out companies with only one unique value in each of them
     international_offers = preprocessed_data[
-        preprocessed_data[company_col].isin(
+        preprocessed_data["company_name"].isin(
             unique_counts[(unique_counts > 1).any(axis=1)].index
         )
     ].reset_index(drop=True)
@@ -389,12 +381,11 @@ def filter_international_companies(
 
 def filter_out_poorly_described_offers(
     preprocessed_data: pd.DataFrame,
-    cols_not_to_be_diversified: list,
-    description_col: str
+    cols_not_to_be_diversified: list
 ) -> pd.DataFrame:
 
     preprocessed_data = preprocessed_data[
-        preprocessed_data[description_col] != ""
+        preprocessed_data["filtered_description"] != ""
     ].reset_index(drop=True)
 
     data_with_one_col_not_to_be_diversified = create_concatenated_column(
@@ -405,12 +396,12 @@ def filter_out_poorly_described_offers(
 
     # Count unique values for tuple of cols of interest for each description
     unique_counts = data_with_one_col_not_to_be_diversified.groupby(
-        [description_col]
+        ["filtered_description"]
     )[["col_not_to_be_diversified"]].nunique()
 
     # Filter out companies with several unique values in any of them
     well_described_offers = preprocessed_data[
-        preprocessed_data[description_col].isin(
+        preprocessed_data["filtered_description"].isin(
             unique_counts[(unique_counts == 1).any(axis=1)].index
         )
     ].reset_index(drop=True)

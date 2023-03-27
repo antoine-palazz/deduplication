@@ -16,9 +16,7 @@ def create_pipeline(**kwargs) -> Pipeline:
             node(
                 func=tokenize_texts,
                 inputs=["extensively_preprocessed_dataset",
-                        "params:concatenated_col_names",
-                        "params:filtered_description_type",
-                        "params:dim_tokens",
+                        "params:hyperparameters",
                         "params:max_df_tokenizer"
                         ],
                 outputs="tokens_tf_idf",
@@ -30,13 +28,10 @@ def create_pipeline(**kwargs) -> Pipeline:
                 inputs=["extensively_preprocessed_dataset",
                         "tokens_tf_idf",
                         "params:str_cols",
-                        "params:description_col",
-                        "params:date_col",
-                        "params:id_col",
-                        "params:language_col",
-                        "params:threshold_similarity",
-                        "params:threshold_semantic_tf_idf",
-                        "params:threshold_partial",
+                        "params:threshold_semantic",
+                        "params:threshold_date",
+                        "params:thresholds_similarity",
+                        "params:thresholds_desc_len",
                         "params:chunk_size"
                         ],
                 outputs="subtle_duplicates_tf_idf",

@@ -10,6 +10,229 @@ from sklearn.metrics.pairwise import cosine_similarity
 from tqdm import tqdm
 
 
+def do_dates_differ_much(
+    date_1,
+    date_2,
+    threshold_date: int
+) -> bool:
+
+    dates_difference = abs((date_1 - date_2).days)
+    dates_differ = dates_difference > threshold_date
+    return dates_differ
+
+
+def compare_text_lengths(
+    text_1: str,
+    text_2: str,
+    lingual: str,
+    thresholds_desc_len: dict
+) -> str:
+
+    absolute_lengths_diff = len(text_1) - len(text_2)
+    # one_longer_than_two = absolute_lengths_diff > 0
+
+    min_length = min(len(text_1), len(text_2))
+    relative_lengths_diff = absolute_lengths_diff / (1 + min_length)
+
+    if (
+        (abs(absolute_lengths_diff) >
+         thresholds_desc_len["absolute"][lingual]["NON"]) or
+        (abs(relative_lengths_diff) >
+            thresholds_desc_len["relative"][lingual]["NON"])
+       ):
+
+        return "too_long"
+
+    if (
+        (abs(absolute_lengths_diff) >
+         thresholds_desc_len["absolute"][lingual]["PARTIAL"]) or
+        (abs(relative_lengths_diff) >
+            thresholds_desc_len["relative"][lingual]["PARTIAL"])
+       ):
+
+        return "different_lengths"
+
+    return "same_length"
+
+
+def is_full(
+    row_1,
+    row_2,
+    current_type: str
+) -> tuple[bool, str]:
+
+    isfull = (
+        (current_type == "FULL") and
+        ((row_1.drop(["id", "date"]) ==
+          row_2.drop(["id", "date"])).all())
+    )
+    if isfull:
+        if row_1["date"] == row_2["date"]:
+            return (True, "FULL")
+        return (True, "TEMPORAL")
+
+    return (False, "Unknown")
+
+
+def is_non_duplicate(
+    row_1,
+    row_2,
+    lingual: str,
+    dates_differ: str,
+    str_cols: dict,
+    threshold_date: int,
+    thresholds_similarity: dict
+) -> tuple[bool, str]:
+
+    if row_1["country_id"] != row_2["country_id"]:
+        return (True, "NON")  # To remove?
+
+    for col in str_cols["no_description"]:
+        if row_1[col] != "" and row_2[col] != "":
+            min_len_field = min(len(row_1[col]), len(row_2[col]))
+            if (
+                jaro_winkler_similarity(row_1[col], row_2[col])
+                < thresholds_similarity[lingual][dates_differ][col]
+            ) and (
+                jaro_winkler_similarity(
+                    row_1[col][:min_len_field],
+                    row_2[col][:min_len_field]
+                ) < thresholds_similarity[lingual][dates_differ][col]
+            ):
+                return (True, "NON")  # A field differs too much
+
+    return (False, "Unknown")
+
+
+def is_partial(
+    row_1,
+    row_2,
+    lingual: str,
+    dates_differ: str,
+    str_cols: dict,
+    threshold_similarity: dict,
+    thresholds_desc_len: dict
+) -> tuple[bool, str]:
+
+    if (
+        (row_1[str_cols["no_description"]] ==
+         row_2[str_cols["no_description"]]).all()
+    ):
+        return (False, "Unknown")
+
+    lengths_differ = compare_text_lengths(
+        row_1["filtered_description"],
+        row_2["filtered_description"],
+        lingual=lingual,
+        thresholds_desc_len=thresholds_desc_len
+    )
+
+    if lengths_differ == "too_long":
+        return (True, "NON")  # Description too long
+
+    if lengths_differ == "same_size" and (
+        jaro_winkler_similarity(row_1["filtered_description"],
+                                row_2["filtered_description"]) <
+        threshold_similarity[lingual][dates_differ]["filtered_description"]
+    ):
+        return (True, "NON")  # Descriptions of similar len but too different
+
+    type_to_return = "Unknown"
+
+    one_more_complete = 0
+    two_more_complete = 0
+    both_incomplete = 0
+
+    for col in str_cols["filtered"]:
+        if (row_1[col] == "") and (row_2[col] == ""):
+            both_incomplete += 1
+        elif (row_1[col] == "") != (row_2[col] == ""):
+            if (row_2[col] == "" and
+                    row_1[col].split(" ", 1)[0] not in row_2["description"]):
+                one_more_complete += 1
+            if (row_1[col] == "" and
+                    row_2[col].split(" ", 1)[0] not in row_1["description"]):
+                two_more_complete += 1
+
+    if one_more_complete + two_more_complete + both_incomplete == 0:
+        return (False, "Unknown")
+
+    if one_more_complete + two_more_complete >= 2:
+        return (True, "NON")  # More than 1 different field
+
+    if one_more_complete + two_more_complete == 1:
+        type_to_return = "PARTIAL"
+
+    elif lengths_differ == "same_size":
+        return (False, "Unknown")
+
+    else:
+        type_to_return = "PARTIAL"
+
+    if type_to_return == "PARTIAL":
+        if row_1["date"] != row_2["date"]:
+            return (True, "NON")  # PARTIAL + TEMPORAL = NON
+        return (True, "PARTIAL")
+
+    return (False, "Unknown")
+
+
+def differentiate_duplicates(
+    row_1,
+    row_2,
+    current_type: str,
+    str_cols: list,
+    threshold_date: int,
+    thresholds_similarity: dict,
+    thresholds_desc_len: dict
+) -> str:
+
+    isfull, type_to_return = is_full(row_1, row_2, current_type=current_type)
+    if isfull:
+        return type_to_return
+
+    lingual = (
+        "monolingual" if row_1["language"] == row_2["language"]
+        else "multilingual"
+    )
+    dates_differ = (
+        "far_dates" if do_dates_differ_much(
+            row_1["date"],
+            row_2["date"],
+            threshold_date=threshold_date
+        ) else "close_dates"
+    )
+
+    isnon, type_to_return = is_non_duplicate(
+        row_1,
+        row_2,
+        lingual=lingual,
+        dates_differ=dates_differ,
+        str_cols=str_cols,
+        thresholds_similarity=thresholds_similarity,
+        threshold_date=threshold_date
+    )
+    if isnon:
+        return type_to_return
+
+    ispartial, type_to_return = is_partial(
+        row_1,
+        row_2,
+        lingual=lingual,
+        dates_differ=dates_differ,
+        str_cols=str_cols,
+        thresholds_similarity=thresholds_similarity,
+        thresholds_desc_len=thresholds_desc_len
+    )
+    if ispartial:
+        return type_to_return
+
+    if row_1["date"] != row_2["date"]:
+        return "TEMPORAL"  # Dates are different
+
+    return current_type  # No more tests, we go with the current assumption
+
+
 def globalize(func):
     def result(*args, **kwargs):
         return func(*args, **kwargs)
@@ -18,14 +241,18 @@ def globalize(func):
     return result
 
 
-def reduce_dimension(matrix_texts: list, dim_tokens: int) -> list:
-    pca = TruncatedSVD(n_components=dim_tokens)
+def reduce_dimension(matrix_texts: list, hyperparameters: dict) -> list:
+    pca = TruncatedSVD(n_components=hyperparameters["dim_tokens"])
     reduced_embeddings = pca.fit_transform(matrix_texts)
 
     return reduced_embeddings
 
 
-def compute_chunk_cosine_similarity(tokenized_texts, start: int, end: int):
+def compute_chunk_cosine_similarity(
+    tokenized_texts,
+    start: int,
+    end: int
+) -> list:
     try:
         end = min(end, tokenized_texts.shape[0])
     except AttributeError:
@@ -36,131 +263,14 @@ def compute_chunk_cosine_similarity(tokenized_texts, start: int, end: int):
     return cosine_similarity_matrix
 
 
-def differentiate_duplicates(
-    row_1,
-    row_2,
-    current_type: str,
-    str_cols: list,
-    description_col: str,
-    date_col: str,
-    language_col: str,
-    threshold_similarity: dict,
-    threshold_partial: dict,
-) -> str:
-
-    if (
-        row_1['country_id'] != row_2['country_id']
-    ):
-        return "NON"  # To remove?
-
-    if (row_1.drop("id") == row_2.drop("id")).all():
-        return "FULL"  # Obvious
-
-    if (
-        row_1.drop(["id", date_col]) ==
-        row_2.drop(["id", date_col])
-    ).all():
-        return "TEMPORAL"  # Obvious
-
-    if row_1[language_col] == row_2[language_col]:
-        lingual = "monolingual"
-    else:
-        lingual = "multilingual"
-
-    for col in str_cols[:-1]:  # All str cols but description
-        if row_1[col] != "" and row_2[col] != "":
-            min_len_field = int(1.1 * min(len(row_1[col]), len(row_2[col])))
-            if (
-                jaro_winkler_similarity(row_1[col], row_2[col])
-                < threshold_similarity[lingual][col]
-            ) and (
-                jaro_winkler_similarity(
-                    row_1[col][:min_len_field],
-                    row_2[col][:min_len_field]
-                )
-                < threshold_similarity[lingual][col]
-            ):
-                return "NON"  # A field differs too much between the offers
-
-    description_lengths_difference = (
-        (len(row_1[description_col]) - len(row_2[description_col]))
-        / (1 + min(len(row_1[description_col]), len(row_2[description_col])))
-    )
-    description_lengths_differ = (abs(description_lengths_difference)
-                                  > threshold_partial[lingual])
-
-    if ((row_1[description_col] != "")
-        and (row_2[description_col] != "")
-            and description_lengths_differ):
-        if abs(description_lengths_difference) > threshold_partial[
-            "too_much_" + lingual
-        ]:
-            return "NON"  # Difference of length between descriptions too big
-
-    dates_difference = abs((row_1[date_col] - row_2[date_col]).days)
-    dates_differ = dates_difference > threshold_similarity["date"]
-
-    one_more_complete = 0
-    two_more_complete = 0
-    incomplete_pair = 0
-    for col in str_cols:
-        if (row_1[col] == "") and (row_2[col] == ""):
-            incomplete_pair += 1
-        elif (row_1[col] == "") != (row_2[col] == ""):
-            if row_2[col] == "":
-                one_more_complete += 1
-            if row_1[col] == "":
-                two_more_complete += 1
-
-    if not description_lengths_differ:
-        if (
-            jaro_winkler_similarity(
-                row_1[description_col], row_2[description_col]
-            ) < threshold_similarity[lingual][dates_differ][description_col]
-        ):
-            return "NON"  # Descriptions of similar lengths but too different
-        if one_more_complete + two_more_complete == 1:
-            current_type = "PARTIAL"  # Or return PARTIAL?
-        if one_more_complete + two_more_complete >= 2:
-            return "NON"   # More than 1 different field
-
-    elif one_more_complete + two_more_complete >= 1:
-        if one_more_complete > 0 and two_more_complete > 0:
-            current_type = "PARTIAL"  # Or return PARTIAL?
-        elif (
-            (one_more_complete == 1 and description_lengths_difference > 0) or
-            (two_more_complete == 1 and description_lengths_difference < 0)
-        ):
-            current_type = "PARTIAL"  # Or return PARTIAL?
-        elif (
-            (one_more_complete >= 2 and description_lengths_difference > 0) or
-            (two_more_complete >= 2 and description_lengths_difference < 0)
-        ):
-            return "NON"   # More than 1 different field
-
-    elif incomplete_pair == 1:
-        current_type = "PARTIAL"  # One field compensated by the description
-
-    elif incomplete_pair >= 2:
-        current_type = "NON"  # Too many fields to be compensated
-
-    if row_1[date_col] != row_2[date_col]:
-        return "TEMPORAL"  # Dates are different
-
-    return current_type  # No more tests, we go with the current assumption
-
-
 def find_subtle_duplicates_from_tokens(
     data: pd.DataFrame,
     tokenized_texts: list,
     str_cols: list,
-    description_col: str,
-    date_col: str,
-    id_col: str,
-    language_col: str,
-    threshold_similarity: dict,
     threshold_semantic: float,
-    threshold_partial: dict,
+    threshold_date: int,
+    thresholds_similarity: dict,
+    thresholds_desc_len: dict,
     chunk_size: int
 ) -> list:
 
@@ -187,18 +297,16 @@ def find_subtle_duplicates_from_tokens(
                         data.loc[chunk_start + j],
                         current_type="SEMANTIC",
                         str_cols=str_cols,
-                        description_col=description_col,
-                        date_col=date_col,
-                        language_col=language_col,
-                        threshold_similarity=threshold_similarity,
-                        threshold_partial=threshold_partial,
+                        threshold_date=threshold_date,
+                        thresholds_similarity=thresholds_similarity,
+                        thresholds_desc_len=thresholds_desc_len
                     )
 
                     if duplicates_type != "NON":
                         duplicates_chunk_i.append(
                             {
-                                "id1": data.loc[chunk_start + i, id_col],
-                                "id2": data.loc[chunk_start + j, id_col],
+                                "id1": data.loc[chunk_start + i, "id"],
+                                "id2": data.loc[chunk_start + j, "id"],
                                 "type": duplicates_type,
                             }
                         )

@@ -1,59 +1,78 @@
-project_path: '/home/onyxia/work/deduplication/'
+# cols:
+#     id: 'id'
+#     title: 'title'
+#     company: 'company_name'
+#     location: 'location'
+#     country: 'country_id'
+#     date: 'retrieval_date'
+#     description: 'description'
+#     language: 'language'
 
-id_col: 'id'
-title_col: 'title'
-description_col: 'description'
-company_col: 'company_name'
-location_col: 'location'
-country_col: 'country_id'
-date_col: 'retrieval_date'
+# cols_prefix:
+#     concatenated: 'concatenated_'
+#     beginning: 'beginning_'
+#     end: 'end_'
+
+FULL: "FULL"
+PARTIAL: "PARTIAL"
+SEMANTIC: "SEMANTIC"
+SEMANTIC_MULTILINGUAL: "SEMANTIC_MULTILINGUAL"
 
 str_cols:
-    ['title', 'company_name', 'location', 'description']
+    normal: ['title', 'company_name', 'location', 'description']
+    filtered: ['title', 'company_name', 'location', 'filtered_description']
+    no_description: ['title', 'company_name', 'location']
 
-language_col: 'language'
+normal_description_col: 'description'
 filtered_description_col: 'filtered_description'
 
-concatenated_col_names:
-    normal: 'concatenated_offer'
-    filtered: 'concatenated_filtered_offer'
+hyperparameters:
+    batch_size: 8
+    dim_tokens: 100
+    chunk_size: 5000
 
-beginning_prefix: 'beginning_'
-end_prefix: 'end_'
-
-normal_description_type: 'normal'
-filtered_description_type: 'filtered'
-
-batch_size: 8
-chunk_size: 5000
-
-threshold_similarity:
-  date: 100
+thresholds_similarity:
   monolingual:
-    title: 0.8
-    company_name: 0.8
-    location: 0.8
-    True:
-      description: 0.8
-      filtered_description: 0.85
-    False:
+    close_dates:
+      title: 0.8
+      company_name: 0.8
+      location: 0.8
       description: 0.75
+      filtered_description: 0.75
+    far_dates:
+      title: 0.8
+      company_name: 0.8
+      location: 0.8
+      description: 0.8
       filtered_description: 0.8
   multilingual:
-    title: 0.5
-    company_name: 0.8
-    location: 0.8
-    True:
-      description: 0.25
-      filtered_description: 0.3
-    False:
+    close_dates:
+      title: 0.25
+      company_name: 0.8
+      location: 0.8
       description: 0.1
-      filtered_description: 0.15
+      filtered_description: 0.1
+    far_dates:
+      title: 0.5
+      company_name: 0.8
+      location: 0.8
+      description: 0.25
+      filtered_description: 0.25
 
-threshold_partial:
-  monolingual: 0.05
-  multilingual: 0.10
-  too_much_monolingual: 0.25  # Too restrictive?
-  too_much_multilingual: 0.50  # Too restrictive?
+threshold_date: 100
 
-dim_tokens: 100
+thresholds_description_length:
+    absolute:
+        monolingual:
+            PARTIAL: 100
+            NON: 500
+        multilingual:
+            PARTIAL: 200
+            NON: 1000
+    relative:
+        monolingual:
+            PARTIAL: 0.05
+            NON: 0.25
+        multilingual:
+            PARTIAL: 0.10
+            NON: 0.50

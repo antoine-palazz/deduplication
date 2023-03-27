@@ -27,24 +27,21 @@ model_distiluse_multilingual.to(device)
 
 def tokenize_texts(
     data: pd.DataFrame,
-    concatenated_col_names: dict,
-    description_type: str,
-    dim_tokens: int,
-    batch_size: int
+    hyperparameters: dict
 ) -> list:
 
     embedded_texts = list(data[
-        concatenated_col_names[description_type]
+        "concatenated_text"
     ].progress_apply(
         partial(model_distiluse_multilingual.encode,
-                batch_size=batch_size,
+                batch_size=hyperparameters["batch_size"],
                 device=device
                 )
     ))
 
     embedded_texts = reduce_dimension(
         embedded_texts,
-        dim_tokens=dim_tokens
+        dim_tokens=hyperparameters["dim_tokens"]
     )
 
     return embedded_texts

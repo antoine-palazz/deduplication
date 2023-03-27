@@ -8,27 +8,25 @@ cols_to_concatenate:
     normal: ['title', 'company_name', 'location', 'country_id', 'description']
     filtered: ['title', 'company_name', 'location', 'country_id', 'filtered_description']
 
-required_cols_full:
-    []
-required_cols_partial:
-    ['title', 'company_name', 'location']
-required_cols_semantic:
-    ['title', 'description']
-required_cols_semantic_multilingual:
-    ['title', 'company_name', 'location']
+required_cols_for_filtering:
+    FULL: []
+    PARTIAL: ['title', 'company_name', 'location']
+    SEMANTIC: ['title', 'description']
+    SEMANTIC_MULTILINGUAL: ['title', 'company_name', 'location']
 
-nb_allowed_nans_full: 2
-nb_allowed_nans_partial: 1
-nb_allowed_nans_semantic: 2
-nb_allowed_nans_semantic_multilingual: 1
-
-proportion_words_to_filter_out: 0.001
-threshold_short_text: 600
+nb_allowed_nans_for_filtering:
+    FULL: 2
+    PARTIAL: 1
+    SEMANTIC: 2
+    SEMANTIC_MULTILINGUAL: 1
 
 cols_to_be_diversified_for_companies:
     ['language', 'country_id']
 cols_not_to_be_diversified_for_descriptions:
     ['title']
+
+proportion_words_to_filter_out: 0.001
+threshold_short_text: 600
 
 languages_list:
     ['chinese',

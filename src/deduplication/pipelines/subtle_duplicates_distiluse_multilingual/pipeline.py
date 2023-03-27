@@ -16,10 +16,7 @@ def create_pipeline(**kwargs) -> Pipeline:
             node(
                 func=tokenize_texts,
                 inputs=["well_preprocessed_and_described_international_offers",
-                        "params:concatenated_col_names",
-                        "params:normal_description_type",
-                        "params:dim_tokens",
-                        "params:batch_size"
+                        "params:hyperparameters",
                         ],
                 outputs="tokens_distiluse_multilingual",
                 name="tokenize_distiluse_multilingual_node"
@@ -30,13 +27,10 @@ def create_pipeline(**kwargs) -> Pipeline:
                 inputs=["well_preprocessed_and_described_international_offers",
                         "tokens_distiluse_multilingual",
                         "params:str_cols",
-                        "params:description_col",
-                        "params:date_col",
-                        "params:id_col",
-                        "params:language_col",
-                        "params:threshold_similarity",
-                        "params:threshold_semantic_distiluse_multilingual",
-                        "params:threshold_partial",
+                        "params:threshold_semantic",
+                        "params:threshold_date",
+                        "params:thresholds_similarity",
+                        "params:thresholds_desc_len",
                         "params:chunk_size"
                         ],
                 outputs="subtle_duplicates_distiluse_multilingual",

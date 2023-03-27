@@ -11,26 +11,23 @@ from deduplication.extras.utils import differentiate_duplicates
 
 def identify_exact_duplicates(
     data: pd.DataFrame,
-    list_cols_to_match: list,
-    list_cols_to_mismatch: list,
+    list_cols_to_match: dict,
+    list_cols_to_mismatch: dict,
     default_type: str,
     str_cols: list,
-    description_col: str,
-    date_col: str,
-    id_col: str,
-    language_col: str,
-    threshold_similarity: dict,
-    threshold_partial: dict
+    threshold_date: int,
+    thresholds_similarity: dict,
+    thresholds_desc_len: dict
 ) -> pd.DataFrame:
 
     n_ads = len(data)
     exact_duplicates = []
 
-    for cols_to_match in tqdm(list_cols_to_match):
-        for cols_to_mismatch in list_cols_to_mismatch:
+    for cols_to_match in tqdm(list_cols_to_match[default_type]):
+        for cols_to_mismatch in list_cols_to_mismatch[default_type]:
 
             data_for_duplicates = data.sort_values(
-                by=cols_to_match+[id_col],
+                by=cols_to_match+["id"],
                 ignore_index=True
             )
 
@@ -60,20 +57,18 @@ def identify_exact_duplicates(
                         duplicates_type = differentiate_duplicates(
                             data_for_duplicates.loc[i],
                             data_for_duplicates.loc[j],
-                            current_type=default_type,
+                            current_type=default_type.split("_", 1)[0],
                             str_cols=str_cols,
-                            description_col=description_col,
-                            date_col=date_col,
-                            language_col=language_col,
-                            threshold_similarity=threshold_similarity,
-                            threshold_partial=threshold_partial
+                            threshold_date=threshold_date,
+                            thresholds_similarity=thresholds_similarity,
+                            thresholds_desc_len=thresholds_desc_len
                         )
 
                         if duplicates_type != "NON":
                             exact_duplicates.append(
                                 {
-                                    'id1': data_for_duplicates.loc[i, id_col],
-                                    'id2': data_for_duplicates.loc[j, id_col],
+                                    'id1': data_for_duplicates.loc[i, "id"],
+                                    'id2': data_for_duplicates.loc[j, "id"],
                                     'type': duplicates_type
                                 })
 

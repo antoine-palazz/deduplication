@@ -62,14 +62,11 @@ def split(a, n):
 
 def tokenize_texts(
     data: pd.DataFrame,
-    concatenated_col_names: dict,
-    description_type: str,
-    dim_tokens: int,
-    batch_size: int
+    hyperparameters: dict
 ) -> list:
 
-    dataset = TextDataset(data[concatenated_col_names[description_type]])
-    dataloader = DataLoader(dataset, batch_size=batch_size)
+    dataset = TextDataset(data["concatenated_text"])
+    dataloader = DataLoader(dataset, batch_size=hyperparameters["batch_size"])
 
     matrix_roberta_texts = []
     with torch.no_grad():
@@ -84,7 +81,7 @@ def tokenize_texts(
 
     matrix_roberta_texts = reduce_dimension(
         matrix_roberta_texts,
-        dim_tokens=dim_tokens
+        dim_tokens=hyperparameters["dim_tokens"]
     )
 
     return matrix_roberta_texts

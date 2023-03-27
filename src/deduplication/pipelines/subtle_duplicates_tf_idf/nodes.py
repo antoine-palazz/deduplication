@@ -11,9 +11,7 @@ from deduplication.extras.utils import reduce_dimension
 
 def tokenize_texts(
     data: pd.DataFrame,
-    concatenated_col_names: dict,
-    description_type: str,
-    dim_tokens: int,
+    hyperparameters: dict,
     max_df_tokenizer: float
 ) -> list:
 
@@ -22,12 +20,12 @@ def tokenize_texts(
     )
 
     tokenized_texts = vectorizer.fit_transform(
-        data[concatenated_col_names[description_type]]
+        data["concatenated_filtered_text"]
     )
 
     tokenized_texts = reduce_dimension(
         tokenized_texts,
-        dim_tokens=dim_tokens
+        dim_tokens=hyperparameters["dim_tokens"]
     )
 
     print(

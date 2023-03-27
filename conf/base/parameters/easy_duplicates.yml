@@ -4,36 +4,28 @@
 # Documentation for this file format can be found in "Parameters"
 # Link: https://kedro.readthedocs.io/en/0.18.6/kedro_project_setup/configuration.html#parameters
 
-list_cols_to_match_full:
-    [
-        ['title', 'company_name', 'location', 'description']
-    ]
+list_cols_to_match:
+    FULL:
+        [
+            ['title', 'company_name', 'location', 'description']
+        ]
+    PARTIAL:
+        [
+            ['title', 'company_name', 'location']
+        ]
+    SEMANTIC:
+        [
+            ['title', 'beginning_filtered_description'],
+            ['title', 'end_filtered_description']
+        ]
+    SEMANTIC_MULTILINGUAL:
+        [
+            ['company_name', 'location', 'retrieval_date']
+        ]
 
-list_cols_to_match_partial:
-    [
-        ['title', 'company_name', 'location']
-    ]
+list_cols_to_mismatch:
+    FULL: [[]]
+    PARTIAL: [[]]
+    SEMANTIC: [[]]
+    SEMANTIC_MULTILINGUAL: [['language']]
 
-list_cols_to_match_semantic:
-    [
-        ['title', 'beginning_filtered_description'],
-        ['title', 'end_filtered_description']
-    ]
-
-list_cols_to_match_semantic_multilingual:
-    [
-        ['company_name', 'location', 'retrieval_date']
-    ]
-
-
-list_cols_to_mismatch_full: [[]]
-list_cols_to_mismatch_partial: [[]]
-list_cols_to_mismatch_semantic: [[]]
-list_cols_to_mismatch_semantic_multilingual: [
-    ['language']
-]
-
-
-type_full: "FULL"
-type_partial: "PARTIAL"
-type_semantic: "SEMANTIC"
