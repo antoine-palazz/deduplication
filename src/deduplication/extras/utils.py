@@ -285,27 +285,28 @@ def find_subtle_duplicates_from_tokens(
             duplicates_chunk_i = []
             for j in range(i + 1, n_ads - chunk_start):
 
-                lingual = (
-                    "monolingual" if (data.loc[chunk_start + i]["language"] ==
-                                      data.loc[chunk_start + j]["language"])
+                row_i = data.loc[chunk_start + i]
+                row_j = data.loc[chunk_start + j]
+
+                ling = (
+                    "monolingual" if (row_i["language"] ==
+                                      row_j["language"])
                     else "multilingual"
                 )
-                dates_differ = (
+                dates_diff = (
                     "far_dates" if do_dates_differ_much(
-                        data.loc[chunk_start + i]["retrieval_date"],
-                        data.loc[chunk_start + j]["retrieval_date"],
+                        row_i["retrieval_date"],
+                        row_j["retrieval_date"],
                         threshold_date=threshold_date
                     ) else "close_dates"
                 )
 
-                if similarity_matrix_chunk[i][j] > threshold_semantic[
-                    lingual
-                ][dates_differ]:
+                if similarity_matrix_chunk[i][j] > threshold_semantic[ling][dates_diff]:
                     duplicates_type = differentiate_duplicates(
-                        data.loc[chunk_start + i],
-                        data.loc[chunk_start + j],
-                        lingual=lingual,
-                        dates_differ=dates_differ,
+                        row_i,
+                        row_j,
+                        lingual=ling,
+                        dates_differ=dates_diff,
                         current_type="SEMANTIC",
                         str_cols=str_cols,
                         threshold_date=threshold_date,
@@ -316,8 +317,8 @@ def find_subtle_duplicates_from_tokens(
                     if duplicates_type != "NON":
                         duplicates_chunk_i.append(
                             {
-                                "id1": data.loc[chunk_start + i, "id"],
-                                "id2": data.loc[chunk_start + j, "id"],
+                                "id1": row_i["id"],
+                                "id2": row_j["id"],
                                 "type": duplicates_type,
                             }
                         )
@@ -327,7 +328,7 @@ def find_subtle_duplicates_from_tokens(
         find_dups_in_chunk_for_pickle = globalize(find_dups_in_chunk)
         with Pool(int(cpu_count()/3)) as pool:
             list_duplicates_chunk = pool.map(find_dups_in_chunk_for_pickle,
-                                             range(hyperparameters["chunk_size"])
+                                             tqdm(range(hyperparameters["chunk_size"]))
                                              )
         duplicates_chunk = list(
             itertools.chain.from_iterable(list_duplicates_chunk)
