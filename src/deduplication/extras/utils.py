@@ -283,9 +283,9 @@ def find_subtle_duplicates_from_tokens(
 
         def find_dups_in_chunk(i):
             duplicates_chunk_i = []
-            for j in range(i + 1, n_ads - chunk_start):
+            row_i = data.loc[chunk_start + i]
 
-                row_i = data.loc[chunk_start + i]
+            for j in range(i + 1, n_ads - chunk_start):
                 row_j = data.loc[chunk_start + j]
 
                 ling = (
