@@ -5,4 +5,10 @@
 # Link: https://kedro.readthedocs.io/en/0.18.6/kedro_project_setup/configuration.html#parameters
 
 max_df_tokenizer: 0.001
-threshold_semantic_tf_idf: 0.95  # What is optimal?
+threshold_semantic_tf_idf:
+    monolingual:
+        close_dates: 0.9
+        far_dates: 0.95
+    multilingual:
+        close_dates: 0.95
+        far_dates: 0.99

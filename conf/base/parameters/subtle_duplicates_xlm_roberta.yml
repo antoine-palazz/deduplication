@@ -4,4 +4,10 @@
 # Documentation for this file format can be found in "Parameters"
 # Link: https://kedro.readthedocs.io/en/0.18.6/kedro_project_setup/configuration.html#parameters
 
-threshold_semantic_xlm_roberta: 0.999  # What is optimal?
+threshold_semantic_xlm_roberta:
+    monolingual:
+        close_dates: 0.995
+        far_dates: 0.999
+    multilingual:
+        close_dates: 0.99
+        far_dates: 0.995

@@ -6,7 +6,7 @@ generated using Kedro 0.18.6
 import pandas as pd
 from tqdm import tqdm
 
-from deduplication.extras.utils import differentiate_duplicates
+from deduplication.extras.utils import differentiate_duplicates, do_dates_differ_much
 
 
 def identify_exact_duplicates(
@@ -54,9 +54,24 @@ def identify_exact_duplicates(
                         data_for_dups_arr[j, cols_to_mismatch_idxs]
                     ).all():
 
+                        lingual = (
+                            "monolingual" if (data_for_duplicates.loc[i]["language"] ==
+                                              data_for_duplicates.loc[j]["language"])
+                            else "multilingual"
+                        )
+                        dates_differ = (
+                            "far_dates" if do_dates_differ_much(
+                                data_for_duplicates.loc[i]["retrieval_date"],
+                                data_for_duplicates.loc[j]["retrieval_date"],
+                                threshold_date=threshold_date
+                            ) else "close_dates"
+                        )
+
                         duplicates_type = differentiate_duplicates(
                             data_for_duplicates.loc[i],
                             data_for_duplicates.loc[j],
+                            lingual=lingual,
+                            dates_differ=dates_differ,
                             current_type=default_type.split("_", 1)[0],
                             str_cols=str_cols,
                             threshold_date=threshold_date,

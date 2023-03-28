@@ -9,7 +9,7 @@ cols_to_concatenate:
     filtered: ['title', 'company_name', 'location', 'country_id', 'filtered_description']
 
 required_cols_for_filtering:
-    FULL: []
+    FULL: ['title', 'description']
     PARTIAL: ['title', 'company_name', 'location']
     SEMANTIC: ['title', 'description']
     SEMANTIC_MULTILINGUAL: ['title', 'company_name', 'location']

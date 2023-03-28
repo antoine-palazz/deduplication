@@ -34,14 +34,14 @@ thresholds_similarity:
       title: 0.8
       company_name: 0.8
       location: 0.8
-      description: 0.75
-      filtered_description: 0.75
-    far_dates:
-      title: 0.8
-      company_name: 0.8
-      location: 0.8
       description: 0.8
       filtered_description: 0.8
+    far_dates:
+      title: 0.85
+      company_name: 0.85
+      location: 0.85
+      description: 0.85
+      filtered_description: 0.85
   multilingual:
     close_dates:
       title: 0.25
@@ -51,8 +51,8 @@ thresholds_similarity:
       filtered_description: 0.1
     far_dates:
       title: 0.5
-      company_name: 0.8
-      location: 0.8
+      company_name: 0.85
+      location: 0.85
       description: 0.25
       filtered_description: 0.25
 

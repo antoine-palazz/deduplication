@@ -45,7 +45,7 @@ def compare_text_lengths(
 
     if (
         (abs(absolute_lengths_diff) >
-         thresholds_desc_len["absolute"][lingual]["PARTIAL"]) or
+         thresholds_desc_len["absolute"][lingual]["PARTIAL"]) and
         (abs(relative_lengths_diff) >
             thresholds_desc_len["relative"][lingual]["PARTIAL"])
        ):
@@ -116,7 +116,8 @@ def is_partial(
 
     if (
         (row_1[str_cols["no_description"]] ==
-         row_2[str_cols["no_description"]]).all()
+         row_2[str_cols["no_description"]]).all() and
+        (row_1[str_cols["no_description"]] != "").all()
     ):
         return (False, "Unknown")
 
@@ -130,17 +131,11 @@ def is_partial(
     if lengths_differ == "too_long":
         return (True, "NON")  # Description too long
 
-    # if lengths_differ == "same_size" and (
-    #     jaro_winkler_similarity(row_1["filtered_description"],
-    #                             row_2["filtered_description"]) <
-    #     thresholds_similarity[lingual][dates_differ]["filtered_description"]
-    # ):
-    if (
+    if lengths_differ == "same_size" and (
         jaro_winkler_similarity(row_1["filtered_description"],
                                 row_2["filtered_description"]) <
         thresholds_similarity[lingual][dates_differ]["filtered_description"]
     ):
-
         return (True, "NON")  # Descriptions of similar len but too different
 
     type_to_return = "Unknown"
@@ -173,11 +168,13 @@ def is_partial(
         return (False, "Unknown")
 
     else:
-        # type_to_return = "PARTIAL"
-        return (False, "Unknown")
+        if both_incomplete == 1:
+            type_to_return = "PARTIAL"
+        else:
+            return (True, "NON")  # 2 missing fields is too much
 
     if type_to_return == "PARTIAL":
-        if row_1["retrieval_date"] == row_2["retrieval_date"]:  # To change to TEMPORAL?
+        if row_1["retrieval_date"] != row_2["retrieval_date"]:  # To change to TEMPORAL?
             return (True, "NON")  # PARTIAL + TEMPORAL = NON
         return (True, "PARTIAL")
 
@@ -187,6 +184,8 @@ def is_partial(
 def differentiate_duplicates(
     row_1,
     row_2,
+    lingual: str,
+    dates_differ: str,
     current_type: str,
     str_cols: dict,
     threshold_date: int,
@@ -197,18 +196,6 @@ def differentiate_duplicates(
     isfull, type_to_return = is_full(row_1, row_2, current_type=current_type)
     if isfull:
         return type_to_return
-
-    lingual = (
-        "monolingual" if row_1["language"] == row_2["language"]
-        else "multilingual"
-    )
-    dates_differ = (
-        "far_dates" if do_dates_differ_much(
-            row_1["retrieval_date"],
-            row_2["retrieval_date"],
-            threshold_date=threshold_date
-        ) else "close_dates"
-    )
 
     isnon, type_to_return = is_non_duplicate(
         row_1,
@@ -274,7 +261,7 @@ def find_subtle_duplicates_from_tokens(
     data: pd.DataFrame,
     tokenized_texts: list,
     str_cols: dict,
-    threshold_semantic: float,
+    threshold_semantic: dict,
     threshold_date: int,
     thresholds_similarity: dict,
     thresholds_desc_len: dict,
@@ -297,10 +284,28 @@ def find_subtle_duplicates_from_tokens(
         def find_dups_in_chunk(i):
             duplicates_chunk_i = []
             for j in range(i + 1, n_ads - chunk_start):
-                if similarity_matrix_chunk[i][j] > threshold_semantic:
+
+                lingual = (
+                    "monolingual" if (data.loc[chunk_start + i]["language"] ==
+                                      data.loc[chunk_start + j]["language"])
+                    else "multilingual"
+                )
+                dates_differ = (
+                    "far_dates" if do_dates_differ_much(
+                        data.loc[chunk_start + i]["retrieval_date"],
+                        data.loc[chunk_start + j]["retrieval_date"],
+                        threshold_date=threshold_date
+                    ) else "close_dates"
+                )
+
+                if similarity_matrix_chunk[i][j] > threshold_semantic[
+                    lingual
+                ][dates_differ]:
                     duplicates_type = differentiate_duplicates(
                         data.loc[chunk_start + i],
                         data.loc[chunk_start + j],
+                        lingual=lingual,
+                        dates_differ=dates_differ,
                         current_type="SEMANTIC",
                         str_cols=str_cols,
                         threshold_date=threshold_date,
