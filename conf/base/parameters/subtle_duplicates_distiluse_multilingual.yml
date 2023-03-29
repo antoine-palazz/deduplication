@@ -6,8 +6,8 @@
 
 threshold_semantic_distiluse_multilingual:
     monolingual:
+        close_dates: 0.9
+        far_dates: 0.95
+    multilingual:
         close_dates: 0.85
         far_dates: 0.9
-    multilingual:
-        close_dates: 0.8
-        far_dates: 0.85

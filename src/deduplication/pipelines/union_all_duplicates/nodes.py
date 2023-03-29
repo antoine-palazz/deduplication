@@ -33,7 +33,7 @@ def add_transitivity_pairs_semantic(
     for subgraph in tqdm(nx.connected_components(G)):
         nodes = sorted(list(subgraph))
         len_nodes = len(nodes)
-        if len_nodes == 2:
+        if len_nodes == 2 or len_nodes > 50:
             continue
 
         for i in range(len_nodes-1):
@@ -68,6 +68,9 @@ def aggregate_duplicates_list(
     duplicates_list: list[pd.DataFrame],
     data: pd.DataFrame
 ) -> pd.DataFrame:
+
+    for duplicates in duplicates_list:
+        print(f"Gross duplicates: {len(duplicates)}")
 
     all_duplicates = pd.concat(
         duplicates_list
