@@ -156,13 +156,13 @@ def aggregate_all_duplicates_several_models(
     **kwargs
 ) -> pd.DataFrame:
 
-    data = kwargs['preprocessed_dataset']
+    data = kwargs['well_preprocessed_and_described_international_offers']
     easy_duplicates = kwargs['easy']
 
     all_duplicates = aggregate_duplicates_list(
         [easy_duplicates] +
         [duplicates for name, duplicates in kwargs.items()
-         if name != "preprocessed_dataset"],
+         if name != "well_preprocessed_and_described_international_offers"],
         data
     )
 
