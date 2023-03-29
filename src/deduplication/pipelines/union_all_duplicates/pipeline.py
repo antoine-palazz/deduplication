@@ -59,9 +59,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                 outputs="all_duplicates_tf_idf",
                 name="aggregate_all_duplicates_tf_idf_node",
                 tags=[
-                    'tf_idf',
-                    'final_models',
-                    'final_models_parallel_part'
+                    'tf_idf'
                      ]
             ),
             node(
@@ -70,8 +68,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                 outputs="all_duplicates_tf_idf_description",
                 name="describe_duplicates_tf_idf_node",
                 tags=[
-                    'tf_idf',
-                    'final_models'
+                    'tf_idf'
                      ]
             ),
 
@@ -83,9 +80,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                 outputs="all_duplicates_distiluse_multilingual",
                 name="aggregate_all_duplicates_distiluse_multilingual_node",
                 tags=[
-                    'distiluse_multilingual',
-                    'final_models',
-                    'final_models_sequential_part'
+                    'distiluse_multilingual'
                 ]
             ),
             node(
@@ -94,8 +89,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                 outputs="all_duplicates_distiluse_multilingual_description",
                 name="describe_duplicates_distiluse_multilingual_node",
                 tags=[
-                    'distiluse_multilingual',
-                    'final_models'
+                    'distiluse_multilingual'
                 ]
             ),
 
