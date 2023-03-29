@@ -33,7 +33,7 @@ def add_transitivity_pairs_semantic(
     for subgraph in tqdm(nx.connected_components(G)):
         nodes = sorted(list(subgraph))
         len_nodes = len(nodes)
-        if len_nodes == 2 or len_nodes > 50:
+        if len_nodes == 2 or len_nodes > 40:
             continue
 
         for i in range(len_nodes-1):
