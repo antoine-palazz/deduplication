@@ -118,7 +118,7 @@ def is_partial(
          row_2[str_cols["no_description"]]).all() and
         (row_1[str_cols["no_description"]] != "").all()
     ):
-        return (False, "Unknown")
+        return (False, "Unknown")  # Partial semantic (easy)
 
     lengths_differ = compare_text_lengths(
         row_1["filtered_description"],
@@ -138,6 +138,8 @@ def is_partial(
         return (True, "NON")  # Descriptions of similar len but too different
 
     type_to_return = "Unknown"
+    one_longer_than_two = (len(row_2["filtered_description"]) <
+                           len(row_1["filtered_description"]))
 
     one_more_complete = 0
     two_more_complete = 0
@@ -157,36 +159,54 @@ def is_partial(
                 two_more_complete += 1
 
     if one_more_complete + two_more_complete + both_incomplete == 0:
-        return (False, "Unknown")
+        return (False, "Unknown")  # Everything is already in the ad
 
-    if both_incomplete >= 3:
+    elif both_incomplete >= 3 or one_more_complete + two_more_complete >= 3:
         return (True, "NON")  # Too many empty fields
 
-    if one_more_complete + two_more_complete >= 2:
-        return (True, "NON")  # More than 1 different field
+    elif one_more_complete * two_more_complete == 1:
+        if lengths_differ == "different_lengths":
+            type_to_return = "PARTIAL"  # Compensation by description length
+        else:
+            return (True, "NON")  # More than one field missing
 
-    if one_more_complete + two_more_complete == 1:
+    elif one_more_complete + two_more_complete >= 1:
 
         if one_more_complete == 1 and not (
             lengths_differ == "different_lengths" and
-            len(row_2["description"]) > len(row_1["description"])
+            not one_longer_than_two
+        ):
+            type_to_return = "PARTIAL"
+
+        elif one_more_complete == 2 and (
+            lengths_differ == "different_lengths" and
+            not one_longer_than_two
         ):
             type_to_return = "PARTIAL"
 
         elif two_more_complete == 1 and not (
             lengths_differ == "different_lengths" and
-            len(row_1["description"]) > len(row_2["description"])
+            one_longer_than_two
         ):
             type_to_return = "PARTIAL"
 
-        else:
+        elif two_more_complete == 2 and not (
+            lengths_differ == "different_lengths" and
+            one_longer_than_two
+        ):
+            type_to_return = "PARTIAL"
+
+        elif one_more_complete + two_more_complete == 1:
             return (False, "Unknown")
 
-    elif lingual == "monolingual" and lengths_differ == "different_lengths":
-        type_to_return = "PARTIAL"
+        else:
+            return (True, "NON")  # More than one field missing
+
+    elif lengths_differ == "different_lengths":
+        type_to_return = "PARTIAL"  # No info on missing fields but longer desc
 
     else:
-        return (False, "Unknown")
+        return (False, "Unknown")  # No info at all
 
     if type_to_return == "PARTIAL":
         if row_1["retrieval_date"] != row_2["retrieval_date"]:
