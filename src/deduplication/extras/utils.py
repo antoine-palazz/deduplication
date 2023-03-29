@@ -298,6 +298,8 @@ def find_subtle_duplicates_from_tokens(
         )
 
         def find_dups_in_chunk(i):
+            if chunk_start + i >= n_ads:
+                return []
             duplicates_chunk_i = []
             row_i = data_arr[chunk_start + i]
 
