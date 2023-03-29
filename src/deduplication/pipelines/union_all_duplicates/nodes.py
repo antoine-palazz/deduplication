@@ -13,11 +13,18 @@ def add_transitivity_pairs_semantic(
     data: pd.DataFrame
 ) -> pd.DataFrame:
 
+    allowed_ids = set(data["id"])
     dates_arr = data['retrieval_date'].values
     indexes_from_id = dict(zip(data.id, data.index))
 
     # Creation of a non oriented graph representing the semantic pairs
     semantic_duplicates = duplicates[duplicates['type'].isin(['SEMANTIC', 'TEMPORAL'])]
+    semantic_duplicates = semantic_duplicates[
+        semantic_duplicates["id1"].isin(allowed_ids)
+    ]
+    semantic_duplicates = semantic_duplicates[
+        semantic_duplicates["id2"].isin(allowed_ids)
+    ]
     G = nx.from_pandas_edgelist(semantic_duplicates, "id1", "id2")
 
     # Exploration of the connex components - Add edges to turn them into cliques

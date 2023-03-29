@@ -22,7 +22,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "gross_partial_duplicates",
                         "gross_semantic_duplicates",
                         "gross_semantic_multilingual_duplicates",
-                        "preprocessed_dataset"],
+                        "well_preprocessed_and_described_international_offers"],
                 outputs="easy_duplicates",
                 name="aggregate_easy_duplicates_node",
                 tags=[
@@ -55,7 +55,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                 func=aggregate_all_duplicates_one_model,
                 inputs=["easy_duplicates",
                         "subtle_duplicates_tf_idf",
-                        "preprocessed_dataset"],
+                        "well_preprocessed_and_described_international_offers"],
                 outputs="all_duplicates_tf_idf",
                 name="aggregate_all_duplicates_tf_idf_node",
                 tags=[
@@ -76,7 +76,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                 func=aggregate_all_duplicates_one_model,
                 inputs=["easy_duplicates",
                         "subtle_duplicates_distiluse_multilingual",
-                        "preprocessed_dataset"],
+                        "well_preprocessed_and_described_international_offers"],
                 outputs="all_duplicates_distiluse_multilingual",
                 name="aggregate_all_duplicates_distiluse_multilingual_node",
                 tags=[
@@ -97,7 +97,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                 func=aggregate_all_duplicates_one_model,
                 inputs=["easy_duplicates",
                         "subtle_duplicates_multilingual_bert",
-                        "preprocessed_dataset"],
+                        "well_preprocessed_and_described_international_offers"],
                 outputs="all_duplicates_multilingual_bert",
                 name="aggregate_all_duplicates_multilingual_bert_node",
                 tags=['multilingual_bert']
@@ -114,7 +114,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                 func=aggregate_all_duplicates_one_model,
                 inputs=["easy_duplicates",
                         "subtle_duplicates_xlm_roberta",
-                        "preprocessed_dataset"],
+                        "well_preprocessed_and_described_international_offers"],
                 outputs="all_duplicates_xlm_roberta",
                 name="aggregate_all_duplicates_xlm_roberta_node",
                 tags=['xlm_roberta']
@@ -134,7 +134,8 @@ def create_pipeline(**kwargs) -> Pipeline:
                     "tf_idf": "subtle_duplicates_tf_idf",
                     "distiluse_multilingual":
                         "subtle_duplicates_distiluse_multilingual",
-                    "preprocessed_dataset": "preprocessed_dataset"
+                    "well_preprocessed_and_described_international_offers":
+                        "well_preprocessed_and_described_international_offers"
                     },
                 outputs="best_duplicates",
                 name="aggregate_all_duplicates_from_best_models_node",
