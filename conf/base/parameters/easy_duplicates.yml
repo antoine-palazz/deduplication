@@ -9,7 +9,7 @@ list_cols_to_match:
         [
             ['title', 'company_name', 'location', 'description', 'country_id']
         ]
-    PARTIAL:
+    SEMANTIC_PARTIAL:
         [
             ['title', 'company_name', 'location']
         ]
@@ -25,7 +25,7 @@ list_cols_to_match:
 
 list_cols_to_mismatch:
     FULL: [[]]
-    PARTIAL: [[]]
+    SEMANTIC_PARTIAL: [[]]
     SEMANTIC: [[]]
     SEMANTIC_MULTILINGUAL: [['language']]
 

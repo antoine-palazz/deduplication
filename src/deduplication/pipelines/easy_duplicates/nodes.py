@@ -42,6 +42,7 @@ def identify_exact_duplicates(
             data_for_dups_arr = data_for_duplicates.values
 
             for i in tqdm(range(n_ads-1)):
+                row_i = data_for_duplicates.loc[i]
                 j = i+1
 
                 while (
@@ -54,22 +55,23 @@ def identify_exact_duplicates(
                         data_for_dups_arr[j, cols_to_mismatch_idxs]
                     ).all():
 
+                        row_j = data_for_duplicates.loc[j]
                         lingual = (
-                            "monolingual" if (data_for_duplicates.loc[i]["language"] ==
-                                              data_for_duplicates.loc[j]["language"])
+                            "monolingual" if (row_i["language"] ==
+                                              row_j["language"])
                             else "multilingual"
                         )
                         dates_differ = (
                             "far_dates" if do_dates_differ_much(
-                                data_for_duplicates.loc[i]["retrieval_date"],
-                                data_for_duplicates.loc[j]["retrieval_date"],
+                                row_i["retrieval_date"],
+                                row_j["retrieval_date"],
                                 threshold_date=threshold_date
                             ) else "close_dates"
                         )
 
                         duplicates_type = differentiate_duplicates(
-                            data_for_duplicates.loc[i],
-                            data_for_duplicates.loc[j],
+                            row_i,
+                            row_j,
                             lingual=lingual,
                             dates_differ=dates_differ,
                             current_type=default_type.split("_", 1)[0],
@@ -82,8 +84,8 @@ def identify_exact_duplicates(
                         if duplicates_type != "NON":
                             exact_duplicates.append(
                                 {
-                                    'id1': data_for_duplicates.loc[i, "id"],
-                                    'id2': data_for_duplicates.loc[j, "id"],
+                                    'id1': row_i["id"],
+                                    'id2': row_j["id"],
                                     'type': duplicates_type
                                 })
 

@@ -29,7 +29,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                 inputs=["extensively_preprocessed_detailed_offers_for_partial",
                         "params:list_cols_to_match",
                         "params:list_cols_to_mismatch",
-                        "params:PARTIAL",
+                        "params:SEMANTIC_PARTIAL",
                         "params:str_cols",
                         "params:threshold_date",
                         "params:thresholds_similarity",

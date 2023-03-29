@@ -16,6 +16,7 @@
 FULL: "FULL"
 PARTIAL: "PARTIAL"
 SEMANTIC: "SEMANTIC"
+SEMANTIC_PARTIAL: "SEMANTIC_PARTIAL"
 SEMANTIC_MULTILINGUAL: "SEMANTIC_MULTILINGUAL"
 
 str_cols:
@@ -68,8 +69,8 @@ thresholds_desc_len:
             NON: 1000
     relative:
         monolingual:
-            PARTIAL: 0.10
+            PARTIAL: 0.05
             NON: 0.25
         multilingual:
-            PARTIAL: 0.20
+            PARTIAL: 0.10
             NON: 0.50
