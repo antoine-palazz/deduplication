@@ -39,6 +39,8 @@ def remove_html(
         r'\r|\n', ' ', regex=True
     ).str.replace(
         '*', ' '
+    ).str.replace(
+        "&#39;", "'"
     ).replace(
         r' +', ' ', regex=True
     ).str.strip()

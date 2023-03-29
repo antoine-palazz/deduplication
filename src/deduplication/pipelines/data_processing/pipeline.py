@@ -98,6 +98,7 @@ def create_pipeline(**kwargs) -> Pipeline:
             'distiluse_multilingual',
             'multilingual_bert',
             'xlm_roberta',
-            'final_models'
+            'final_models',
+            'final_models_parallel_part'
             ]
     )

@@ -15,6 +15,7 @@ kedro_datasets
 kedro-telemetry~=0.2.0
 kedro-viz
 nbstripout~=0.4
+networkx
 nltk
 numpy
 pandas

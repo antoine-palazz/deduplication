@@ -68,8 +68,8 @@ thresholds_desc_len:
             NON: 1000
     relative:
         monolingual:
-            PARTIAL: 0.05
+            PARTIAL: 0.10
             NON: 0.25
         multilingual:
-            PARTIAL: 0.10
+            PARTIAL: 0.20
             NON: 0.50

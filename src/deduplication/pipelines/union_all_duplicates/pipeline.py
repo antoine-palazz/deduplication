@@ -21,7 +21,8 @@ def create_pipeline(**kwargs) -> Pipeline:
                 inputs=["gross_full_duplicates",
                         "gross_partial_duplicates",
                         "gross_semantic_duplicates",
-                        "gross_semantic_multilingual_duplicates"],
+                        "gross_semantic_multilingual_duplicates",
+                        "preprocessed_dataset"],
                 outputs="easy_duplicates",
                 name="aggregate_easy_duplicates_node",
                 tags=[
@@ -30,7 +31,8 @@ def create_pipeline(**kwargs) -> Pipeline:
                     'distiluse_multilingual',
                     'multilingual_bert',
                     'xlm_roberta',
-                    'final_models'
+                    'final_models',
+                    'final_models_parallel_part'
                      ]
             ),
             node(
@@ -44,19 +46,22 @@ def create_pipeline(**kwargs) -> Pipeline:
                     'distiluse_multilingual',
                     'multilingual_bert',
                     'xlm_roberta',
-                    'final_models'
+                    'final_models',
+                    'final_models_parallel_part'
                      ]
             ),
 
             node(
                 func=aggregate_all_duplicates_one_model,
                 inputs=["easy_duplicates",
-                        "subtle_duplicates_tf_idf"],
+                        "subtle_duplicates_tf_idf",
+                        "preprocessed_dataset"],
                 outputs="all_duplicates_tf_idf",
                 name="aggregate_all_duplicates_tf_idf_node",
                 tags=[
                     'tf_idf',
-                    'final_models'
+                    'final_models',
+                    'final_models_parallel_part'
                      ]
             ),
             node(
@@ -73,13 +78,14 @@ def create_pipeline(**kwargs) -> Pipeline:
             node(
                 func=aggregate_all_duplicates_one_model,
                 inputs=["easy_duplicates",
-                        "subtle_duplicates_distiluse_multilingual"],
+                        "subtle_duplicates_distiluse_multilingual",
+                        "preprocessed_dataset"],
                 outputs="all_duplicates_distiluse_multilingual",
                 name="aggregate_all_duplicates_distiluse_multilingual_node",
                 tags=[
                     'distiluse_multilingual',
                     'final_models',
-                    'final_models_long_part'
+                    'final_models_sequential_part'
                 ]
             ),
             node(
@@ -89,15 +95,15 @@ def create_pipeline(**kwargs) -> Pipeline:
                 name="describe_duplicates_distiluse_multilingual_node",
                 tags=[
                     'distiluse_multilingual',
-                    'final_models',
-                    'final_models_long_part'
+                    'final_models'
                 ]
             ),
 
             node(
                 func=aggregate_all_duplicates_one_model,
                 inputs=["easy_duplicates",
-                        "subtle_duplicates_multilingual_bert"],
+                        "subtle_duplicates_multilingual_bert",
+                        "preprocessed_dataset"],
                 outputs="all_duplicates_multilingual_bert",
                 name="aggregate_all_duplicates_multilingual_bert_node",
                 tags=['multilingual_bert']
@@ -113,7 +119,8 @@ def create_pipeline(**kwargs) -> Pipeline:
             node(
                 func=aggregate_all_duplicates_one_model,
                 inputs=["easy_duplicates",
-                        "subtle_duplicates_xlm_roberta"],
+                        "subtle_duplicates_xlm_roberta",
+                        "preprocessed_dataset"],
                 outputs="all_duplicates_xlm_roberta",
                 name="aggregate_all_duplicates_xlm_roberta_node",
                 tags=['xlm_roberta']
@@ -132,18 +139,19 @@ def create_pipeline(**kwargs) -> Pipeline:
                     "easy": "easy_duplicates",
                     "tf_idf": "subtle_duplicates_tf_idf",
                     "distiluse_multilingual":
-                        "subtle_duplicates_distiluse_multilingual"
+                        "subtle_duplicates_distiluse_multilingual",
+                    "preprocessed_dataset": "preprocessed_dataset"
                     },
                 outputs="best_duplicates",
                 name="aggregate_all_duplicates_from_best_models_node",
-                tags=['final_models', 'final_models_long_part']
+                tags=['final_models', 'final_models_sequential_part']
             ),
             node(
                 func=describe_duplicates,
                 inputs=["best_duplicates"],
                 outputs="best_duplicates_description",
                 name="describe_best_duplicates_node",
-                tags=['final_models', 'final_models_long_part']
+                tags=['final_models', 'final_models_sequential_part']
             )
         ]
     )

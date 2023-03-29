@@ -146,6 +146,8 @@ def is_partial(
     for col in str_cols["filtered"]:
         if (row_1[col] == "") and (row_2[col] == ""):
             both_incomplete += 1
+            if col == "filtered_description":
+                both_incomplete += 1
         elif (row_1[col] == "") != (row_2[col] == ""):
             if (row_2[col] == "" and
                     row_1[col].split(" ", 1)[0] not in row_2["description"]):
@@ -156,6 +158,9 @@ def is_partial(
 
     if one_more_complete + two_more_complete + both_incomplete == 0:
         return (False, "Unknown")
+
+    if both_incomplete >= 3:
+        return (True, "NON")  # Too many empty fields
 
     if one_more_complete + two_more_complete >= 2:
         return (True, "NON")  # More than 1 different field
@@ -177,17 +182,14 @@ def is_partial(
         else:
             return (False, "Unknown")
 
-    elif lengths_differ == "same_size":
-        return (False, "Unknown")
+    elif lingual == "monolingual" and lengths_differ == "different_lengths":
+        type_to_return = "PARTIAL"
 
     else:
-        if both_incomplete == 1:
-            type_to_return = "PARTIAL"
-        else:
-            return (True, "NON")  # 2 missing fields is too much
+        return (False, "Unknown")
 
     if type_to_return == "PARTIAL":
-        if row_1["retrieval_date"] != row_2["retrieval_date"]:  # To change to TEMPORAL?
+        if row_1["retrieval_date"] != row_2["retrieval_date"]:
             return (True, "NON")  # PARTIAL + TEMPORAL = NON
         return (True, "PARTIAL")
 
@@ -344,7 +346,7 @@ def find_subtle_duplicates_from_tokens(
             return duplicates_chunk_i
 
         find_dups_in_chunk_for_pickle = globalize(find_dups_in_chunk)
-        with Pool(int(cpu_count()/3)) as pool:
+        with Pool(int(cpu_count()/2)) as pool:
             list_duplicates_chunk = pool.map(find_dups_in_chunk_for_pickle,
                                              range(hyperparameters["chunk_size"])
                                              )

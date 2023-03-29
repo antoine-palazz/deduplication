@@ -40,6 +40,7 @@ def create_pipeline(**kwargs) -> Pipeline:
         ],
         tags=[
             'tf_idf',
-            'final_models'
+            'final_models',
+            'final_models_parallel_part'
             ]
     )
