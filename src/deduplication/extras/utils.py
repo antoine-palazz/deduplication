@@ -173,10 +173,10 @@ def is_partial(
         return (True, "NON")  # Too many empty fields
 
     elif one_more_complete * two_more_complete == 1:
-        # if lengths_differ == "different_lengths":
-        #     type_to_return = "PARTIAL"  # Compensation by description length
-        # else:
-        return (True, "NON")  # More than one field missing
+        if lengths_differ == "different_lengths" and lingual == "monolingual":
+            type_to_return = "PARTIAL"  # Compensation by description length
+        else:
+            return (True, "NON")  # More than one field missing
 
     elif one_more_complete + two_more_complete >= 1:
 
@@ -210,7 +210,8 @@ def is_partial(
         else:
             return (True, "NON")  # More than one field missing
 
-    elif lengths_differ == "different_lengths":  # and lingual == "monolingual":
+    elif lengths_differ == "different_lengths" and lingual == "monolingual":
+        # Remove condition monolingual?
         type_to_return = "PARTIAL"  # No info on missing fields but longer desc
 
     else:

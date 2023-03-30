@@ -41,8 +41,8 @@ def add_transitivity_pairs_semantic(
             for j in range(i+1, len_nodes):
                 if not G.has_edge(nodes[i], nodes[j]):
 
-                    date_1 = dates_arr[indexes_from_id[nodes[i]]]
-                    date_2 = dates_arr[indexes_from_id[nodes[j]]]
+                    date_1 = pd.to_datetime(dates_arr[indexes_from_id[nodes[i]]])
+                    date_2 = pd.to_datetime(dates_arr[indexes_from_id[nodes[j]]])
                     dates_differ = do_dates_differ_much(
                         date_1,
                         date_2,
