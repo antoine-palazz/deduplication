@@ -142,8 +142,8 @@ def aggregate_duplicates_list(
         data,
         threshold_date=threshold_date
     )
-    all_duplicates = add_transitivity_pairs_partial(all_duplicates, data)
-    # Only if mutualisation with another good submission
+    # all_duplicates = add_transitivity_pairs_partial(all_duplicates, data)
+    # Adds to many false positives for now
 
     return all_duplicates
 

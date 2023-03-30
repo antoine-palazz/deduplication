@@ -26,19 +26,6 @@ def create_pipeline(**kwargs) -> Pipeline:
             ),
             node(
                 func=identify_exact_duplicates,
-                inputs=["extensively_preprocessed_detailed_offers_for_partial",
-                        "params:list_cols_to_match",
-                        "params:list_cols_to_mismatch",
-                        "params:SEMANTIC_PARTIAL",
-                        "params:str_cols",
-                        "params:threshold_date",
-                        "params:thresholds_similarity",
-                        "params:thresholds_desc_len"],
-                outputs="gross_partial_duplicates",
-                name="identify_gross_partial_duplicates_node"
-            ),
-            node(
-                func=identify_exact_duplicates,
                 inputs=[
                     "extensively_preprocessed_described_offers_for_semantic",
                     "params:list_cols_to_match",
@@ -54,8 +41,21 @@ def create_pipeline(**kwargs) -> Pipeline:
             ),
             node(
                 func=identify_exact_duplicates,
+                inputs=["extensively_preprocessed_detailed_offers_for_semantic_partial",
+                        "params:list_cols_to_match",
+                        "params:list_cols_to_mismatch",
+                        "params:SEMANTIC_PARTIAL",
+                        "params:str_cols",
+                        "params:threshold_date",
+                        "params:thresholds_similarity",
+                        "params:thresholds_desc_len"],
+                outputs="gross_partial_duplicates",
+                name="identify_gross_partial_duplicates_node"
+            ),
+            node(
+                func=identify_exact_duplicates,
                 inputs=[
-                    "extensively_preprocessed_detailed_offers_for_semantic",
+                    "extensively_preprocessed_detailed_offers_for_semantic_lingual",
                     "params:list_cols_to_match",
                     "params:list_cols_to_mismatch",
                     "params:SEMANTIC_MULTILINGUAL",

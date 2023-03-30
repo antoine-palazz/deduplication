@@ -138,13 +138,6 @@ def is_partial(
     if lengths_differ == "too_long":
         return (True, "NON")  # Description too long
 
-    # if lengths_differ == "same_size" and (
-    #     jaro_winkler_similarity(row_1["filtered_description"],
-    #                             row_2["filtered_description"]) <
-    #     thresholds_similarity[lingual][dates_differ]["filtered_description"]
-    # ):
-    #     return (True, "NON")  # Descriptions of similar len but too different
-
     type_to_return = "Unknown"
     one_longer_than_two = (len(row_2["filtered_description"]) <
                            len(row_1["filtered_description"]))
@@ -173,7 +166,7 @@ def is_partial(
         return (True, "NON")  # Too many empty fields
 
     elif one_more_complete * two_more_complete == 1:
-        if lengths_differ == "different_lengths" and lingual == "monolingual":
+        if lengths_differ == "different_lengths":
             type_to_return = "PARTIAL"  # Compensation by description length
         else:
             return (True, "NON")  # More than one field missing
@@ -210,8 +203,7 @@ def is_partial(
         else:
             return (True, "NON")  # More than one field missing
 
-    elif lengths_differ == "different_lengths" and lingual == "monolingual":
-        # Remove condition monolingual?
+    elif lengths_differ == "different_lengths":
         type_to_return = "PARTIAL"  # No info on missing fields but longer desc
 
     else:

@@ -9,14 +9,14 @@ list_cols_to_match:
         [
             ['title', 'company_name', 'location', 'description', 'country_id']
         ]
-    SEMANTIC_PARTIAL:
-        [
-            ['title', 'company_name', 'location']
-        ]
     SEMANTIC:
         [
             ['title', 'beginning_filtered_description'],
             ['title', 'end_filtered_description']
+        ]
+    SEMANTIC_PARTIAL:
+        [
+            ['title', 'company_name', 'location']
         ]
     SEMANTIC_MULTILINGUAL:
         [
@@ -25,7 +25,7 @@ list_cols_to_match:
 
 list_cols_to_mismatch:
     FULL: [[]]
-    SEMANTIC_PARTIAL: [[]]
     SEMANTIC: [[]]
+    SEMANTIC_PARTIAL: [[]]
     SEMANTIC_MULTILINGUAL: [['language']]
 

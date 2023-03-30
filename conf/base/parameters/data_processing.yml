@@ -10,14 +10,14 @@ cols_to_concatenate:
 
 required_cols_for_filtering:
     FULL: []
-    PARTIAL: ['title', 'company_name', 'location']
     SEMANTIC: ['title', 'description']
+    SEMANTIC_PARTIAL: ['title', 'company_name', 'location']
     SEMANTIC_MULTILINGUAL: ['title', 'company_name', 'location']
 
 nb_allowed_nans_for_filtering:
     FULL: 2
-    PARTIAL: 1
     SEMANTIC: 2
+    SEMANTIC_PARTIAL: 1
     SEMANTIC_MULTILINGUAL: 1
 
 cols_to_be_diversified_for_companies:
