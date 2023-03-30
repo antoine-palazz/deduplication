@@ -13,12 +13,16 @@ from tqdm import tqdm
 def do_dates_differ_much(
     date_1,
     date_2,
-    threshold_date: int
+    threshold_date: dict
 ) -> bool:
 
     dates_difference = abs((date_1 - date_2).days)
-    dates_differ = dates_difference > threshold_date
-    return dates_differ
+
+    if dates_difference > threshold_date["too_much"]:
+        return "too_much"
+    if dates_difference > threshold_date["far_dates"]:
+        return "far_dates"
+    return "close_dates"
 
 
 def compare_text_lengths(
@@ -79,14 +83,18 @@ def is_non_duplicate(
     lingual: str,
     dates_differ: str,
     str_cols: dict,
-    threshold_date: int,
+    threshold_date: dict,
     thresholds_similarity: dict
 ) -> tuple[bool, str]:
 
-    # if row_1["country_id"] != row_2["country_id"]:
-    #     return (True, "NON")  # To remove?
+    if row_1["country_id"] != row_2["country_id"]:
+        return (True, "NON")  # To remove?
 
-    for col in str_cols["no_description"]:
+    if dates_differ == "too_much":
+        return (True, "NON")  # To remove?
+
+    # for col in str_cols["no_description"]:
+    for col in str_cols["filtered"]:
         if row_1[col] != "" and row_2[col] != "":
             min_len_field = int(1.05*min(len(row_1[col]), len(row_2[col])))
             if (
@@ -135,16 +143,11 @@ def is_partial(
     #                             row_2["filtered_description"]) <
     #     thresholds_similarity[lingual][dates_differ]["filtered_description"]
     # ):
-    if (
-        jaro_winkler_similarity(row_1["filtered_description"],
-                                row_2["filtered_description"]) <
-        thresholds_similarity[lingual][dates_differ]["filtered_description"]
-    ):
-        return (True, "NON")  # Descriptions of similar len but too different
+    #     return (True, "NON")  # Descriptions of similar len but too different
 
     type_to_return = "Unknown"
-    # one_longer_than_two = (len(row_2["filtered_description"]) <
-    #                        len(row_1["filtered_description"]))
+    one_longer_than_two = (len(row_2["filtered_description"]) <
+                           len(row_1["filtered_description"]))
 
     one_more_complete = 0
     two_more_complete = 0
@@ -177,30 +180,29 @@ def is_partial(
 
     elif one_more_complete + two_more_complete >= 1:
 
-        if (one_more_complete == 1):  # and not (
-            # lengths_differ == "different_lengths" and
-            # not one_longer_than_two
+        if one_more_complete == 1 and not (
+            lengths_differ == "different_lengths" and
+            not one_longer_than_two
+        ):
             type_to_return = "PARTIAL"
 
-        elif (one_more_complete == 2  # and (
-              # lengths_differ == "different_lengths" and
-              # not one_longer_than_two)
-              ):
-            # type_to_return = "PARTIAL"
-            return (True, "NON")
-
-        elif (two_more_complete == 1  # and not (
-              # lengths_differ == "different_lengths" and
-              # one_longer_than_two)
-              ):
+        elif one_more_complete == 2 and (
+            lengths_differ == "different_lengths" and
+            not one_longer_than_two
+        ):
             type_to_return = "PARTIAL"
 
-        elif (two_more_complete == 2  # and not (
-              # lengths_differ == "different_lengths" and
-              # one_longer_than_two)
-              ):
-            # type_to_return = "PARTIAL"
-            return (True, "NON")
+        elif two_more_complete == 1 and not (
+            lengths_differ == "different_lengths" and
+            one_longer_than_two
+        ):
+            type_to_return = "PARTIAL"
+
+        elif two_more_complete == 2 and (
+            lengths_differ == "different_lengths" and
+            one_longer_than_two
+        ):
+            type_to_return = "PARTIAL"
 
         elif one_more_complete + two_more_complete == 1:
             return (False, "Unknown")
@@ -208,8 +210,8 @@ def is_partial(
         else:
             return (True, "NON")  # More than one field missing
 
-    # elif lengths_differ == "different_lengths":
-    #     type_to_return = "PARTIAL"  # No info on missing fields but longer desc
+    elif lengths_differ == "different_lengths":  # and lingual == "monolingual":
+        type_to_return = "PARTIAL"  # No info on missing fields but longer desc
 
     else:
         return (False, "Unknown")  # No info at all
@@ -229,7 +231,7 @@ def differentiate_duplicates(
     dates_differ: str,
     current_type: str,
     str_cols: dict,
-    threshold_date: int,
+    threshold_date: dict,
     thresholds_similarity: dict,
     thresholds_desc_len: dict
 ) -> str:
@@ -303,7 +305,7 @@ def find_subtle_duplicates_from_tokens(
     tokenized_texts: list,
     str_cols: dict,
     threshold_semantic: dict,
-    threshold_date: int,
+    threshold_date: dict,
     thresholds_similarity: dict,
     thresholds_desc_len: dict,
     hyperparameters: dict
@@ -339,13 +341,11 @@ def find_subtle_duplicates_from_tokens(
                                       row_j[cols_idxs["language"]])
                     else "multilingual"
                 )
-                dates_diff = (
-                    "far_dates" if do_dates_differ_much(
-                        row_i[cols_idxs["retrieval_date"]],
-                        row_j[cols_idxs["retrieval_date"]],
-                        threshold_date=threshold_date
-                    ) else "close_dates"
-                )
+                dates_diff = do_dates_differ_much(
+                    row_i[cols_idxs["retrieval_date"]],
+                    row_j[cols_idxs["retrieval_date"]],
+                    threshold_date=threshold_date
+                    )
 
                 if similarity_matrix_chunk[i][j] > threshold_semantic[ling][dates_diff]:
                     duplicates_type = differentiate_duplicates(

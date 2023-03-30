@@ -15,7 +15,7 @@ def identify_exact_duplicates(
     list_cols_to_mismatch: dict,
     default_type: str,
     str_cols: dict,
-    threshold_date: int,
+    threshold_date: dict,
     thresholds_similarity: dict,
     thresholds_desc_len: dict
 ) -> pd.DataFrame:
@@ -61,13 +61,11 @@ def identify_exact_duplicates(
                                               row_j["language"])
                             else "multilingual"
                         )
-                        dates_differ = (
-                            "far_dates" if do_dates_differ_much(
-                                row_i["retrieval_date"],
-                                row_j["retrieval_date"],
-                                threshold_date=threshold_date
-                            ) else "close_dates"
-                        )
+                        dates_differ = do_dates_differ_much(
+                            row_i["retrieval_date"],
+                            row_j["retrieval_date"],
+                            threshold_date=threshold_date
+                            )
 
                         duplicates_type = differentiate_duplicates(
                             row_i,

@@ -57,20 +57,22 @@ thresholds_similarity:
       description: 0.25
       filtered_description: 0.25
 
-threshold_date: 100
+threshold_date:
+    far_dates: 100
+    too_much: 500
 
 thresholds_desc_len:
     absolute:
         monolingual:
-            PARTIAL: 100
+            PARTIAL: 50
             NON: 500
         multilingual:
-            PARTIAL: 200
+            PARTIAL: 100
             NON: 1000
     relative:
         monolingual:
-            PARTIAL: 0.05
+            PARTIAL: 0.10  # 0.05
             NON: 0.25
         multilingual:
-            PARTIAL: 0.10
+            PARTIAL: 0.20  # 0.10
             NON: 0.50

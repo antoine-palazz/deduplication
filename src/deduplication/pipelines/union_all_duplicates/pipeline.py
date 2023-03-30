@@ -22,7 +22,8 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "gross_partial_duplicates",
                         "gross_semantic_duplicates",
                         "gross_semantic_multilingual_duplicates",
-                        "well_preprocessed_and_described_international_offers"],
+                        "well_preprocessed_and_described_offers",
+                        "params:threshold_date"],
                 outputs="easy_duplicates",
                 name="aggregate_easy_duplicates_node",
                 tags=[
@@ -55,7 +56,8 @@ def create_pipeline(**kwargs) -> Pipeline:
                 func=aggregate_all_duplicates_one_model,
                 inputs=["easy_duplicates",
                         "subtle_duplicates_tf_idf",
-                        "well_preprocessed_and_described_international_offers"],
+                        "well_preprocessed_and_described_offers",
+                        "params:threshold_date"],
                 outputs="all_duplicates_tf_idf",
                 name="aggregate_all_duplicates_tf_idf_node",
                 tags=[
@@ -76,7 +78,8 @@ def create_pipeline(**kwargs) -> Pipeline:
                 func=aggregate_all_duplicates_one_model,
                 inputs=["easy_duplicates",
                         "subtle_duplicates_distiluse_multilingual",
-                        "well_preprocessed_and_described_international_offers"],
+                        "well_preprocessed_and_described_international_offers",
+                        "params:threshold_date"],
                 outputs="all_duplicates_distiluse_multilingual",
                 name="aggregate_all_duplicates_distiluse_multilingual_node",
                 tags=[
@@ -97,7 +100,8 @@ def create_pipeline(**kwargs) -> Pipeline:
                 func=aggregate_all_duplicates_one_model,
                 inputs=["easy_duplicates",
                         "subtle_duplicates_multilingual_bert",
-                        "well_preprocessed_and_described_international_offers"],
+                        "well_preprocessed_and_described_international_offers",
+                        "params:threshold_date"],
                 outputs="all_duplicates_multilingual_bert",
                 name="aggregate_all_duplicates_multilingual_bert_node",
                 tags=['multilingual_bert']
@@ -114,7 +118,8 @@ def create_pipeline(**kwargs) -> Pipeline:
                 func=aggregate_all_duplicates_one_model,
                 inputs=["easy_duplicates",
                         "subtle_duplicates_xlm_roberta",
-                        "well_preprocessed_and_described_international_offers"],
+                        "well_preprocessed_and_described_international_offers",
+                        "params:threshold_date"],
                 outputs="all_duplicates_xlm_roberta",
                 name="aggregate_all_duplicates_xlm_roberta_node",
                 tags=['xlm_roberta']
@@ -134,8 +139,9 @@ def create_pipeline(**kwargs) -> Pipeline:
                     "tf_idf": "subtle_duplicates_tf_idf",
                     "distiluse_multilingual":
                         "subtle_duplicates_distiluse_multilingual",
-                    "well_preprocessed_and_described_international_offers":
-                        "well_preprocessed_and_described_international_offers"
+                    "well_preprocessed_and_described_offers":
+                        "well_preprocessed_and_described_offers",
+                    "threshold_date": "params:threshold_date"
                     },
                 outputs="best_duplicates",
                 name="aggregate_all_duplicates_from_best_models_node",
