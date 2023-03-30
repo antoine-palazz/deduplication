@@ -136,8 +136,8 @@ def create_pipeline(**kwargs) -> Pipeline:
                 func=aggregate_all_duplicates_several_models,
                 inputs={
                     "easy": "easy_duplicates",
-                    "tf_idf": "subtle_duplicates_tf_idf",
-                    "distiluse_multilingual":
+                    "tf_idf_duplicates": "subtle_duplicates_tf_idf",
+                    "distiluse_multilingual_duplicates":
                         "subtle_duplicates_distiluse_multilingual",
                     "well_preprocessed_and_described_offers":
                         "well_preprocessed_and_described_offers",
