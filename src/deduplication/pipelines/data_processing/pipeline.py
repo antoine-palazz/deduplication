@@ -78,19 +78,20 @@ def create_pipeline(**kwargs) -> Pipeline:
             ),
 
             node(
-                func=filter_international_companies,
+                func=filter_out_poorly_described_offers,
                 inputs=["extensively_preprocessed_dataset",
-                        "params:cols_to_be_diversified_for_companies"],
-                outputs="extensively_preprocessed_international_offers",
-                name="filter_international_offers_node"
+                        "params:cols_not_to_be_diversified_for_descriptions"],
+                outputs="well_preprocessed_and_described_offers",
+                name="filter_out_poorly_described_offers_node"
             ),
             node(
-                func=filter_out_poorly_described_offers,
-                inputs=["extensively_preprocessed_international_offers",
-                        "params:cols_not_to_be_diversified_for_descriptions"],
+                func=filter_international_companies,
+                inputs=["well_preprocessed_and_described_offers",
+                        "params:cols_to_be_diversified_for_companies"],
                 outputs="well_preprocessed_and_described_international_offers",
-                name="filter_out_poorly_described_offers_node"
+                name="filter_international_offers_node"
             )
+
         ],
         tags=[
             'easy',

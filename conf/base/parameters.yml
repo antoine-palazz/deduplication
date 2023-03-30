@@ -33,14 +33,14 @@ thresholds_similarity:
   monolingual:
     close_dates:
       title: 0.8
-      company_name: 0.8
-      location: 0.8
+      company_name: 0.85
+      location: 0.85
       description: 0.8
       filtered_description: 0.8
     far_dates:
       title: 0.85
-      company_name: 0.85
-      location: 0.85
+      company_name: 0.9
+      location: 0.9
       description: 0.85
       filtered_description: 0.85
   multilingual:

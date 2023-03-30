@@ -20,9 +20,7 @@ def add_transitivity_pairs_semantic(
     # Creation of a non oriented graph representing the semantic pairs
     semantic_duplicates = duplicates[duplicates['type'].isin(['SEMANTIC', 'TEMPORAL'])]
     semantic_duplicates = semantic_duplicates[
-        semantic_duplicates["id1"].isin(allowed_ids)
-    ]
-    semantic_duplicates = semantic_duplicates[
+        semantic_duplicates["id1"].isin(allowed_ids) &
         semantic_duplicates["id2"].isin(allowed_ids)
     ]
     G = nx.from_pandas_edgelist(semantic_duplicates, "id1", "id2")
@@ -33,7 +31,7 @@ def add_transitivity_pairs_semantic(
     for subgraph in tqdm(nx.connected_components(G)):
         nodes = sorted(list(subgraph))
         len_nodes = len(nodes)
-        if len_nodes == 2 or len_nodes > 40:
+        if len_nodes == 2 or len_nodes > 100:
             continue
 
         for i in range(len_nodes-1):
@@ -61,6 +59,31 @@ def add_transitivity_pairs_semantic(
 
     dup_count_end = len(duplicates)
     print(f"{dup_count_end - dup_count_init} new duplicates found by transitivity")
+    return duplicates
+
+
+def add_transitivity_pairs_partial(
+    duplicates: pd.DataFrame,
+    data: pd.DataFrame
+) -> pd.DataFrame:
+
+    # allowed_ids = set(data["id"])
+    # dates_arr = data['retrieval_date'].values
+    # indexes_from_id = dict(zip(data.id, data.index))
+
+    # # Creation of a non oriented graph representing the pairs
+    # filtered_duplicates = duplicates[
+    #     duplicates["id1"].isin(allowed_ids) &
+    #     duplicates["id2"].isin(allowed_ids)
+    # ]
+    # semantic_duplicates = filtered_duplicates[
+    #     filtered_duplicates['type'] == "SEMANTIC"
+    # ]
+    # partial_duplicates = filtered_duplicates[filtered_duplicates['type'] == "PARTIAL"]
+
+    # G_semantic = nx.from_pandas_edgelist(semantic_duplicates, "id1", "id2")
+    # G_partial = nx.from_pandas_edgelist(partial_duplicates, "id1", "id2")
+
     return duplicates
 
 
@@ -107,7 +130,7 @@ def aggregate_easy_duplicates(
 
     if len(easy_duplicates[
         easy_duplicates['id1'] >= easy_duplicates['id2']
-            ]) > 0:
+    ]) > 0:
         print('PROBLEM: id1 >= id2 in the "easy" duplicates table')
 
     return easy_duplicates

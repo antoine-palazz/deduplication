@@ -38,7 +38,7 @@ def compare_text_lengths(
          thresholds_desc_len["absolute"][lingual]["NON"]) or
         (relative_lengths_diff >
             thresholds_desc_len["relative"][lingual]["NON"])
-       ):
+    ):
 
         return "too_long"
 
@@ -47,7 +47,7 @@ def compare_text_lengths(
          thresholds_desc_len["absolute"][lingual]["PARTIAL"]) and
         (relative_lengths_diff >
             thresholds_desc_len["relative"][lingual]["PARTIAL"])
-       ):
+    ):
 
         return "different_lengths"
 
@@ -83,12 +83,12 @@ def is_non_duplicate(
     thresholds_similarity: dict
 ) -> tuple[bool, str]:
 
-    if row_1["country_id"] != row_2["country_id"]:
-        return (True, "NON")  # To remove?
+    # if row_1["country_id"] != row_2["country_id"]:
+    #     return (True, "NON")  # To remove?
 
     for col in str_cols["no_description"]:
         if row_1[col] != "" and row_2[col] != "":
-            min_len_field = min(len(row_1[col]), len(row_2[col]))
+            min_len_field = int(1.05*min(len(row_1[col]), len(row_2[col])))
             if (
                 jaro_winkler_similarity(row_1[col], row_2[col])
                 < thresholds_similarity[lingual][dates_differ][col]
@@ -130,7 +130,12 @@ def is_partial(
     if lengths_differ == "too_long":
         return (True, "NON")  # Description too long
 
-    if lengths_differ == "same_size" and (
+    # if lengths_differ == "same_size" and (
+    #     jaro_winkler_similarity(row_1["filtered_description"],
+    #                             row_2["filtered_description"]) <
+    #     thresholds_similarity[lingual][dates_differ]["filtered_description"]
+    # ):
+    if (
         jaro_winkler_similarity(row_1["filtered_description"],
                                 row_2["filtered_description"]) <
         thresholds_similarity[lingual][dates_differ]["filtered_description"]
@@ -138,8 +143,8 @@ def is_partial(
         return (True, "NON")  # Descriptions of similar len but too different
 
     type_to_return = "Unknown"
-    one_longer_than_two = (len(row_2["filtered_description"]) <
-                           len(row_1["filtered_description"]))
+    # one_longer_than_two = (len(row_2["filtered_description"]) <
+    #                        len(row_1["filtered_description"]))
 
     one_more_complete = 0
     two_more_complete = 0
@@ -165,36 +170,37 @@ def is_partial(
         return (True, "NON")  # Too many empty fields
 
     elif one_more_complete * two_more_complete == 1:
-        if lengths_differ == "different_lengths":
-            type_to_return = "PARTIAL"  # Compensation by description length
-        else:
-            return (True, "NON")  # More than one field missing
+        # if lengths_differ == "different_lengths":
+        #     type_to_return = "PARTIAL"  # Compensation by description length
+        # else:
+        return (True, "NON")  # More than one field missing
 
     elif one_more_complete + two_more_complete >= 1:
 
-        if one_more_complete == 1 and not (
-            lengths_differ == "different_lengths" and
-            not one_longer_than_two
-        ):
+        if (one_more_complete == 1):  # and not (
+            # lengths_differ == "different_lengths" and
+            # not one_longer_than_two
             type_to_return = "PARTIAL"
 
-        elif one_more_complete == 2 and (
-            lengths_differ == "different_lengths" and
-            not one_longer_than_two
-        ):
+        elif (one_more_complete == 2  # and (
+              # lengths_differ == "different_lengths" and
+              # not one_longer_than_two)
+              ):
+            # type_to_return = "PARTIAL"
+            return (True, "NON")
+
+        elif (two_more_complete == 1  # and not (
+              # lengths_differ == "different_lengths" and
+              # one_longer_than_two)
+              ):
             type_to_return = "PARTIAL"
 
-        elif two_more_complete == 1 and not (
-            lengths_differ == "different_lengths" and
-            one_longer_than_two
-        ):
-            type_to_return = "PARTIAL"
-
-        elif two_more_complete == 2 and not (
-            lengths_differ == "different_lengths" and
-            one_longer_than_two
-        ):
-            type_to_return = "PARTIAL"
+        elif (two_more_complete == 2  # and not (
+              # lengths_differ == "different_lengths" and
+              # one_longer_than_two)
+              ):
+            # type_to_return = "PARTIAL"
+            return (True, "NON")
 
         elif one_more_complete + two_more_complete == 1:
             return (False, "Unknown")
@@ -202,15 +208,15 @@ def is_partial(
         else:
             return (True, "NON")  # More than one field missing
 
-    elif lengths_differ == "different_lengths":
-        type_to_return = "PARTIAL"  # No info on missing fields but longer desc
+    # elif lengths_differ == "different_lengths":
+    #     type_to_return = "PARTIAL"  # No info on missing fields but longer desc
 
     else:
         return (False, "Unknown")  # No info at all
 
     if type_to_return == "PARTIAL":
         if row_1["retrieval_date"] != row_2["retrieval_date"]:
-            return (True, "NON")  # PARTIAL + TEMPORAL = NON
+            return (True, "NON")  # PARTIAL + TEMPORAL = NON?
         return (True, "PARTIAL")
 
     return (False, "Unknown")

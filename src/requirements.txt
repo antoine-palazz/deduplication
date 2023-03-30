@@ -1,3 +1,4 @@
+autopep8
 black~=22.0
 fastparquet
 fasttext-langdetect

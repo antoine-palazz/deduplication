@@ -15,7 +15,7 @@ def create_pipeline(**kwargs) -> Pipeline:
         [
             node(
                 func=tokenize_texts,
-                inputs=["extensively_preprocessed_dataset",
+                inputs=["well_preprocessed_and_described_offers",
                         "params:hyperparameters",
                         "params:max_df_tokenizer"
                         ],
@@ -25,7 +25,7 @@ def create_pipeline(**kwargs) -> Pipeline:
 
             node(
                 func=find_subtle_duplicates_from_tokens,
-                inputs=["extensively_preprocessed_dataset",
+                inputs=["well_preprocessed_and_described_offers",
                         "tokens_tf_idf",
                         "params:str_cols",
                         "params:threshold_semantic_tf_idf",

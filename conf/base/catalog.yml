@@ -52,9 +52,9 @@ extensively_preprocessed_located_offers:
   save_args:
       index: False
 
-extensively_preprocessed_international_offers:
+well_preprocessed_and_described_offers:
   type: pandas.ParquetDataSet
-  filepath: data/03_primary/extensively_preprocessed_international_offers.pq
+  filepath: data/03_primary/well_preprocessed_and_described_offers.pq
   layer: primary
   save_args:
       index: False

@@ -7,8 +7,8 @@
 max_df_tokenizer: 0.001
 threshold_semantic_tf_idf:
     monolingual:
+        close_dates: 0.85
+        far_dates: 0.9
+    multilingual:
         close_dates: 0.9
         far_dates: 0.95
-    multilingual:
-        close_dates: 0.95
-        far_dates: 0.99
