@@ -11,17 +11,42 @@ from multiprocessing import Pool, cpu_count
 
 import nltk
 import pandas as pd
+import torch
 from ftlangdetect import detect
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from tqdm import tqdm
+from transformers import (
+    AutoModelForTokenClassification,
+    AutoTokenizer,
+    logging,
+    pipeline,
+)
 from unidecode import unidecode
 
+logging.set_verbosity_error()
 nltk.download('punkt')
 nltk.download('stopwords')
 nltk.download('wordnet')
 tqdm.pandas()
 warnings.filterwarnings('ignore')
+
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+print(f"The device for NER is {device}")
+
+tokenizer_ner = AutoTokenizer.from_pretrained(
+    "Davlan/distilbert-base-multilingual-cased-ner-hrl"
+)
+model_ner = AutoModelForTokenClassification.from_pretrained(
+    "Davlan/distilbert-base-multilingual-cased-ner-hrl"
+)
+model_ner.to(device)
+ner_pipeline = pipeline(
+    "ner",
+    model=model_ner,
+    tokenizer=tokenizer_ner,
+    device=device
+)
 
 
 def remove_nans(data: pd.DataFrame) -> pd.DataFrame:
@@ -64,9 +89,10 @@ def find_language_from_text(
     return text
 
 
-def preprocess_data_basic(
+def preprocess_data_very_basic(
     data: pd.DataFrame,
-    str_cols: dict
+    str_cols: dict,
+    compute_ner: bool = False
 ) -> pd.DataFrame:
 
     preprocessed_data = remove_nans(data)
@@ -76,6 +102,30 @@ def preprocess_data_basic(
     ].progress_apply(
         remove_html
     )
+
+    preprocessed_data = create_concatenated_column(
+        data=preprocessed_data,
+        list_cols_to_concatenate=str_cols["normal"],
+        concatenated_col_name="concatenated_raw_text"
+    )
+
+    if compute_ner:
+        # Very long to run + requires GPU
+        # Only useful for partials identification in utils.py
+        preprocessed_data = encode_ner(preprocessed_data)
+
+    return preprocessed_data
+
+
+def preprocess_data_basic(
+    data: pd.DataFrame,
+    str_cols: dict
+) -> pd.DataFrame:
+
+    preprocessed_data = preprocess_data_very_basic(
+        data,
+        str_cols=str_cols,
+        compute_ner=False)
 
     preprocessed_data[str_cols["normal"]] = preprocessed_data[
         str_cols["normal"]
@@ -416,3 +466,32 @@ def filter_out_poorly_described_offers(
         f'Nb of not poorly described offers: {len(well_described_offers)}'
     )
     return well_described_offers
+
+
+def ner_one_text(
+    text: str
+) -> set:
+
+    raw_entities = ner_pipeline(text)
+
+    filtered_entities = []
+    for entity in raw_entities:
+        if (
+            entity['entity'] in ['I-LOC', 'I-ORG'] and
+            len(entity['word']) >= 3
+        ):
+            clean_entity = entity['word'].replace("##", "")
+            filtered_entities.append(clean_entity)
+
+    return set(filtered_entities)
+
+
+def encode_ner(
+    data: pd.DataFrame
+) -> pd.DataFrame:
+
+    data["NER"] = data["concatenated_raw_text"].progress_apply(
+        ner_one_text
+    )
+
+    return data

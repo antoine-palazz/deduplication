@@ -138,6 +138,8 @@ def is_partial(
     if lengths_differ == "too_long":
         return (True, "NON")  # Description too long
 
+    # START VERSION WITH NER HERE
+
     type_to_return = "Unknown"
     one_longer_than_two = (len(row_2["filtered_description"]) <
                            len(row_1["filtered_description"]))
@@ -208,6 +210,8 @@ def is_partial(
 
     else:
         return (False, "Unknown")  # No info at all
+
+    # END SEQUENCE WITH NER HERE
 
     if type_to_return == "PARTIAL":
         if row_1["retrieval_date"] != row_2["retrieval_date"]:

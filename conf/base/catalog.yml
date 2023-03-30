@@ -9,6 +9,13 @@ wi_dataset:
   layer: raw
 
 
+barely_preprocessed_dataset:
+  type: pandas.ParquetDataSet
+  filepath: data/02_intermediate/barely_preprocessed_dataset.pq
+  layer: intermediate
+  save_args:
+      index: False
+
 preprocessed_dataset:
   type: pandas.ParquetDataSet
   filepath: data/02_intermediate/preprocessed_dataset.pq

@@ -11,12 +11,20 @@ from .nodes import (
     filter_out_poorly_described_offers,
     preprocess_data_basic,
     preprocess_data_extensive,
+    preprocess_data_very_basic,
 )
 
 
 def create_pipeline(**kwargs) -> Pipeline:
     return pipeline(
         [
+            node(
+                func=preprocess_data_very_basic,
+                inputs=["wi_dataset",
+                        "params:str_cols"],
+                outputs="barely_preprocessed_dataset",
+                name="very_basic_preprocessing_data_node"
+            ),
             node(
                 func=preprocess_data_basic,
                 inputs=["wi_dataset",
