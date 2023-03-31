@@ -94,7 +94,7 @@ def is_non_duplicate(
         return (True, "NON")  # To remove?
 
     # for col in str_cols["no_description"]:
-    for col in str_cols["filtered"]:
+    for col in str_cols["normal"]:
         if row_1[col] != "" and row_2[col] != "":
             min_len_field = int(1.05*min(len(row_1[col]), len(row_2[col])))
             if (
