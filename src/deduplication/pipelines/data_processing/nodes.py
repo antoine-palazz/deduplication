@@ -92,7 +92,7 @@ def find_language_from_text(
 def preprocess_data_very_basic(
     data: pd.DataFrame,
     str_cols: dict,
-    compute_ner: bool = False
+    ner: dict
 ) -> pd.DataFrame:
 
     preprocessed_data = remove_nans(data)
@@ -109,7 +109,7 @@ def preprocess_data_very_basic(
         concatenated_col_name="concatenated_raw_text"
     )
 
-    if compute_ner:
+    if ner['compute']:
         # Very long to run + requires GPU
         # Only useful for partials identification in utils.py
         preprocessed_data = encode_ner(preprocessed_data)
@@ -119,13 +119,14 @@ def preprocess_data_very_basic(
 
 def preprocess_data_basic(
     data: pd.DataFrame,
-    str_cols: dict
+    str_cols: dict,
+    ner: dict
 ) -> pd.DataFrame:
 
     preprocessed_data = preprocess_data_very_basic(
         data,
         str_cols=str_cols,
-        compute_ner=False)
+        ner=ner)
 
     preprocessed_data[str_cols["normal"]] = preprocessed_data[
         str_cols["normal"]
@@ -147,8 +148,13 @@ def filter_out_incomplete_offers(
     nb_allowed_nans_for_filtering: dict,
 ) -> pd.DataFrame:
 
+    if "NER" in data.columns:
+        data_no_ner = data.drop("NER", axis=1)
+    else:
+        data_no_ner = data.copy()
+
     filtered_data_on_nans = data[
-        (data.apply(lambda x: x == "").sum(axis=1) <=
+        (data_no_ner.apply(lambda x: x == "").sum(axis=1) <=
          nb_allowed_nans_for_filtering[type_easy])
     ]
 
@@ -220,7 +226,7 @@ def remove_stopwords(
     stopwords_list: set
 ) -> pd.Series:
 
-    with Pool(int(cpu_count()/3)) as pool:
+    with Pool(int(cpu_count()/2)) as pool:
         texts_no_stopwords = pool.map(
             partial(
                 remove_stopwords_from_text,
@@ -249,7 +255,7 @@ def lemmatize_texts(
 
     lem = WordNetLemmatizer()
 
-    with Pool(int(cpu_count()/3)) as pool:
+    with Pool(int(cpu_count()/2)) as pool:
         lemmatized_texts = pool.map(
             partial(lemmatize_text, lemmatizer=lem),
             tqdm(texts)
@@ -496,7 +502,7 @@ def ner_one_text(
             index = entity['index']
             filtered_entities.append(clean_entity)
 
-    return set([entity for entity in filtered_entities if len(entity) >= 3])
+    return set([entity for entity in filtered_entities if len(entity) > 3])
 
 
 def encode_ner(
@@ -505,6 +511,10 @@ def encode_ner(
 
     data["NER"] = data["concatenated_raw_text"].progress_apply(
         ner_one_text
+    )
+
+    data["NER"] = data["NER"].progress_apply(
+        lambda x: set([unidecode(entity.lower()) for entity in x])
     )
 
     return data

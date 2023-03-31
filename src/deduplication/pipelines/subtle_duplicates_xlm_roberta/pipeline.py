@@ -31,7 +31,8 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:threshold_date",
                         "params:thresholds_similarity",
                         "params:thresholds_desc_len",
-                        "params:hyperparameters"
+                        "params:hyperparameters",
+                        "params:ner"
                         ],
                 outputs="subtle_duplicates_xlm_roberta",
                 name="identify_subtle_duplicates_xlm_roberta_node"

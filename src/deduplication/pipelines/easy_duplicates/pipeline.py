@@ -20,7 +20,8 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:str_cols",
                         "params:threshold_date",
                         "params:thresholds_similarity",
-                        "params:thresholds_desc_len"],
+                        "params:thresholds_desc_len",
+                        "params:ner"],
                 outputs="gross_full_duplicates",
                 name="identify_gross_full_duplicates_node"
             ),
@@ -34,7 +35,8 @@ def create_pipeline(**kwargs) -> Pipeline:
                     "params:str_cols",
                     "params:threshold_date",
                     "params:thresholds_similarity",
-                    "params:thresholds_desc_len"
+                    "params:thresholds_desc_len",
+                    "params:ner"
                     ],
                 outputs="gross_semantic_duplicates",
                 name="identify_gross_semantic_duplicates_node"
@@ -48,7 +50,8 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:str_cols",
                         "params:threshold_date",
                         "params:thresholds_similarity",
-                        "params:thresholds_desc_len"],
+                        "params:thresholds_desc_len",
+                        "params:ner"],
                 outputs="gross_partial_duplicates",
                 name="identify_gross_partial_duplicates_node"
             ),
@@ -62,7 +65,8 @@ def create_pipeline(**kwargs) -> Pipeline:
                     "params:str_cols",
                     "params:threshold_date",
                     "params:thresholds_similarity",
-                    "params:thresholds_desc_len"
+                    "params:thresholds_desc_len",
+                    "params:ner"
                 ],
                 outputs="gross_semantic_multilingual_duplicates",
                 name="identify_gross_semantic_multilingual_duplicates_node"
@@ -75,6 +79,7 @@ def create_pipeline(**kwargs) -> Pipeline:
             'multilingual_bert',
             'xlm_roberta',
             'final_models',
-            'final_models_parallel_part'
+            'final_models_parallel_part',
+            'test_ner'
             ]
     )

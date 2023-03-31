@@ -31,10 +31,12 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:threshold_date",
                         "params:thresholds_similarity",
                         "params:thresholds_desc_len",
-                        "params:hyperparameters"
+                        "params:hyperparameters",
+                        "params:ner"
                         ],
                 outputs="subtle_duplicates_distiluse_multilingual",
-                name="identify_subtle_duplicates_distiluse_multilingual_node"
+                name="identify_subtle_duplicates_distiluse_multilingual_node",
+                tags=['test_ner']
             )
         ],
         tags=[

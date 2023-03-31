@@ -33,7 +33,8 @@ def create_pipeline(**kwargs) -> Pipeline:
                     'multilingual_bert',
                     'xlm_roberta',
                     'final_models',
-                    'final_models_parallel_part'
+                    'final_models_parallel_part',
+                    'test_ner'
                      ]
             ),
             node(
@@ -48,7 +49,8 @@ def create_pipeline(**kwargs) -> Pipeline:
                     'multilingual_bert',
                     'xlm_roberta',
                     'final_models',
-                    'final_models_parallel_part'
+                    'final_models_parallel_part',
+                    'test_ner'
                      ]
             ),
 
@@ -145,14 +147,14 @@ def create_pipeline(**kwargs) -> Pipeline:
                     },
                 outputs="best_duplicates",
                 name="aggregate_all_duplicates_from_best_models_node",
-                tags=['final_models', 'final_models_sequential_part']
+                tags=['final_models', 'final_models_sequential_part', 'test_ner']
             ),
             node(
                 func=describe_duplicates,
                 inputs=["best_duplicates"],
                 outputs="best_duplicates_description",
                 name="describe_best_duplicates_node",
-                tags=['final_models', 'final_models_sequential_part']
+                tags=['final_models', 'final_models_sequential_part', 'test_ner']
             )
         ]
     )

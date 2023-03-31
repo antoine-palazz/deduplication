@@ -17,7 +17,8 @@ def identify_exact_duplicates(
     str_cols: dict,
     threshold_date: dict,
     thresholds_similarity: dict,
-    thresholds_desc_len: dict
+    thresholds_desc_len: dict,
+    ner: dict
 ) -> pd.DataFrame:
 
     n_ads = len(data)
@@ -76,7 +77,8 @@ def identify_exact_duplicates(
                             str_cols=str_cols,
                             threshold_date=threshold_date,
                             thresholds_similarity=thresholds_similarity,
-                            thresholds_desc_len=thresholds_desc_len
+                            thresholds_desc_len=thresholds_desc_len,
+                            ner=ner
                         )
 
                         if duplicates_type != "NON":

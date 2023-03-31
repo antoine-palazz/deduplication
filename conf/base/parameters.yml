@@ -24,6 +24,10 @@ SEMANTIC: "SEMANTIC"
 SEMANTIC_PARTIAL: "SEMANTIC_PARTIAL"
 SEMANTIC_MULTILINGUAL: "SEMANTIC_MULTILINGUAL"
 
+ner:
+  compute: False
+  use: False
+
 hyperparameters:
     batch_size: 8
     dim_tokens: 100

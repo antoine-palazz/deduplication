@@ -58,16 +58,29 @@ def compare_text_lengths(
     return "same_length"
 
 
+def compute_difference_sets(
+    set_1: set,
+    set_2: set
+):
+    new_set_1 = set([
+        el for el in set_1 if all(
+            [jaro_winkler_similarity(el, el_to_compare) < 0.8
+             for el_to_compare in set_2]
+        )
+    ])
+    return new_set_1
+
+
 def is_full(
     row_1,
     row_2,
-    current_type: str
+    current_type: str,
+    str_cols: dict
 ) -> tuple[bool, str]:
 
     isfull = (
         (current_type == "FULL") and
-        ((row_1.drop(["id", "retrieval_date"]) ==
-          row_2.drop(["id", "retrieval_date"])).all())
+        ((row_1[str_cols["normal"]] == row_2[str_cols["normal"]]).all())
     )
     if isfull:
         if row_1["retrieval_date"] == row_2["retrieval_date"]:
@@ -117,7 +130,6 @@ def is_partial(
     lingual: str,
     dates_differ: str,
     str_cols: dict,
-    thresholds_similarity: dict,
     thresholds_desc_len: dict
 ) -> tuple[bool, str]:
 
@@ -126,7 +138,7 @@ def is_partial(
          row_2[str_cols["no_description"]]).all() and
         (row_1[str_cols["no_description"]] != "").all()
     ):
-        return (False, "Unknown")  # Partial semantic (easy)
+        return (False, "Unknown")  # SEMANTIC PARTIAL (easy)
 
     lengths_differ = compare_text_lengths(
         row_1["filtered_description"],
@@ -208,10 +220,75 @@ def is_partial(
     elif lengths_differ == "different_lengths":
         type_to_return = "PARTIAL"  # No info on missing fields but longer desc
 
+    # elif both_incomplete == 2:
+    #     type_to_return = "PARTIAL"
+
     else:
         return (False, "Unknown")  # No info at all
 
     # END SEQUENCE WITH NER HERE
+
+    if type_to_return == "PARTIAL":
+        if row_1["retrieval_date"] != row_2["retrieval_date"]:
+            return (True, "NON")  # PARTIAL + TEMPORAL = NON?
+        return (True, "PARTIAL")
+
+    return (False, "Unknown")
+
+
+def is_partial_with_ner(
+    row_1,
+    row_2,
+    lingual: str,
+    str_cols: dict,
+    thresholds_desc_len: dict
+) -> tuple[bool, str]:
+
+    if (
+        (row_1[str_cols["no_description"]] ==
+         row_2[str_cols["no_description"]]).all() and
+        (row_1[str_cols["no_description"]] != "").all()
+    ):
+        return (False, "Unknown")  # SEMANTIC PARTIAL (easy)
+
+    lengths_differ = compare_text_lengths(
+        row_1["filtered_description"],
+        row_2["filtered_description"],
+        lingual=lingual,
+        thresholds_desc_len=thresholds_desc_len
+    )
+
+    if lengths_differ == "too_long":
+        return (True, "NON")  # Description too long
+
+    # START VERSION WITH OR WITHOUT NER HERE
+
+    if (
+        (row_1[str_cols["filtered"]] != "").all() and
+        (row_2[str_cols["filtered"]] != "").all()
+    ):
+        return (False, "Unknown")  # No empty field
+
+    ner_row_1 = set(row_1["NER"])
+    ner_row_2 = set(row_2["NER"])
+
+    filtered_ner_1 = ner_row_1.difference(ner_row_2)
+    filtered_ner_2 = ner_row_2.difference(ner_row_1)
+
+    unique_ner_1 = compute_difference_sets(filtered_ner_1, filtered_ner_2)
+    unique_ner_2 = compute_difference_sets(filtered_ner_2, filtered_ner_1)
+
+    if len(unique_ner_1) == 0 and len(unique_ner_2) == 0:
+        return (False, "Unknown")  # Same entities in each row
+
+    if len(unique_ner_1) == len(unique_ner_2):
+        return (False, "Unknown")  # As many information in each ad
+
+    if lengths_differ == "same_size" and lingual == "multilingual":
+        return (False, "Unknown")  # Hard to conclude on multilingual
+
+    type_to_return = "PARTIAL"
+    # END SEQUENCE WITH OR WITHOUT NER HERE
 
     if type_to_return == "PARTIAL":
         if row_1["retrieval_date"] != row_2["retrieval_date"]:
@@ -230,10 +307,16 @@ def differentiate_duplicates(
     str_cols: dict,
     threshold_date: dict,
     thresholds_similarity: dict,
-    thresholds_desc_len: dict
+    thresholds_desc_len: dict,
+    ner: dict
 ) -> str:
 
-    isfull, type_to_return = is_full(row_1, row_2, current_type=current_type)
+    isfull, type_to_return = is_full(
+        row_1,
+        row_2,
+        current_type=current_type,
+        str_cols=str_cols
+    )
     if isfull:
         return type_to_return
 
@@ -249,15 +332,24 @@ def differentiate_duplicates(
     if isnon:
         return type_to_return
 
-    ispartial, type_to_return = is_partial(
-        row_1,
-        row_2,
-        lingual=lingual,
-        dates_differ=dates_differ,
-        str_cols=str_cols,
-        thresholds_similarity=thresholds_similarity,
-        thresholds_desc_len=thresholds_desc_len
-    )
+    if ner["compute"] and ner["use"]:
+        ispartial, type_to_return = is_partial_with_ner(
+            row_1,
+            row_2,
+            lingual=lingual,
+            str_cols=str_cols,
+            thresholds_desc_len=thresholds_desc_len
+        )
+    else:
+        ispartial, type_to_return = is_partial(
+            row_1,
+            row_2,
+            lingual=lingual,
+            dates_differ=dates_differ,
+            str_cols=str_cols,
+            thresholds_desc_len=thresholds_desc_len
+        )
+
     if ispartial:
         return type_to_return
 
@@ -305,7 +397,8 @@ def find_subtle_duplicates_from_tokens(
     threshold_date: dict,
     thresholds_similarity: dict,
     thresholds_desc_len: dict,
-    hyperparameters: dict
+    hyperparameters: dict,
+    ner: dict
 ) -> list:
 
     duplicates = []
@@ -354,7 +447,8 @@ def find_subtle_duplicates_from_tokens(
                         str_cols=str_cols,
                         threshold_date=threshold_date,
                         thresholds_similarity=thresholds_similarity,
-                        thresholds_desc_len=thresholds_desc_len
+                        thresholds_desc_len=thresholds_desc_len,
+                        ner=ner
                     )
 
                     if duplicates_type != "NON":

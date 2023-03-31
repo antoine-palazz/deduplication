@@ -11,7 +11,6 @@ from .nodes import (
     filter_out_poorly_described_offers,
     preprocess_data_basic,
     preprocess_data_extensive,
-    preprocess_data_very_basic,
 )
 
 
@@ -19,16 +18,10 @@ def create_pipeline(**kwargs) -> Pipeline:
     return pipeline(
         [
             node(
-                func=preprocess_data_very_basic,
-                inputs=["wi_dataset",
-                        "params:str_cols"],
-                outputs="barely_preprocessed_dataset",
-                name="very_basic_preprocessing_data_node"
-            ),
-            node(
                 func=preprocess_data_basic,
                 inputs=["wi_dataset",
-                        "params:str_cols"],
+                        "params:str_cols",
+                        "params:ner"],
                 outputs="preprocessed_dataset",
                 name="basic_preprocessing_data_node"
             ),
@@ -39,7 +32,8 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:required_cols_for_filtering",
                         "params:nb_allowed_nans_for_filtering"],
                 outputs="preprocessed_offers_for_full",
-                name="filter_offers_for_full_node"
+                name="filter_offers_for_full_node",
+                tags=['test_ner']
             ),
 
             node(
@@ -62,7 +56,8 @@ def create_pipeline(**kwargs) -> Pipeline:
                 outputs=(
                     "extensively_preprocessed_described_offers_for_semantic"
                 ),
-                name="filter_described_offers_for_semantic_node"
+                name="filter_described_offers_for_semantic_node",
+                tags=['test_ner']
             ),
             node(
                 func=filter_out_incomplete_offers,
@@ -71,7 +66,8 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:required_cols_for_filtering",
                         "params:nb_allowed_nans_for_filtering"],
                 outputs="extensively_preprocessed_detailed_offers_for_semantic_partial",
-                name="filter_detailed_offers_for_semantic_partial_node"
+                name="filter_detailed_offers_for_semantic_partial_node",
+                tags=['test_ner']
             ),
             node(
                 func=filter_out_incomplete_offers,
@@ -82,7 +78,8 @@ def create_pipeline(**kwargs) -> Pipeline:
                 outputs=(
                     "extensively_preprocessed_detailed_offers_for_semantic_lingual"
                 ),
-                name="filter_detailed_offers_for_semantic_multilingual_node"
+                name="filter_detailed_offers_for_semantic_multilingual_node",
+                tags=['test_ner']
             ),
 
             node(
