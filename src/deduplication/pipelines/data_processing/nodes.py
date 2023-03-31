@@ -475,15 +475,28 @@ def ner_one_text(
     raw_entities = ner_pipeline(text)
 
     filtered_entities = []
+    end, index = 0, 0
+
     for entity in raw_entities:
-        if (
-            entity['entity'] in ['I-LOC', 'I-ORG'] and
-            len(entity['word']) >= 3
-        ):
+
+        if entity['entity'] in ['B-LOC', 'B-ORG']:
             clean_entity = entity['word'].replace("##", "")
+            end = entity['end']
+            index = entity['index']
             filtered_entities.append(clean_entity)
 
-    return set(filtered_entities)
+        if (
+            (entity['entity'] in ['I-LOC', 'I-ORG']) and
+            (entity['index'] == index + 1) and
+            (entity['start'] == end)
+        ):
+            beginning = filtered_entities.pop()
+            clean_entity = beginning + entity['word'].replace("##", "")
+            end = entity['end']
+            index = entity['index']
+            filtered_entities.append(clean_entity)
+
+    return set([entity for entity in filtered_entities if len(entity) >= 3])
 
 
 def encode_ner(
