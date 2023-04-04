@@ -403,7 +403,6 @@ def differentiate_duplicates(
     dates_differ: str,
     current_type: str,
     str_cols: dict,
-    threshold_date: dict,
     thresholds_similarity: dict,
     thresholds_desc_len: dict,
     ner: dict
@@ -419,7 +418,6 @@ def differentiate_duplicates(
         dates_differ (str): "close_dates" / "far_dates" / "too_much"
         current_type (str): current assumption for the type of duplicate
         str_cols (dict): Columns to compare
-        threshold_date (dict): The thresholds for dates
         thresholds_similarity (dict): The thresholds for text lengths
         thresholds_desc_len (dict): Thresholds to compare description lengths
         ner (dict): booleans to know whether to use NER or not
@@ -443,7 +441,6 @@ def differentiate_duplicates(
         lingual=lingual,
         dates_differ=dates_differ,
         str_cols=str_cols,
-        threshold_date=threshold_date,
         thresholds_similarity=thresholds_similarity
     )
     if isnon:  # Do we have a duplicate at all?
@@ -621,7 +618,6 @@ def find_subtle_duplicates_from_tokens(
                         dates_differ=dates_diff,
                         current_type="SEMANTIC",
                         str_cols=str_cols,
-                        threshold_date=threshold_date,
                         thresholds_similarity=thresholds_similarity,
                         thresholds_desc_len=thresholds_desc_len,
                         ner=ner
