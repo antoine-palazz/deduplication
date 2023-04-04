@@ -425,7 +425,6 @@ def differentiate_duplicates(
     Returns:
         str: type of duplicates (or "NON")
     """
-
     isfull, type_to_return = is_full(
         row_1,
         row_2,
@@ -566,7 +565,6 @@ def find_subtle_duplicates_from_tokens(
     Returns:
         list: Duplicates found with the embeddings
     """
-
     duplicates = []
 
     data_arr = data.values  # Convert data to np array for faster computations
