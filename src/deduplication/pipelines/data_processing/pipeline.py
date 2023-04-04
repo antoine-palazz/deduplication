@@ -32,8 +32,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:required_cols_for_filtering",
                         "params:nb_allowed_nans_for_filtering"],
                 outputs="preprocessed_offers_for_full",
-                name="filter_offers_for_full_node",
-                tags=['test_ner']
+                name="filter_offers_for_full_node"
             ),
 
             node(
@@ -54,10 +53,9 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:required_cols_for_filtering",
                         "params:nb_allowed_nans_for_filtering"],
                 outputs=(
-                    "extensively_preprocessed_described_offers_for_semantic"
+                    "very_preprocessed_described_offers_for_semantic"
                 ),
-                name="filter_described_offers_for_semantic_node",
-                tags=['test_ner']
+                name="filter_described_offers_for_semantic_node"
             ),
             node(
                 func=filter_out_incomplete_offers,
@@ -65,9 +63,10 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:SEMANTIC_PARTIAL",
                         "params:required_cols_for_filtering",
                         "params:nb_allowed_nans_for_filtering"],
-                outputs="extensively_preprocessed_detailed_offers_for_semantic_partial",
-                name="filter_detailed_offers_for_semantic_partial_node",
-                tags=['test_ner']
+                outputs=(
+                    "very_preprocessed_detailed_offers_for_semantic_partial"
+                ),
+                name="filter_detailed_offers_for_semantic_partial_node"
             ),
             node(
                 func=filter_out_incomplete_offers,
@@ -76,10 +75,9 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:required_cols_for_filtering",
                         "params:nb_allowed_nans_for_filtering"],
                 outputs=(
-                    "extensively_preprocessed_detailed_offers_for_semantic_lingual"
+                    "very_preprocessed_detailed_offers_for_semantic_lingual"
                 ),
-                name="filter_detailed_offers_for_semantic_multilingual_node",
-                tags=['test_ner']
+                name="filter_detailed_offers_for_semantic_multilingual_node"
             ),
 
             node(

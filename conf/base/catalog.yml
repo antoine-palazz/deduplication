@@ -24,30 +24,30 @@ extensively_preprocessed_dataset:
   save_args:
       index: False
 
-preprocessed_full_offers:
+preprocessed_offers_for_full:
   type: pandas.ParquetDataSet
   filepath: data/03_primary/preprocessed_full_offers.pq
   layer: primary
   save_args:
       index: False
 
-preprocessed_quasi_complete_offers:
+very_preprocessed_described_offers_for_semantic:
   type: pandas.ParquetDataSet
-  filepath: data/03_primary/preprocessed_quasi_complete_offers.pq
+  filepath: data/03_primary/very_preprocessed_described_offers_for_semantic.pq
   layer: primary
   save_args:
       index: False
 
-extensively_preprocessed_described_offers:
+very_preprocessed_detailed_offers_for_semantic_partial:
   type: pandas.ParquetDataSet
-  filepath: data/03_primary/extensively_preprocessed_described_offers.pq
+  filepath: data/03_primary/very_preprocessed_detailed_offers_for_semantic_partial.pq
   layer: primary
   save_args:
       index: False
 
-extensively_preprocessed_located_offers:
+very_preprocessed_detailed_offers_for_semantic_lingual:
   type: pandas.ParquetDataSet
-  filepath: data/03_primary/extensively_preprocessed_located_offers.pq
+  filepath: data/03_primary/very_preprocessed_detailed_offers_for_semantic_lingual.pq
   layer: primary
   save_args:
       index: False
