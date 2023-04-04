@@ -4,28 +4,28 @@
 # Documentation for this file format can be found in "Parameters"
 # Link: https://kedro.readthedocs.io/en/0.18.6/kedro_project_setup/configuration.html#parameters
 
-list_cols_to_match:
-    FULL:
+list_cols_to_match:  # What columns need to match to find ...
+    FULL:  # Full: all columns
         [
             ['title', 'company_name', 'location', 'description', 'country_id']
         ]
-    SEMANTIC:
+    SEMANTIC:  # Semantic: the title and a long enough extract of the description
         [
             ['title', 'beginning_filtered_description'],
             ['title', 'end_filtered_description']
         ]
-    SEMANTIC_PARTIAL:
+    SEMANTIC_PARTIAL:  # Semantic: all but the description
         [
             ['title', 'company_name', 'location']
         ]
-    SEMANTIC_MULTILINGUAL:
+    SEMANTIC_MULTILINGUAL:  # Semantic: all offers from the same company for the same location on the same day
         [
             ['company_name', 'location', 'retrieval_date']
         ]
 
-list_cols_to_mismatch:
+list_cols_to_mismatch:  # Are there columns that we want to differ?
     FULL: [[]]
     SEMANTIC: [[]]
     SEMANTIC_PARTIAL: [[]]
-    SEMANTIC_MULTILINGUAL: [['language']]
+    SEMANTIC_MULTILINGUAL: [['language']]  # Extra requirement for multilingual semantic: languages need to differ
 

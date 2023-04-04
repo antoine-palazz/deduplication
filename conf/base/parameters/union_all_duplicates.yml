@@ -6,7 +6,7 @@
 
 # Non-multilingual must be put in the list before multilingual
 
-final_duplicates_str_list:
+final_duplicates_str_list:  # What models were kept for the final submissions?
     [
     'subtle_duplicates_tf_idf',
     'subtle_duplicates_distiluse_multilingual'

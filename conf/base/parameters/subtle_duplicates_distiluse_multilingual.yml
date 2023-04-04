@@ -4,10 +4,10 @@
 # Documentation for this file format can be found in "Parameters"
 # Link: https://docs.kedro.org/en/0.18.7/kedro_project_setup/configuration.html#parameters
 
-threshold_semantic_distiluse_multilingual:
-    monolingual:
-        close_dates: 0.85
-        far_dates: 0.9
-    multilingual:
-        close_dates: 0.8
-        far_dates: 0.85
+threshold_semantic_distiluse_multilingual:  # Thresholds for cosine similarity between pairs
+    monolingual:  # When the languages are the same
+        close_dates: 0.85  # The dates of the offers are close
+        far_dates: 0.9  # The dates of the offers are far apart
+    multilingual:  # When the languages differ
+        close_dates: 0.8  # The dates of the offers are close
+        far_dates: 0.85  # The dates of the offers are far apart

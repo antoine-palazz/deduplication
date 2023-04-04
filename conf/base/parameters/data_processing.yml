@@ -4,31 +4,31 @@
 # Documentation for this file format can be found in "Parameters"
 # Link: https://kedro.readthedocs.io/en/0.18.6/kedro_project_setup/configuration.html#parameters
 
-cols_to_concatenate:
+cols_to_concatenate:  # Several models need to take only one aggregated column as input
     normal: ['title', 'company_name', 'location', 'country_id', 'description']
     filtered: ['title', 'company_name', 'location', 'country_id', 'filtered_description']
 
-required_cols_for_filtering:
+required_cols_for_filtering:  # Which columns do we not allow to be NULL?
     FULL: []
     SEMANTIC: ['title', 'description']
     SEMANTIC_PARTIAL: ['title', 'company_name', 'location']
     SEMANTIC_MULTILINGUAL: ['title', 'company_name', 'location']
 
-nb_allowed_nans_for_filtering:
+nb_allowed_nans_for_filtering:  # How many columns do we allow to be NULL?
     FULL: 2
     SEMANTIC: 2
     SEMANTIC_PARTIAL: 1
     SEMANTIC_MULTILINGUAL: 1
 
-cols_to_be_diversified_for_companies:
+cols_to_be_diversified_for_companies:  # Columns to filter out non international companies
     ['language', 'country_id']
-cols_not_to_be_diversified_for_descriptions:
+cols_not_to_be_diversified_for_descriptions:  # Columns to filter out generic descriptions
     ['title']
 
-proportion_words_to_filter_out: 0.001
-threshold_short_text: 600
+proportion_words_to_filter_out: 0.001  # What proportion of the most frequent words do we take out?
+threshold_short_text: 600  # How many characters define a good extract of a description?
 
-languages_list:
+languages_list:  # What are the languages observed in the dataset?
     ['chinese',
     'danish',
     'dutch',

@@ -12,8 +12,9 @@
 #     concatenated: 'concatenated_'
 #     beginning: 'beginning_'
 #     end: 'end_'
+#     filtered: "filtered_"
 
-str_cols:
+str_cols:  # What columns can require cleaning?
     normal: ['title', 'company_name', 'location', 'description']
     filtered: ['title', 'company_name', 'location', 'filtered_description']
     no_description: ['title', 'company_name', 'location']
@@ -24,16 +25,20 @@ SEMANTIC: "SEMANTIC"
 SEMANTIC_PARTIAL: "SEMANTIC_PARTIAL"
 SEMANTIC_MULTILINGUAL: "SEMANTIC_MULTILINGUAL"
 
-ner:
+ner:  # Do we want to compute and use NER?
   compute: False
   use: False
 
 hyperparameters:
-    batch_size: 8
-    dim_tokens: 100
-    chunk_size: 5000
+    batch_size: 8  # For Transformers
+    dim_tokens: 100  # For dimension reduction before computing cosine similarities
+    chunk_size: 5000  # Cosine similarity matrix too big to compute, needs to be done by chunks
 
-thresholds_similarity:
+threshold_date:  # How do we define if the offers are close in time or not?
+    far_dates: 100  # Nb of days before offers are considered far apart
+    too_much: 500  # Nb of days before we consider the offers cannot be duplicates
+
+thresholds_similarity:  # Minimum requirement of Jaro-Winkler similarity between fields to be considered duplicates
   monolingual:
     close_dates:
       title: 0.8
@@ -61,22 +66,18 @@ thresholds_similarity:
       description: 0.25
       filtered_description: 0.25
 
-threshold_date:
-    far_dates: 100
-    too_much: 500
-
-thresholds_desc_len:
-    absolute:
+thresholds_desc_len:  # Thresholds for comparing the differences in length of the descriptions
+    absolute:  # Absolute difference in length, in nb of characters
         monolingual:
-            PARTIAL: 50
-            NON: 500
+            PARTIAL: 50  # Above, can be eligible to be a partial duplicate
+            NON: 500  # Above, the difference is too big to be eligible to be duplicate at all
         multilingual:
-            PARTIAL: 100
-            NON: 1000
-    relative:
+            PARTIAL: 100  # Above, can be eligible to be a partial duplicate
+            NON: 1000  # Above, the difference is too big to be eligible to be duplicate at all
+    relative:  # Relative difference in length, as a % of characters compared to the shortest one
         monolingual:
-            PARTIAL: 0.05
-            NON: 0.25
+            PARTIAL: 0.05  # Above, can be eligible to be a partial duplicate
+            NON: 0.25  # Above, the difference is too big to be eligible to be duplicate at all
         multilingual:
-            PARTIAL: 0.15
-            NON: 0.50
+            PARTIAL: 0.15  # Above, can be eligible to be a partial duplicate
+            NON: 0.50  # Above, the difference is too big to be eligible to be duplicate at all
