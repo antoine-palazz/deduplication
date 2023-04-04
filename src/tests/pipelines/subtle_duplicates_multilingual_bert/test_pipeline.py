@@ -1,6 +1,6 @@
 """
-This is a boilerplate test file for pipeline 'subtle_duplicates_multilingual_bert'
-generated using Kedro 0.18.6.
+This is a boilerplate test file for pipeline
+'subtle_duplicates_multilingual_bert' generated using Kedro 0.18.6.
 Please add your pipeline tests here.
 
 Kedro recommends using `pytest` framework, more info about it can be found
