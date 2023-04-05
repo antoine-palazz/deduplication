@@ -2,9 +2,9 @@
 
 ## Web Intelligence - Deduplication Challenge
 
-- https://statistics-awards.eu/competitions/4
+- Link of the challenge: https://statistics-awards.eu/competitions/4
 
-- https://github.com/antoine-palazz/deduplication
+- Link to the public repository: https://github.com/antoine-palazz/deduplication
 
 - For more information, you can contact [Antoine Palazzolo](mailto:antoine.palazzolo@insee.fr).
 
@@ -16,7 +16,7 @@ Take a look at the [Kedro documentation](https://kedro.readthedocs.io) to get st
 
 ## How to start with the code
 
-In the file ```setup.sh```, change the path to your dataset "wi_dataset.csv" and possible past submissions.
+In the file ```setup.sh```, change the path to your dataset ```wi_dataset.csv``` and possible past approaches to the problem.
 
 To install the dependencies and import your data, run:
 
@@ -30,6 +30,14 @@ You can run your Kedro project with:
 
 ```
 kedro run
+```
+
+To run only the part that has been selected for the final submission, add ```--tags=final_models```.
+
+If you have several CPUs at your disposition and want to make the execution faster, you can run the following lines:
+```
+kedro run --tags=final_models_parallel_part --runner=ParallelRunner
+kedro run --tags=final_models_sequential_part --runner=SequentialRunner
 ```
 
 ## Project dependencies
