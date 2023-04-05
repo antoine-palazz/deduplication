@@ -28,7 +28,7 @@ def create_pipeline(**kwargs) -> Pipeline:
             node(
                 func=identify_exact_duplicates,
                 inputs=[
-                    "extensively_preprocessed_described_offers_for_semantic",
+                    "very_preprocessed_described_offers_for_semantic",
                     "params:list_cols_to_match",
                     "params:list_cols_to_mismatch",
                     "params:SEMANTIC",
@@ -37,28 +37,30 @@ def create_pipeline(**kwargs) -> Pipeline:
                     "params:thresholds_similarity",
                     "params:thresholds_desc_len",
                     "params:ner"
-                    ],
+                ],
                 outputs="gross_semantic_duplicates",
                 name="identify_gross_semantic_duplicates_node"
             ),
             node(
                 func=identify_exact_duplicates,
-                inputs=["extensively_preprocessed_detailed_offers_for_semantic_partial",
-                        "params:list_cols_to_match",
-                        "params:list_cols_to_mismatch",
-                        "params:SEMANTIC_PARTIAL",
-                        "params:str_cols",
-                        "params:threshold_date",
-                        "params:thresholds_similarity",
-                        "params:thresholds_desc_len",
-                        "params:ner"],
+                inputs=[
+                    "very_preprocessed_detailed_offers_for_semantic_partial",
+                    "params:list_cols_to_match",
+                    "params:list_cols_to_mismatch",
+                    "params:SEMANTIC_PARTIAL",
+                    "params:str_cols",
+                    "params:threshold_date",
+                    "params:thresholds_similarity",
+                    "params:thresholds_desc_len",
+                    "params:ner"
+                ],
                 outputs="gross_partial_duplicates",
                 name="identify_gross_partial_duplicates_node"
             ),
             node(
                 func=identify_exact_duplicates,
                 inputs=[
-                    "extensively_preprocessed_detailed_offers_for_semantic_lingual",
+                    "very_preprocessed_detailed_offers_for_semantic_lingual",
                     "params:list_cols_to_match",
                     "params:list_cols_to_mismatch",
                     "params:SEMANTIC_MULTILINGUAL",
@@ -79,7 +81,6 @@ def create_pipeline(**kwargs) -> Pipeline:
             'multilingual_bert',
             'xlm_roberta',
             'final_models',
-            'final_models_parallel_part',
-            'test_ner'
+            'final_models_parallel_part'
             ]
     )
