@@ -81,11 +81,13 @@ def add_transitivity_pairs_semantic(
                         # that are too far frome each other in time
                         type_to_return = ("SEMANTIC" if date_1 == date_2
                                           else "TEMPORAL")
-                        duplicates = duplicates.append({
-                            "id1": nodes[i],
-                            "id2": nodes[j],
-                            "type": type_to_return
-                        }, ignore_index=True)
+                        new_dup = {"id1": nodes[i],
+                                   "id2": nodes[j],
+                                   "type": type_to_return}
+                        duplicates = pd.concat(
+                            [duplicates, pd.DataFrame([new_dup])],
+                            ignore_index=True
+                        )
 
     duplicates = duplicates.drop_duplicates(
         subset=["id1", "id2"]

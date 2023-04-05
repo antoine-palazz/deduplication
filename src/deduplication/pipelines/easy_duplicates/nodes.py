@@ -6,10 +6,7 @@ generated using Kedro 0.18.6
 import pandas as pd
 from tqdm import tqdm
 
-from deduplication.extras.utils import (
-    differentiate_duplicates,
-    do_dates_differ_much
-)
+from deduplication.extras.utils import differentiate_duplicates, do_dates_differ_much
 
 
 def identify_exact_duplicates(
@@ -101,7 +98,6 @@ def identify_exact_duplicates(
                             dates_differ=dates_differ,
                             current_type=default_type.split("_", 1)[0],
                             str_cols=str_cols,
-                            thresholds_dates=thresholds_dates,
                             thresholds_similarity=thresholds_similarity,
                             thresholds_desc_len=thresholds_desc_len,
                             ner=ner
