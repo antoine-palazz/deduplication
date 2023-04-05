@@ -34,7 +34,7 @@ hyperparameters:
     dim_tokens: 100  # For dimension reduction before computing cosine similarities
     chunk_size: 5000  # Cosine similarity matrix too big to compute, needs to be done by chunks
 
-threshold_date:  # How do we define if the offers are close in time or not?
+thresholds_dates:  # How do we define if the offers are close in time or not?
     far_dates: 100  # Nb of days before offers are considered far apart
     too_much: 500  # Nb of days before we consider the offers cannot be duplicates
 

@@ -23,7 +23,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "gross_semantic_duplicates",
                         "gross_semantic_multilingual_duplicates",
                         "well_preprocessed_and_described_offers",
-                        "params:threshold_date"],
+                        "params:thresholds_dates"],
                 outputs="easy_duplicates",
                 name="aggregate_easy_duplicates_node",
                 tags=[
@@ -33,8 +33,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                     'multilingual_bert',
                     'xlm_roberta',
                     'final_models',
-                    'final_models_parallel_part',
-                    'test_ner'
+                    'final_models_parallel_part'
                      ]
             ),
             node(
@@ -49,8 +48,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                     'multilingual_bert',
                     'xlm_roberta',
                     'final_models',
-                    'final_models_parallel_part',
-                    'test_ner'
+                    'final_models_parallel_part'
                      ]
             ),
 
@@ -59,7 +57,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                 inputs=["easy_duplicates",
                         "subtle_duplicates_tf_idf",
                         "well_preprocessed_and_described_offers",
-                        "params:threshold_date"],
+                        "params:thresholds_dates"],
                 outputs="all_duplicates_tf_idf",
                 name="aggregate_all_duplicates_tf_idf_node",
                 tags=[
@@ -81,7 +79,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                 inputs=["easy_duplicates",
                         "subtle_duplicates_distiluse_multilingual",
                         "well_preprocessed_and_described_international_offers",
-                        "params:threshold_date"],
+                        "params:thresholds_dates"],
                 outputs="all_duplicates_distiluse_multilingual",
                 name="aggregate_all_duplicates_distiluse_multilingual_node",
                 tags=[
@@ -103,7 +101,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                 inputs=["easy_duplicates",
                         "subtle_duplicates_multilingual_bert",
                         "well_preprocessed_and_described_international_offers",
-                        "params:threshold_date"],
+                        "params:thresholds_dates"],
                 outputs="all_duplicates_multilingual_bert",
                 name="aggregate_all_duplicates_multilingual_bert_node",
                 tags=['multilingual_bert']
@@ -121,7 +119,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                 inputs=["easy_duplicates",
                         "subtle_duplicates_xlm_roberta",
                         "well_preprocessed_and_described_international_offers",
-                        "params:threshold_date"],
+                        "params:thresholds_dates"],
                 outputs="all_duplicates_xlm_roberta",
                 name="aggregate_all_duplicates_xlm_roberta_node",
                 tags=['xlm_roberta']
@@ -143,18 +141,18 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "subtle_duplicates_distiluse_multilingual",
                     "well_preprocessed_and_described_offers":
                         "well_preprocessed_and_described_offers",
-                    "threshold_date": "params:threshold_date"
+                    "thresholds_dates": "params:thresholds_dates"
                     },
                 outputs="best_duplicates",
                 name="aggregate_all_duplicates_from_best_models_node",
-                tags=['final_models', 'final_models_sequential_part', 'test_ner']
+                tags=['final_models', 'final_models_sequential_part']
             ),
             node(
                 func=describe_duplicates,
                 inputs=["best_duplicates"],
                 outputs="best_duplicates_description",
                 name="describe_best_duplicates_node",
-                tags=['final_models', 'final_models_sequential_part', 'test_ner']
+                tags=['final_models', 'final_models_sequential_part']
             )
         ]
     )

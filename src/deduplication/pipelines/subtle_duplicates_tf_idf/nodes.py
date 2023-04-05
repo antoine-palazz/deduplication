@@ -14,6 +14,17 @@ def tokenize_texts(
     hyperparameters: dict,
     max_df_tokenizer: float
 ) -> list:
+    """
+    Tokenizes the offers using a TF-IDF approach
+
+    Args:
+        data (pd.DataFrame): Dataset of the offers
+        hyperparameters (dict): Includes the dimension of the final tokens
+        max_df_tokenizer (float): Proportion of most frequent words to remove
+
+    Returns:
+        list: List of the embedded offers
+    """
 
     vectorizer = TfidfVectorizer(
         max_df=max_df_tokenizer
@@ -23,6 +34,8 @@ def tokenize_texts(
         data["concatenated_filtered_text"]
     )
 
+    # Reduces the dimension of the embeddings to a given dimension
+    # Essential for TF-IDF as the initial embeddings have a very high dimension
     tokenized_texts = reduce_dimension(
         tokenized_texts,
         hyperparameters=hyperparameters

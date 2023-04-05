@@ -28,7 +28,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "tokens_xlm_roberta",
                         "params:str_cols",
                         "params:threshold_semantic_xlm_roberta",
-                        "params:threshold_date",
+                        "params:thresholds_dates",
                         "params:thresholds_similarity",
                         "params:thresholds_desc_len",
                         "params:hyperparameters",

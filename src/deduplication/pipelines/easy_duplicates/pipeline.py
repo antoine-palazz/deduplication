@@ -18,7 +18,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                         "params:list_cols_to_mismatch",
                         "params:FULL",
                         "params:str_cols",
-                        "params:threshold_date",
+                        "params:thresholds_dates",
                         "params:thresholds_similarity",
                         "params:thresholds_desc_len",
                         "params:ner"],
@@ -33,7 +33,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                     "params:list_cols_to_mismatch",
                     "params:SEMANTIC",
                     "params:str_cols",
-                    "params:threshold_date",
+                    "params:thresholds_dates",
                     "params:thresholds_similarity",
                     "params:thresholds_desc_len",
                     "params:ner"
@@ -49,7 +49,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                     "params:list_cols_to_mismatch",
                     "params:SEMANTIC_PARTIAL",
                     "params:str_cols",
-                    "params:threshold_date",
+                    "params:thresholds_dates",
                     "params:thresholds_similarity",
                     "params:thresholds_desc_len",
                     "params:ner"
@@ -65,7 +65,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                     "params:list_cols_to_mismatch",
                     "params:SEMANTIC_MULTILINGUAL",
                     "params:str_cols",
-                    "params:threshold_date",
+                    "params:thresholds_dates",
                     "params:thresholds_similarity",
                     "params:thresholds_desc_len",
                     "params:ner"

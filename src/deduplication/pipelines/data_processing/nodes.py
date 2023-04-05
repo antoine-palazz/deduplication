@@ -31,6 +31,7 @@ nltk.download('wordnet')
 tqdm.pandas()
 warnings.filterwarnings('ignore')
 
+# Use GPU if available
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 print(f"The device for NER is {device}")
 

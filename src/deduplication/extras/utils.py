@@ -13,7 +13,7 @@ from tqdm import tqdm
 def do_dates_differ_much(
     date_1,
     date_2,
-    threshold_date: dict
+    thresholds_dates: dict
 ) -> str:
     """
     Describe to what extent two dates differ
@@ -21,16 +21,16 @@ def do_dates_differ_much(
     Args:
         date_1 (datetime)
         date_2 (datetime)
-        threshold_date (dict): The thresholds for dates
+        thresholds_dates (dict): The thresholds for dates
 
     Returns:
         str: A string indicating the closeness of the dates
     """
     dates_difference = abs((date_1 - date_2).days)
 
-    if dates_difference > threshold_date["too_much"]:
+    if dates_difference > thresholds_dates["too_much"]:
         return "too_much"
-    if dates_difference > threshold_date["far_dates"]:
+    if dates_difference > thresholds_dates["far_dates"]:
         return "far_dates"
     return "close_dates"
 
@@ -541,7 +541,7 @@ def find_subtle_duplicates_from_tokens(
     tokenized_texts: list,
     str_cols: dict,
     threshold_semantic: dict,
-    threshold_date: dict,
+    thresholds_dates: dict,
     thresholds_similarity: dict,
     thresholds_desc_len: dict,
     hyperparameters: dict,
@@ -556,7 +556,7 @@ def find_subtle_duplicates_from_tokens(
         tokenized_texts (list): Embeddings of the concatenated offers
         str_cols (dict): Columns to compare
         threshold_semantic (dict): Thresholds for cosine similarities
-        threshold_date (dict): The thresholds for dates
+        thresholds_dates (dict): The thresholds for dates
         thresholds_similarity (dict): The thresholds for text lengths
         thresholds_desc_len (dict): Thresholds to compare description lengths
         hyperparameters (dict): Diverse hyperparameters, including chunk size
@@ -602,7 +602,7 @@ def find_subtle_duplicates_from_tokens(
                 dates_diff = do_dates_differ_much(
                     row_i[cols_idxs["retrieval_date"]],
                     row_j[cols_idxs["retrieval_date"]],
-                    threshold_date=threshold_date
+                    thresholds_dates=thresholds_dates
                     )  # Are the retrieval dates close or not?
 
                 if (

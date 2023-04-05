@@ -18,7 +18,7 @@ def identify_exact_duplicates(
     list_cols_to_mismatch: dict,
     default_type: str,
     str_cols: dict,
-    threshold_date: dict,
+    thresholds_dates: dict,
     thresholds_similarity: dict,
     thresholds_desc_len: dict,
     ner: dict
@@ -34,7 +34,7 @@ def identify_exact_duplicates(
         list_cols_to_mismatch (dict): Columns required to mismatch
         default_type (str): Current assumption about the duplicates type
         str_cols (dict): Columns to compare via Jaro Winkler
-        threshold_date (dict): Thresholds for the dates
+        thresholds_dates (dict): Thresholds for the dates
         thresholds_similarity (dict): Thresholds for the cosine similarities
         thresholds_desc_len (dict): Thresholds for the description lengths
         ner (dict): Booleans to decide if we use NER or not
@@ -42,7 +42,6 @@ def identify_exact_duplicates(
     Returns:
         pd.DataFrame: Dataframe of duplicates and their types
     """
-
     n_ads = len(data)
     exact_duplicates = []
 
@@ -92,7 +91,7 @@ def identify_exact_duplicates(
                         dates_differ = do_dates_differ_much(
                             row_i["retrieval_date"],
                             row_j["retrieval_date"],
-                            threshold_date=threshold_date
+                            thresholds_dates=thresholds_dates
                             )
 
                         duplicates_type = differentiate_duplicates(
@@ -102,7 +101,7 @@ def identify_exact_duplicates(
                             dates_differ=dates_differ,
                             current_type=default_type.split("_", 1)[0],
                             str_cols=str_cols,
-                            threshold_date=threshold_date,
+                            thresholds_dates=thresholds_dates,
                             thresholds_similarity=thresholds_similarity,
                             thresholds_desc_len=thresholds_desc_len,
                             ner=ner
