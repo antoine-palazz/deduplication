@@ -6,7 +6,10 @@ generated using Kedro 0.18.6
 import pandas as pd
 from tqdm import tqdm
 
-from deduplication.extras.utils import differentiate_duplicates, do_dates_differ_much
+from deduplication.extras.utils import (
+    differentiate_duplicates,
+    do_dates_differ_much
+)
 
 
 def identify_exact_duplicates(
@@ -20,6 +23,25 @@ def identify_exact_duplicates(
     thresholds_desc_len: dict,
     ner: dict
 ) -> pd.DataFrame:
+    """
+    "Easy" approach to identify duplicated offers, by testing
+    if certain sets of columns match or mismatch, which could
+    provide some obvious duplicates
+
+    Args:
+        data (pd.DataFrame): Dataset of offers
+        list_cols_to_match (dict): Columns required to match
+        list_cols_to_mismatch (dict): Columns required to mismatch
+        default_type (str): Current assumption about the duplicates type
+        str_cols (dict): Columns to compare via Jaro Winkler
+        threshold_date (dict): Thresholds for the dates
+        thresholds_similarity (dict): Thresholds for the cosine similarities
+        thresholds_desc_len (dict): Thresholds for the description lengths
+        ner (dict): Booleans to decide if we use NER or not
+
+    Returns:
+        pd.DataFrame: Dataframe of duplicates and their types
+    """
 
     n_ads = len(data)
     exact_duplicates = []
@@ -27,11 +49,14 @@ def identify_exact_duplicates(
     for cols_to_match in tqdm(list_cols_to_match[default_type]):
         for cols_to_mismatch in list_cols_to_mismatch[default_type]:
 
+            # Sort the table alphabetically by the cols to match (O(n*log(n)))
+            # To reduce the following search of duplicates from O(n^2) to O(n)
             data_for_duplicates = data.sort_values(
                 by=cols_to_match+["id"],
                 ignore_index=True
             )
 
+            # Converts dataframes to numpy array to run faster
             cols_to_match_idxs = [
                 data_for_duplicates.columns.get_loc(col)
                 for col in cols_to_match
@@ -55,6 +80,8 @@ def identify_exact_duplicates(
                         data_for_dups_arr[i, cols_to_mismatch_idxs] !=
                         data_for_dups_arr[j, cols_to_mismatch_idxs]
                     ).all():
+                        # By then we have a possible match between two rows
+                        # Need to go deeper into the investigation
 
                         row_j = data_for_duplicates.loc[j]
                         lingual = (
