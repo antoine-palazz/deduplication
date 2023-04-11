@@ -644,7 +644,7 @@ def find_subtle_duplicates_from_tokens(
         )  # All duplicates in the chunk
         print(
             f"{len(duplicates_chunk)} duplicates \
-                in chunck n°{int(chunk_start/hyperparameters['chunk_size']+1)}"
+                in chunk n°{int(chunk_start/hyperparameters['chunk_size']+1)}"
         )
         duplicates.extend(duplicates_chunk)
 
