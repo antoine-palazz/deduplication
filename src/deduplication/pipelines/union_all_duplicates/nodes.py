@@ -113,7 +113,7 @@ def add_transitivity_pairs_partial(
       partial duplicates to all of the semantic duplicates of B
     Using this property, we can catch many new partial duplicates
     that were not found before.
-    However, this method requires to have a high level of trust into
+    However, this method requires to have a high level of confidence into
     the duplicates (whether they are partial or semantic) we already have
 
     Args:
