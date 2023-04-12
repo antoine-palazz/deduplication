@@ -20,6 +20,7 @@ networkx
 nltk
 numpy
 pandas
+pipenv
 pre-commit
 pyarrow
 pytest-cov~=3.0
