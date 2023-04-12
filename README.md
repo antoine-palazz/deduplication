@@ -17,7 +17,7 @@ Take a look at the [Kedro documentation](https://kedro.readthedocs.io) to get st
 ## How to start with the code
 
 Two possibilities:
-- Load manually the initial dataset wi_dataset.csv into the folder data/01_raw/ (and the possible past approaches or submissions in data/09_past_approaches/)
+- Load manually the initial dataset wi_dataset.csv into the folder ```data/01_raw/``` (and the possible past approaches or submissions in ```data/09_past_approaches/```)
 - In the file ```setup.sh```, change the s3 path to your dataset ```wi_dataset.csv``` and possible past approaches to the problem, and uncomment the import.
 
 To install the dependencies (and possibly import your data), run:
