@@ -16,9 +16,11 @@ Take a look at the [Kedro documentation](https://kedro.readthedocs.io) to get st
 
 ## How to start with the code
 
-In the file ```setup.sh```, change the path to your dataset ```wi_dataset.csv``` and possible past approaches to the problem.
+Two possibilities:
+- Load manually the initial dataset wi_dataset.csv into the folder data/01_raw/ (and the possible past approaches or submissions in data/09_past_approaches/)
+- In the file ```setup.sh```, change the s3 path to your dataset ```wi_dataset.csv``` and possible past approaches to the problem, and uncomment the import.
 
-To install the dependencies and import your data, run:
+To install the dependencies (and possibly import your data), run:
 
 ```
 ./setup.sh
@@ -45,6 +47,10 @@ If you have several CPUs at your disposition and want to make the execution fast
 kedro run --tags=final_models_parallel_part --runner=ParallelRunner
 kedro run --tags=final_models_sequential_part --runner=SequentialRunner
 ```
+
+The final output will be stored in ```data/07_model_output/best_duplicates.csv```, and a description of the output will be available in ```data/08_reporting/best_duplicates_description.csv```.
+
+To further analyze and possibly improve the output by using past approaches, you can then use the notebook stored in ```notebooks/use_past_approaches.ipynb```.
 
 ## Project dependencies
 
