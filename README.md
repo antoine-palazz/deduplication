@@ -6,7 +6,7 @@
 
 - Link to the public repository: https://github.com/antoine-palazz/deduplication
 
-- For more information, you can contact [Antoine Palazzolo](mailto:antoine.palazzolo@insee.fr).
+- For more information, you can contact [Antoine Palazzolo](mailto:antoine.palazzolo@insee.fr), that represents team **Nins**.
 
 ## Overview
 
