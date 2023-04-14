@@ -35,7 +35,7 @@ warnings.filterwarnings('ignore')
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 print(f"The device for NER is {device}")
 
-# If we want to cumpute NER:
+# If we want to compute NER:
 tokenizer_ner = AutoTokenizer.from_pretrained(
     "Davlan/distilbert-base-multilingual-cased-ner-hrl"
 )
@@ -699,6 +699,7 @@ def ner_one_text(
     """
     Computes NER of a text
     using distilbert-base-multilingual-cased-ner-hrl
+    Babelscape/wikineural-multilingual-ner was also tested out but not kept
     Keeps locations and companies of length > 3
 
     Args:
@@ -713,7 +714,7 @@ def ner_one_text(
     end, index = 0, 0
 
     for entity in raw_entities:  # Post-processing required
-        # We only keep locations and companies
+        # We only keep locations and companies / organizations
 
         if entity['entity'] in ['B-LOC', 'B-ORG']:
             clean_entity = entity['word'].replace("##", "")

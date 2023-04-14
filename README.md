@@ -6,6 +6,8 @@
 
 - Link to the public repository: https://github.com/antoine-palazz/deduplication
 
+- Link to the Datalab that was used for the coding part of the challenge: https://datalab.sspcloud.fr/. For more information about the Onyxia project: https://github.com/InseeFrLab/onyxia.
+
 - For more information, you can contact [Antoine Palazzolo](mailto:antoine.palazzolo@insee.fr), that represents team **Nins**.
 
 ## Overview
